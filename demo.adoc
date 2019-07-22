@@ -1,0 +1,196 @@
+:experimental:
+// Define unicode for Apple Command key.
+:commandkey: &#8984;
+
+== Mobile Development with Ionic, React Native, and JHipster
+
+The brackets at the end of each step indicate the alias's or IntelliJ Live Templates to use. You can find the template definitions at https://github.com/mraible/idea-live-templates[mraible/idea-live-templates].
+
+NOTE: I've purposely left the version numbers off this tutorial's `npm install` commands so the latest versions will be used. If you find issues with these steps, please file an issue for this repo.
+
+=== Spring Boot API
+
+. Install JHipster: `npm install -g generator-jhipster`
+. Create a new directory for API: `mkdir -p app`
+. Download https://github.com/jhipster/jdl-samples/blob/master/21-points.jh[21-Points Health JDL] into the root directory.
+. Create app with import-jdl:
+
+  jhipster import-jdl ../app.jh
+
+. Start Docker containers:
+
+  docker-compose -f src/main/docker/elasticsearch.yml up -d
+  docker-compose -f src/main/docker/keycloak.yml up -d
+  docker-compose -f src/main/docker/postgresql.yml up -d
+  docker-compose -f src/main/docker/sonar.yml up -d
+
+. Ensure coverage with Sonar (results at http://localhost:9001):
+
+  ./gradlew -Pprod clean test sonarqube
+
+=== React Native App
+
+. Install Ignite CLI and Ignite JHipster
+
+  npm i -g ignite-cli ignite-jhipster
+
+. Create React Native client:
+
+  ignite new HealthPoints -b ignite-jhipster
+
+. Rename `HealthPoints` to `mobile-react-native`.
+
+. To run on iOS, cd into `mobile-react-native/ios` and run `pod install`
+
+. In the `mobile-react-native` directory, run `react-native run-ios`
+
+. To run on Android, use `react-native run-android`
+
+. For AVD to communicate with your API and Keycloak, you need to add some port mappings
+
+  adb reverse tcp:8080 tcp:8080
+  adb reverse tcp:9080 tcp:9080
+
+. Generate UI screens in React Native app
+
+  ignite generate import-jdl ../app.jh
+
+. Open `points-entity-edit-screen.js` and change the `formModel` to use `t.Boolean` for exercise, meals, and alcohol
+
+  formModel: t.struct({
+    id: t.maybe(t.Number),
+    date: t.Date,
+    exercise: t.maybe(t.Boolean),
+    meals: t.maybe(t.Boolean),
+    alcohol: t.maybe(t.Boolean),
+    notes: t.maybe(t.String),
+    userId: this.getUsers()
+  }),
+
+. Change `entityToFormValue()` to set the toggle to on if the value is 1 [`rn-entityToForm`]
+
+  entityToFormValue = (value) => {
+    if (!value) {
+      return {}
+    }
+    return {
+      id: value.id || null,
+      date: value.date || null,
+      exercise: (value.exercise === 1),
+      meals: (value.meals === 1),
+      alcohol: (value.alcohol === 1),
+      notes: value.notes || null,
+      userId: (value.user && value.user.id) ? value.user.id : null
+    }
+  }
+
+. Change `formValueToEntity()` to save 1 or 0, depending on the user's selection [`rn-formToEntity`]
+
+  formValueToEntity = (value) => {
+    const entity = {
+      id: value.id || null,
+      date: value.date || null,
+      exercise: (value.exercise) ? 1 : 0,
+      meals: (value.meals) ? 1 : 0,
+      alcohol: (value.alcohol) ? 1 : 0,
+      notes: value.notes || null
+    }
+    if (value.userId) {
+      entity.user = { id: value.userId }
+    }
+    return entity
+  }
+
+. Add default form values in `componentWillMount()` [`rn-defaultValues`]
+
+  componentWillMount () {
+    if (this.props.data.entityId) {
+      this.props.getPoint(this.props.data.entityId)
+    } else {
+      this.setState({
+        formValue: {
+          id: null,
+          date: new Date(),
+          exercise: true,
+          meals: true,
+          alcohol: true
+        }
+      })
+    }
+    this.props.getAllUsers()
+  }
+
+. Refresh your app in Simulator using kbd:[{commandkey} + R]
+
+. Tweak React App in JHipster (`points-update.tsx`) to use checkboxes [`react-checkboxes`]
+
+TIP: To debug React Native, I recommend https://github.com/infinitered/reactotron[Reactotron] and using `console.tron.log()` instead of `console.log()`.
+
+=== Ionic 4 App
+
+. Install Ionic CLI and Ionic for JHipster
+
+  npm i -g generator-jhipster-ionic ionic yo
+
+. Create an Ionic app
+
+  // todo: ionic4j
+  yo jhipster-ionic
+
+. Launch app and log in after running `ionic serve`
+
+. Generate entities
+
+  // todo: simplify
+  yo jhipster-ionic:entity points
+  yo jhipster-ionic:entity bloodpressure
+  yo jhipster-ionic:entity weight
+  yo jhipster-ionic:entity preferences
+  yo jhipster-ionic:entity units
+
+. Run app in iOS Simulator
+
+  ionic cordova prepare ios
+  open platforms/ios/MyApp.xcworkspace
+
+. Run app using Android Studio
+
+  ionic cordova prepare android
+  studio platforms/android
+
+. Run `adb reverse tcp:8080 tcp:8080` so app can talk to JHipster app
+
+. Modify entities to use booleans for points and set defaults
+
+=== Use Okta for Identity
+
+. Create a **Web** application on Okta, add `http://localhost:8080/login/oauth2/code/oidc` as a login redirect URI, and use `http://localhost:8080` as a logout redirect URI
+
+. Add `groups` as a claim to the ID token.
+
+. Create `~/.okta.env` and specify the settings for your app; show Okta login
+
+  export SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER_URI=https://{yourOktaDomain}/oauth2/default
+  export SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_ID=$clientId
+  export SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_SECRET=$clientSecret
+
+. Create a **Native** app with PKCE, add the following URLs as login redirect URIs:
+
+  * `healthpoints://authorize`
+  * `http://localhost:8100/implicit/callback`
+  * `dev.localhost.ionic:/callback`
+
+. Add logout URIs too:
+
+  * `http://localhost:8100/implicit/logout`
+  * `dev.localhost.ionic:/logout`
+
+. Add `groups`, `given_name`, and `family_name` as claims to the access token.
+
+. Modify `mobile-react-native/app/modules/login/login.sagas.js` to use the generated client ID
+
+. Update `mobile-ionic/src/app/auth/auth.service.ts` to use client ID from Native Okta app
+
+. Logout of React Native and Ionic apps, refresh, and log in with Okta
+
+Source: https://developer.okta.com/blog/2018/10/10/react-native-spring-boot-mobile-app[Build a Mobile App with React Native and Spring Boot] and https://developer.okta.com/blog/2019/06/24/ionic-4-angular-spring-boot-jhipster[Build Mobile Apps with Angular, Ionic 4, and Spring Boot].
