@@ -20,7 +20,7 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 . Install JHipster: `npm install -g generator-jhipster`
 . Create a new directory to hold all the projects: `mkdir -p mobile-jhipster`
 . Download https://github.com/jhipster/jdl-samples/blob/master/21-points.jh[21-Points Health JDL] into the root directory.
-. Create an `backend` directory and run import-jdl from it:
+. Create a `backend` directory and run import-jdl from it:
 
   take backend
   jhipster import-jdl ../app.jh
@@ -226,6 +226,6 @@ TIP: To debug React Native, I recommend https://github.com/infinitered/reactotro
 
 . Update `mobile-ionic/src/app/auth/auth.service.ts` to use client ID from Native Okta app
 
-. Restart apps and log in with Okta
+. Restart mobile apps and log in with Okta
 
 Source: https://developer.okta.com/blog/2018/10/10/react-native-spring-boot-mobile-app[Build a Mobile App with React Native and Spring Boot] and https://developer.okta.com/blog/2019/06/24/ionic-4-angular-spring-boot-jhipster[Build Mobile Apps with Angular, Ionic 4, and Spring Boot].
