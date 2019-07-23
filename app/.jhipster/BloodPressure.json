@@ -32,7 +32,7 @@
             "otherEntityField": "login"
         }
     ],
-    "changelogDate": "20190723143625",
+    "changelogDate": "20190723143933",
     "entityTableName": "blood_pressure",
     "dto": "no",
     "pagination": "infinite-scroll",

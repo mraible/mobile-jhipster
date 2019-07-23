@@ -22,7 +22,6 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 
   docker-compose -f src/main/docker/elasticsearch.yml up -d
   docker-compose -f src/main/docker/keycloak.yml up -d
-  docker-compose -f src/main/docker/postgresql.yml up -d
   docker-compose -f src/main/docker/sonar.yml up -d
 
 . Ensure coverage with Sonar (results at http://localhost:9001):

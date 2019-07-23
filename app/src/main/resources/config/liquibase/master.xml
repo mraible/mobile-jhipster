@@ -14,14 +14,14 @@
     <property name="uuidType" value="uuid" dbms="h2, postgresql"/>
 
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190723143625_added_entity_BloodPressure.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190723143626_added_entity_Weight.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190723143627_added_entity_Points.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190723143628_added_entity_Preferences.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190723143933_added_entity_BloodPressure.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190723143934_added_entity_Weight.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190723143935_added_entity_Points.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190723143936_added_entity_Preferences.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
-    <include file="config/liquibase/changelog/20190723143625_added_entity_constraints_BloodPressure.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190723143626_added_entity_constraints_Weight.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190723143627_added_entity_constraints_Points.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190723143628_added_entity_constraints_Preferences.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190723143933_added_entity_constraints_BloodPressure.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190723143934_added_entity_constraints_Weight.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190723143935_added_entity_constraints_Points.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190723143936_added_entity_constraints_Preferences.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 </databaseChangeLog>

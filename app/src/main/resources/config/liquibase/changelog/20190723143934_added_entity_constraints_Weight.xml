@@ -4,13 +4,13 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
     <!--
-        Added the constraints for entity Preferences.
+        Added the constraints for entity Weight.
     -->
-    <changeSet id="20190723143628-2" author="jhipster">
+    <changeSet id="20190723143934-2" author="jhipster">
         
         <addForeignKeyConstraint baseColumnNames="user_id"
-                                 baseTableName="preferences"
-                                 constraintName="fk_preferences_user_id"
+                                 baseTableName="weight"
+                                 constraintName="fk_weight_user_id"
                                  referencedColumnNames="id"
                                  referencedTableName="jhi_user"/>
 

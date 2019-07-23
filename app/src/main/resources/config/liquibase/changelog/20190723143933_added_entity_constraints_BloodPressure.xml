@@ -6,7 +6,7 @@
     <!--
         Added the constraints for entity BloodPressure.
     -->
-    <changeSet id="20190723143625-2" author="jhipster">
+    <changeSet id="20190723143933-2" author="jhipster">
         
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="blood_pressure"

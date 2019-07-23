@@ -31,7 +31,7 @@
             "ownerSide": true
         }
     ],
-    "changelogDate": "20190723143628",
+    "changelogDate": "20190723143936",
     "entityTableName": "preferences",
     "dto": "no",
     "pagination": "no",
