@@ -1,0 +1,7 @@
+{
+  "generator-jhipster-ionic": {
+    "promptValues": {
+      "backendPath": "../app"
+    }
+  }
+}
