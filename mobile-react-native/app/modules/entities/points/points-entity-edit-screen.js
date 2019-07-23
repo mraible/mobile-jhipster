@@ -80,7 +80,14 @@ class PointEntityEditScreen extends React.Component {
     if (this.props.data.entityId) {
       this.props.getPoint(this.props.data.entityId)
     } else {
-      this.setState({ formValue: { id: null } })
+      this.setState({
+        formValue: {
+          id: null,
+          date: new Date(),
+          exercise: true,
+          meals: true,
+          alcohol: true
+        } })
     }
     this.props.getAllUsers()
   }
