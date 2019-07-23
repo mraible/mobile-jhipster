@@ -41,8 +41,8 @@ describe('Preferences e2e test', () => {
   it('should create and save Preferences', async () => {
     async function createPreferences() {
       await preferencesComponentsPage.clickOnCreateButton();
-      await preferencesUpdatePage.setWeeklyGoalInput('5');
-      expect(await preferencesUpdatePage.getWeeklyGoalInput()).to.eq('5');
+      await preferencesUpdatePage.setWeeklyGoalInput('10');
+      expect(await preferencesUpdatePage.getWeeklyGoalInput()).to.eq('10');
       await preferencesUpdatePage.weightUnitsSelectLastOption();
       await preferencesUpdatePage.userSelectLastOption();
       await waitUntilDisplayed(preferencesUpdatePage.getSaveButton());

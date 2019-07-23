@@ -6,6 +6,13 @@
 
 The brackets at the end of each step indicate the alias's or IntelliJ Live Templates to use. You can find the template definitions at https://github.com/mraible/idea-live-templates[mraible/idea-live-templates].
 
+**Prerequisites:**
+
+* https://adoptopenjdk.net/[Java 8+]
+* https://nodejs.org[Node 10+]
+* https://yarnpkg.com/lang/en/docs/cli/install/[Yarn]
+* https://cocoapods.org/[CocoaPods]
+
 NOTE: I've purposely left the version numbers off this tutorial's `npm install` commands so the latest versions will be used. If you find issues with these steps, please file an issue for this repo.
 
 === Spring Boot API
@@ -13,10 +20,10 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 . Install JHipster: `npm install -g generator-jhipster`
 . Create a new directory to hold all the projects: `mkdir -p mobile-jhipster`
 . Download https://github.com/jhipster/jdl-samples/blob/master/21-points.jh[21-Points Health JDL] into the root directory.
-. Create an `app` directory and run import-jdl from it:
+. Create an `backend` directory and run import-jdl from it:
 
-  take app
-  jhipster import-jdl ../21-points.jh
+  take backend
+  jhipster import-jdl ../app.jh
 
 . Start Docker containers:
 
@@ -24,9 +31,11 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
   docker-compose -f src/main/docker/keycloak.yml up -d
   docker-compose -f src/main/docker/sonar.yml up -d
 
+. Start app using `./gradlew`, show project in IDE, and browse `http://localhost:8080`
+
 . Ensure coverage with Sonar (results at http://localhost:9001):
 
-  ./gradlew -Pprod clean test sonarqube
+  ./gradlew -Pprod clean check sonarqube -Dsonar.host.url=http://localhost:9001
 
 === React Native App
 
@@ -34,7 +43,7 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 
   npm i -g ignite-cli ignite-jhipster
 
-. Create React Native client:
+. Create a React Native client:
 
   ignite new HealthPoints -b ignite-jhipster
 
@@ -50,6 +59,8 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 
   adb reverse tcp:8080 tcp:8080
   adb reverse tcp:9080 tcp:9080
+
+. Add `heathpoints://authorize` as redirect URI in http://localhost:9080/auth/[Keycloak]
 
 . Generate UI screens in React Native app
 
@@ -132,21 +143,41 @@ TIP: To debug React Native, I recommend https://github.com/infinitered/reactotro
 
   npm i -g generator-jhipster-ionic ionic yo
 
-. Create an Ionic app
+. Create an Ionic app named `mobile-ionic`
 
-  // todo: ionic4j
   yo jhipster-ionic
 
 . Launch app and log in after running `ionic serve`
 
 . Generate entities
 
-  // todo: simplify
   yo jhipster-ionic:entity points
-  yo jhipster-ionic:entity bloodpressure
+  yo jhipster-ionic:entity bloodPressure
   yo jhipster-ionic:entity weight
   yo jhipster-ionic:entity preferences
-  yo jhipster-ionic:entity units
+
+. Restart app and show generated entity screens
+
+. Change `points-update.html` to use `<ion-toggle>`
+
+. Modify `points-update.ts` to use booleans for points in the `save()` method
+
+  const points = this.createFromForm();
+
+  // convert booleans to ints
+  points.exercise = points.exercise ? 1 : 0;
+  points.meals = points.meals ? 1 : 0;
+  points.alcohol = points.alcohol ? 1 : 0;
+
+. Update `points-update.ts` to set defaults in `ngOnInit(()`
+
+  if (this.isNew) {
+    this.points.date = new Date().toISOString().split('T')[0];
+    this.points.alcohol = 1;
+    this.points.exercise = 1;
+    this.points.meals = 1;
+    this.updateForm(this.points);
+  }
 
 . Run app in iOS Simulator
 
@@ -158,9 +189,10 @@ TIP: To debug React Native, I recommend https://github.com/infinitered/reactotro
   ionic cordova prepare android
   studio platforms/android
 
-. Run `adb reverse tcp:8080 tcp:8080` so app can talk to JHipster app
+. For AVD to communicate with your API and Keycloak, you need to add some port mappings
 
-. Modify entities to use booleans for points and set defaults
+  adb reverse tcp:8080 tcp:8080
+  adb reverse tcp:9080 tcp:9080
 
 === Use Okta for Identity
 
@@ -187,10 +219,13 @@ TIP: To debug React Native, I recommend https://github.com/infinitered/reactotro
 
 . Add `groups`, `given_name`, and `family_name` as claims to the access token.
 
+  * For `given_name`, use expression `user.firstName`
+  * For `family_name`, use expression `user.lastName`
+
 . Modify `mobile-react-native/app/modules/login/login.sagas.js` to use the generated client ID
 
 . Update `mobile-ionic/src/app/auth/auth.service.ts` to use client ID from Native Okta app
 
-. Logout of React Native and Ionic apps, refresh, and log in with Okta
+. Restart apps and log in with Okta
 
 Source: https://developer.okta.com/blog/2018/10/10/react-native-spring-boot-mobile-app[Build a Mobile App with React Native and Spring Boot] and https://developer.okta.com/blog/2019/06/24/ionic-4-angular-spring-boot-jhipster[Build Mobile Apps with Angular, Ionic 4, and Spring Boot].
