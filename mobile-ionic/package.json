@@ -38,6 +38,7 @@
         "@ngx-translate/core": "11.0.1",
         "@ngx-translate/http-loader": "4.0.0",
         "@oktadev/schematics": "^0.8.3",
+        "cordova-android": "8.0.0",
         "cordova-ios": "5.0.1",
         "cordova-plugin-advanced-http": "^2.1.1",
         "cordova-plugin-camera": "^4.1.0",
