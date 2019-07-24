@@ -198,7 +198,7 @@ TIP: To debug React Native, I recommend https://github.com/infinitered/reactotro
 
 . Add `groups` as a claim to the ID token.
 
-. Create `~/.okta.env` and specify the settings for your app; show Okta login
+. Create `~/.okta.env` and specify the settings for your app; run `source ~/.okta.env` and show Okta login
 
   export SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER_URI=https://{yourOktaDomain}/oauth2/default
   export SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_ID=$clientId
