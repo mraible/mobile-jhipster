@@ -1,0 +1,131 @@
+{
+  "name": "ionic4j",
+  "version": "0.0.1",
+  "author": "Ionic Framework",
+  "homepage": "https://ionicframework.com/",
+  "scripts": {
+    "ng": "ng",
+    "start": "ionic serve",
+    "build": "ng build",
+    "test": "jest",
+    "lint": "ng lint",
+    "e2e": "npm run e2e-update && npm run e2e-test",
+    "test:watch": "jest --watch",
+    "test:ci": "jest --runInBand",
+    "test:coverage": "jest --coverage",
+    "e2e-test": "protractor ./e2e/protractor.conf.js",
+    "e2e-update": "node node_modules/webdriver-manager/bin/webdriver-manager update --gecko false"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/common": "^7.2.2",
+    "@angular/core": "^7.2.2",
+    "@angular/forms": "^7.2.2",
+    "@angular/http": "^7.2.2",
+    "@angular/platform-browser": "^7.2.2",
+    "@angular/platform-browser-dynamic": "^7.2.2",
+    "@angular/router": "^7.2.2",
+    "@ionic-native/core": "^5.0.0",
+    "@ionic-native/splash-screen": "^5.0.0",
+    "@ionic-native/status-bar": "^5.0.0",
+    "@ionic/angular": "^4.1.0",
+    "core-js": "^2.5.4",
+    "rxjs": "~6.5.1",
+    "tslib": "^1.9.0",
+    "zone.js": "~0.8.29",
+    "@ionic-native/camera": "5.3.0",
+    "@ngx-translate/core": "11.0.1",
+    "@ngx-translate/http-loader": "4.0.0",
+    "ngx-webstorage": "3.0.2",
+    "ng-jhipster": "0.9.3",
+    "@fortawesome/angular-fontawesome": "^0.3.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2.19",
+    "@fortawesome/free-solid-svg-icons": "^5.9.0",
+    "@ng-bootstrap/ng-bootstrap": "^4.2.1"
+  },
+  "devDependencies": {
+    "@angular-devkit/architect": "~0.13.8",
+    "@angular-devkit/build-angular": "~0.13.8",
+    "@angular-devkit/core": "~7.3.8",
+    "@angular-devkit/schematics": "~7.3.8",
+    "@angular/cli": "~7.3.8",
+    "@angular/compiler": "~7.2.2",
+    "@angular/compiler-cli": "~7.2.2",
+    "@angular/language-service": "~7.2.2",
+    "@ionic/angular-toolkit": "~1.5.1",
+    "@types/node": "11.12.2",
+    "@types/jasmine": "~2.8.8",
+    "@types/jasminewd2": "~2.0.3",
+    "codelyzer": "~4.5.0",
+    "jasmine-core": "~2.99.1",
+    "jasmine-spec-reporter": "4.2.1",
+    "karma": "~4.1.0",
+    "karma-chrome-launcher": "~2.2.0",
+    "karma-coverage-istanbul-reporter": "~2.0.1",
+    "karma-jasmine": "~1.1.2",
+    "karma-jasmine-html-reporter": "^0.2.2",
+    "protractor": "5.4.2",
+    "ts-node": "8.0.3",
+    "tslint": "~5.16.0",
+    "typescript": "3.1.1",
+    "generator-jhipster": "^6.0.1",
+    "@types/jest": "24.0.11",
+    "html-loader": "0.5.5",
+    "ionic-mocks-jest": "1.3.3",
+    "istanbul-instrumenter-loader": "3.0.1",
+    "jasmine": "3.3.1",
+    "jest": "24.5.0",
+    "jest-localstorage-mock": "2.4.0",
+    "jest-preset-angular": "7.0.1",
+    "null-loader": "0.1.1",
+    "ts-loader": "5.3.3",
+    "webdriver-manager": "12.1.5"
+  },
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-camera": {
+        "CAMERA_USAGE_DESCRIPTION": "Need camera access to take pictures",
+        "PHOTOLIBRARY_USAGE_DESCRIPTION": "Need photo library access to get pictures from there"
+      }
+    }
+  },
+  "jest": {
+    "preset": "jest-preset-angular",
+    "setupFiles": [
+      "jest-localstorage-mock"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/setupJest.ts"
+    ],
+    "testPathIgnorePatterns": [
+      "src/test.ts"
+    ],
+    "testURL": "http://localhost/",
+    "transformIgnorePatterns": [
+      "node_modules/(?!@ngrx|@ionic-native|@ionic)"
+    ],
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/e2e/"
+    ],
+    "collectCoverageFrom": [
+      "**/*.{ts}",
+      "!**/*d.{ts}",
+      "!**/*interface.{ts}",
+      "!**/*module.{ts}",
+      "!**/*main.{ts}",
+      "!**/node_modules/**"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json"
+    ],
+    "coverageReporters": [
+      "json",
+      "lcov",
+      "text"
+    ],
+    "coverageDirectory": "./public/coverage"
+  },
+  "description": "An Ionic project"
+}

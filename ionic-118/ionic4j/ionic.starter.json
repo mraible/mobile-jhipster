@@ -1,0 +1,110 @@
+{
+  "name": "JHipster Starter",
+  "baseref": "a1abd0df2aaa0ab46c8c6495e1f63e07c4f7c977",
+  "welcome": "Welcome to the \u001b[34m\u001b[1mIonic\u001b[22m\u001b[39m \u001b[32m\u001b[1mJ\u001b[22m\u001b[39m\u001b[31m\u001b[1mHipster\u001b[22m\u001b[39m Starter!\n\nThe Ionic JHipster Starter ships with login and signup that will work with a JHipster backend (with JWT Authentication). \n\nFor more details, please see the project's README: \u001b[1mhttps://github.com/oktadeveloper/ionic-jhipster-starter/blob/master/README.md\u001b[22m",
+  "packageJson": {
+    "scripts": {
+      "start": "ionic serve",
+      "test": "jest",
+      "test:watch": "jest --watch",
+      "test:ci": "jest --runInBand",
+      "test:coverage": "jest --coverage",
+      "e2e": "npm run e2e-update && npm run e2e-test",
+      "e2e-test": "protractor ./e2e/protractor.conf.js",
+      "e2e-update": "node node_modules/webdriver-manager/bin/webdriver-manager update --gecko false"
+    },
+    "dependencies": {
+      "@ionic-native/camera": "5.3.0",
+      "@ngx-translate/core": "11.0.1",
+      "@ngx-translate/http-loader": "4.0.0",
+      "ngx-webstorage": "3.0.2",
+      "ng-jhipster": "0.9.3",
+      "@fortawesome/angular-fontawesome": "^0.3.0",
+      "@fortawesome/fontawesome-svg-core": "^1.2.19",
+      "@fortawesome/free-solid-svg-icons": "^5.9.0",
+      "@ng-bootstrap/ng-bootstrap": "^4.2.1"
+    },
+    "devDependencies": {
+      "generator-jhipster": "^6.0.1",
+      "@types/node": "11.12.2",
+      "@types/jest": "24.0.11",
+      "typescript": "3.1.1",
+      "html-loader": "0.5.5",
+      "ionic-mocks-jest": "1.3.3",
+      "istanbul-instrumenter-loader": "3.0.1",
+      "jasmine": "3.3.1",
+      "jasmine-spec-reporter": "4.2.1",
+      "jest": "24.5.0",
+      "jest-localstorage-mock": "2.4.0",
+      "jest-preset-angular": "7.0.1",
+      "null-loader": "0.1.1",
+      "protractor": "5.4.2",
+      "ts-loader": "5.3.3",
+      "ts-node": "8.0.3",
+      "webdriver-manager": "12.1.5"
+    },
+    "cordova": {
+      "plugins": {
+        "cordova-plugin-camera": {
+          "CAMERA_USAGE_DESCRIPTION": "Need camera access to take pictures",
+          "PHOTOLIBRARY_USAGE_DESCRIPTION": "Need photo library access to get pictures from there"
+        }
+      }
+    },
+    "jest": {
+      "preset": "jest-preset-angular",
+      "setupFiles": [
+        "jest-localstorage-mock"
+      ],
+      "setupFilesAfterEnv": [
+        "<rootDir>/src/setupJest.ts"
+      ],
+      "testPathIgnorePatterns": [
+        "src/test.ts"
+      ],
+      "testURL": "http://localhost/",
+      "transformIgnorePatterns": [
+        "node_modules/(?!@ngrx|@ionic-native|@ionic)"
+      ],
+      "coveragePathIgnorePatterns": [
+        "<rootDir>/e2e/"
+      ],
+      "collectCoverageFrom": [
+        "**/*.{ts}",
+        "!**/*d.{ts}",
+        "!**/*interface.{ts}",
+        "!**/*module.{ts}",
+        "!**/*main.{ts}",
+        "!**/node_modules/**"
+      ],
+      "moduleFileExtensions": [
+        "ts",
+        "js",
+        "json"
+      ],
+      "coverageReporters": [
+        "json",
+        "lcov",
+        "text"
+      ],
+      "coverageDirectory": "./public/coverage"
+    }
+  },
+  "gitignore": [
+    "coverage/",
+    "idea/"
+  ],
+  "tsconfigJson": {
+    "types": ["jest"]
+  },
+  "tarignore": [
+    ".travis.yml",
+    ".sourcemaps",
+    "node_modules",
+    "package-lock.json",
+    "www"
+  ],
+  "scripts": {
+    "test": "npm test"
+  }
+}
