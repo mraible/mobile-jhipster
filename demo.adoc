@@ -47,20 +47,18 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 
   ignite new HealthPoints -b ignite-jhipster
 
-. Rename `HealthPoints` to `mobile-react-native`.
-
-. To run on iOS, cd into `mobile-react-native/ios` and run `pod install`
+. Rename `HealthPoints` to `mobile-react-native`
 
 . In the `mobile-react-native` directory, run `react-native run-ios`
 
+. Add `healthpoints://authorize` as redirect URI in http://localhost:9080/auth/[Keycloak]
+
 . To run on Android, use `react-native run-android`
 
-. For AVD to communicate with your API and Keycloak, you need to add some port mappings
+. For AVD to communicate with your API and Keycloak, add some port mappings
 
   adb reverse tcp:8080 tcp:8080
   adb reverse tcp:9080 tcp:9080
-
-. Add `heathpoints://authorize` as redirect URI in http://localhost:9080/auth/[Keycloak]
 
 . Generate UI screens in React Native app
 
@@ -200,7 +198,7 @@ TIP: To debug React Native, I recommend https://github.com/infinitered/reactotro
 
 . Add `groups` as a claim to the ID token.
 
-. Create `~/.okta.env` and specify the settings for your app; show Okta login
+. Create `~/.okta.env` and specify the settings for your app; run `source ~/.okta.env` and show Okta login
 
   export SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER_URI=https://{yourOktaDomain}/oauth2/default
   export SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_ID=$clientId
