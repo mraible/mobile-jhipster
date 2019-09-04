@@ -23,7 +23,7 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 . Create a `backend` directory and run import-jdl from it:
 
   take backend
-  jhipster import-jdl ../21-points.jh
+  jhipster import-jdl ../21-points.jdl
 
 . Start Docker containers:
 
@@ -62,7 +62,7 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 
 . Generate UI screens in React Native app
 
-  ignite generate import-jdl ../app.jh
+  ignite generate import-jdl ../21-points.jdl
 
 . Open `points-entity-edit-screen.js` and change the `formModel` to use `t.Boolean` for exercise, meals, and alcohol
 
@@ -156,7 +156,7 @@ TIP: To debug React Native, I recommend https://github.com/infinitered/reactotro
 
 . Restart app and show generated entity screens
 
-. Change `points-update.html` to use `<ion-toggle>`
+. Change `points-update.html` to use `<ion-toggle>` (remote position from label, add `slot="start"` to element)
 
 . Modify `points-update.ts` to use booleans for points in the `save()` method
 
