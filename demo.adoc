@@ -18,12 +18,12 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 === Spring Boot API
 
 . Install JHipster: `npm install -g generator-jhipster`
-. Create a new directory to hold all the projects: `mkdir -p mobile-jhipster`
+. Create a new directory to hold all the projects: `mkdir mobile-jhipster`
 . Download https://github.com/jhipster/jdl-samples/blob/master/21-points.jh[21-Points Health JDL] into the root directory.
 . Create a `backend` directory and run import-jdl from it:
 
   take backend
-  jhipster import-jdl ../app.jh
+  jhipster import-jdl ../21-points.jh
 
 . Start Docker containers:
 
