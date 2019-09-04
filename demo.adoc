@@ -23,7 +23,7 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 . Create a `backend` directory and run import-jdl from it:
 
   take backend
-  jhipster import-jdl ../21-points.jdl
+  jhipster import-jdl ../app.jh
 
 . Start Docker containers:
 
@@ -62,7 +62,7 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 
 . Generate UI screens in React Native app
 
-  ignite generate import-jdl ../21-points.jdl
+  ignite generate import-jdl ../app.jh
 
 . Open `points-entity-edit-screen.js` and change the `formModel` to use `t.Boolean` for exercise, meals, and alcohol
 
