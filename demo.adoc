@@ -37,6 +37,63 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 
   ./gradlew -Pprod clean check sonarqube -Dsonar.host.url=http://localhost:9001
 
+=== Ionic 4 App
+
+. Install Ionic CLI and Ionic for JHipster
+
+  npm i -g generator-jhipster-ionic ionic yo
+
+. Create an Ionic app named `mobile-ionic`
+
+  yo jhipster-ionic
+
+. Launch app and log in after running `ionic serve`
+
+. Generate entities
+
+  yo jhipster-ionic:entity points
+  yo jhipster-ionic:entity bloodPressure
+  yo jhipster-ionic:entity weight
+  yo jhipster-ionic:entity preferences
+
+. Restart app and show generated entity screens
+
+. Change `points-update.html` to use `<ion-toggle>` (remote position from label, add `slot="start"` to element)
+
+. Modify `points-update.ts` to use booleans for points in the `save()` method
+
+  const points = this.createFromForm();
+
+  // convert booleans to ints
+  points.exercise = points.exercise ? 1 : 0;
+  points.meals = points.meals ? 1 : 0;
+  points.alcohol = points.alcohol ? 1 : 0;
+
+. Update `points-update.ts` to set defaults in `ngOnInit(()`
+
+  if (this.isNew) {
+    this.points.date = new Date().toISOString().split('T')[0];
+    this.points.alcohol = 1;
+    this.points.exercise = 1;
+    this.points.meals = 1;
+    this.updateForm(this.points);
+  }
+
+. Run app in iOS Simulator
+
+  ionic cordova prepare ios
+  open platforms/ios/MyApp.xcworkspace
+
+. Run app using Android Studio
+
+  ionic cordova prepare android
+  studio platforms/android
+
+. For AVD to communicate with your API and Keycloak, you need to add some port mappings
+
+  adb reverse tcp:8080 tcp:8080
+  adb reverse tcp:9080 tcp:9080
+
 === React Native App
 
 . Install Ignite CLI and Ignite JHipster
@@ -135,63 +192,6 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 
 TIP: To debug React Native, I recommend https://github.com/infinitered/reactotron[Reactotron] and using `console.tron.log()` instead of `console.log()`.
 
-=== Ionic 4 App
-
-. Install Ionic CLI and Ionic for JHipster
-
-  npm i -g generator-jhipster-ionic ionic yo
-
-. Create an Ionic app named `mobile-ionic`
-
-  yo jhipster-ionic
-
-. Launch app and log in after running `ionic serve`
-
-. Generate entities
-
-  yo jhipster-ionic:entity points
-  yo jhipster-ionic:entity bloodPressure
-  yo jhipster-ionic:entity weight
-  yo jhipster-ionic:entity preferences
-
-. Restart app and show generated entity screens
-
-. Change `points-update.html` to use `<ion-toggle>` (remote position from label, add `slot="start"` to element)
-
-. Modify `points-update.ts` to use booleans for points in the `save()` method
-
-  const points = this.createFromForm();
-
-  // convert booleans to ints
-  points.exercise = points.exercise ? 1 : 0;
-  points.meals = points.meals ? 1 : 0;
-  points.alcohol = points.alcohol ? 1 : 0;
-
-. Update `points-update.ts` to set defaults in `ngOnInit(()`
-
-  if (this.isNew) {
-    this.points.date = new Date().toISOString().split('T')[0];
-    this.points.alcohol = 1;
-    this.points.exercise = 1;
-    this.points.meals = 1;
-    this.updateForm(this.points);
-  }
-
-. Run app in iOS Simulator
-
-  ionic cordova prepare ios
-  open platforms/ios/MyApp.xcworkspace
-
-. Run app using Android Studio
-
-  ionic cordova prepare android
-  studio platforms/android
-
-. For AVD to communicate with your API and Keycloak, you need to add some port mappings
-
-  adb reverse tcp:8080 tcp:8080
-  adb reverse tcp:9080 tcp:9080
-
 === Use Okta for Identity
 
 . Create a **Web** application on Okta, add `http://localhost:8080/login/oauth2/code/oidc` as a login redirect URI, and use `http://localhost:8080` as a logout redirect URI
@@ -226,4 +226,4 @@ TIP: To debug React Native, I recommend https://github.com/infinitered/reactotro
 
 . Restart mobile apps and log in with Okta
 
-Source: https://developer.okta.com/blog/2018/10/10/react-native-spring-boot-mobile-app[Build a Mobile App with React Native and Spring Boot] and https://developer.okta.com/blog/2019/06/24/ionic-4-angular-spring-boot-jhipster[Build Mobile Apps with Angular, Ionic 4, and Spring Boot].
+Source: https://developer.okta.com/blog/2019/06/24/ionic-4-angular-spring-boot-jhipster[Build Mobile Apps with Angular, Ionic 4, and Spring Boot] and https://developer.okta.com/blog/2018/10/10/react-native-spring-boot-mobile-app[Build a Mobile App with React Native and Spring Boot].
