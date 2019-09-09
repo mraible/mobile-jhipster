@@ -6,16 +6,10 @@ import { AuthService } from '../../auth.service';
   template: '<p style="margin-left: 10px">Signing out...</p>'
 })
 export class EndSessionPage implements OnInit {
-
-  constructor(
-    private authService: AuthService,
-    private navCtrl: NavController,
-  ) {
-  }
+  constructor(private authService: AuthService, private navCtrl: NavController) {}
 
   ngOnInit() {
     this.authService.EndSessionCallBack();
     this.navCtrl.navigateRoot('login');
   }
-
 }

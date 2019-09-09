@@ -73,7 +73,7 @@ export default (state: WeightState = initialState, action): WeightState => {
         errorMessage: action.payload
       };
     case SUCCESS(ACTION_TYPES.SEARCH_WEIGHTS):
-    case SUCCESS(ACTION_TYPES.FETCH_WEIGHT_LIST):
+    case SUCCESS(ACTION_TYPES.FETCH_WEIGHT_LIST): {
       const links = parseHeaderForLinks(action.payload.headers.link);
 
       return {
@@ -83,6 +83,7 @@ export default (state: WeightState = initialState, action): WeightState => {
         entities: loadMoreDataWhenScrolled(state.entities, action.payload.data, links),
         totalItems: parseInt(action.payload.headers['x-total-count'], 10)
       };
+    }
     case SUCCESS(ACTION_TYPES.FETCH_WEIGHT):
       return {
         ...state,

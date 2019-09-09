@@ -9,15 +9,16 @@ import { NavController } from '@ionic/angular';
   providedIn: 'root'
 })
 export class AuthGuardService implements CanActivate {
-
-  constructor(private authService: AuthService, private navCtrl: NavController) {
-  }
+  constructor(private authService: AuthService, private navCtrl: NavController) {}
 
   public async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
     const authenticated: boolean = await this.authService.authObservable
-      .pipe(skipWhile(action => action.action === AuthActions.Default),
+      .pipe(
+        skipWhile(action => action.action === AuthActions.Default),
         take(1),
-        map((action: IAuthAction) => action.tokenResponse !== undefined)).toPromise();
+        map((action: IAuthAction) => action.tokenResponse !== undefined)
+      )
+      .toPromise();
 
     if (!authenticated) {
       this.navCtrl.navigateRoot('login');

@@ -37,7 +37,7 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 
   ./gradlew -Pprod clean check sonarqube -Dsonar.host.url=http://localhost:9001
 
-=== Ionic 4 App
+=== Ionic App
 
 . Install Ionic CLI and Ionic for JHipster
 
@@ -58,7 +58,7 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 
 . Restart app and show generated entity screens
 
-. Change `points-update.html` to use `<ion-toggle>` (remote position from label, add `slot="start"` to element)
+. Change `points-update.html` to use `<ion-toggle>` (remove `position` from label, add `slot="start"` to element)
 
 . Modify `points-update.ts` to use booleans for points in the `save()` method
 

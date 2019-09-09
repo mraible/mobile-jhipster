@@ -1,9 +1,5 @@
 import { IUser } from 'app/shared/model/user.model';
-
-export const enum Units {
-  KG = 'KG',
-  LB = 'LB'
-}
+import { Units } from 'app/shared/model/enumerations/units.model';
 
 export interface IPreferences {
   id?: number;

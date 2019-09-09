@@ -18,7 +18,6 @@ import reducer, {
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import { IPoints, defaultValue } from 'app/shared/model/points.model';
 
-// tslint:disable no-invalid-template-strings
 describe('Entities reducer tests', () => {
   function isEmpty(element): boolean {
     if (element instanceof Array) {

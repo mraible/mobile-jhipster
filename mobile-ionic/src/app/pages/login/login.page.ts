@@ -11,11 +11,10 @@ import { AuthService } from '../../auth/auth.service';
 export class LoginPage implements OnInit {
   action: IAuthAction;
 
-  constructor(private authService: AuthService, private navCtrl: NavController) {
-  }
+  constructor(private authService: AuthService, private navCtrl: NavController) {}
 
   ngOnInit() {
-    this.authService.authObservable.subscribe((action) => {
+    this.authService.authObservable.subscribe(action => {
       this.action = action;
       if (action.action === AuthActions.SignInSuccess) {
         this.navCtrl.navigateRoot('tabs');

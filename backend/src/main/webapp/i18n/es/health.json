@@ -4,15 +4,16 @@
     "refresh.button": "Refrescar",
     "stacktrace": "Stacktrace",
     "details": {
-      "details": "Details",
-      "properties": "Properties",
-      "name": "Name",
-      "value": "Value",
+      "details": "Detalles",
+      "properties": "Propiedades",
+      "name": "Nombre",
+      "value": "Valor",
       "error": "Error"
     },
     "indicator": {
       "diskSpace": "Espacio en disco",
       "mail": "Email",
+      "ping": "Application",
       "elasticsearch": "Elasticsearch",
       "db": "Database"
     },

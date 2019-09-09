@@ -5,8 +5,8 @@
         "title": "Blood Pressures",
         "createLabel": "Crear nuevo Blood Pressure",
         "createOrEditLabel": "Crear o editar Blood Pressure",
-        "search": "Search for Blood Pressure",
-        "notFound": "No Blood Pressure found"
+        "search": "Buscar Blood Pressure",
+        "notFound": "Ningún Blood Pressures encontrado"
       },
       "created": "Un nuevo Blood Pressure ha sido creado con el identificador {{ param }}",
       "updated": "Un Blood Pressure ha sido actualizado con el identificador {{ param }}",

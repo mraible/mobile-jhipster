@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.okta.developer.domain.enumeration.Units;
 /**
- * Integration tests for the {@Link PreferencesResource} REST controller.
+ * Integration tests for the {@link PreferencesResource} REST controller.
  */
 @SpringBootTest(classes = {HealthPointsApp.class, TestSecurityConfiguration.class})
 public class PreferencesResourceIT {
@@ -124,7 +124,7 @@ public class PreferencesResourceIT {
 
         // Create the Preferences
         restPreferencesMockMvc.perform(post("/api/preferences")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(TestUtil.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(preferences)))
             .andExpect(status().isCreated());
 
@@ -149,7 +149,7 @@ public class PreferencesResourceIT {
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restPreferencesMockMvc.perform(post("/api/preferences")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(TestUtil.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(preferences)))
             .andExpect(status().isBadRequest());
 
@@ -172,7 +172,7 @@ public class PreferencesResourceIT {
         // Create the Preferences, which fails.
 
         restPreferencesMockMvc.perform(post("/api/preferences")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(TestUtil.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(preferences)))
             .andExpect(status().isBadRequest());
 
@@ -190,7 +190,7 @@ public class PreferencesResourceIT {
         // Create the Preferences, which fails.
 
         restPreferencesMockMvc.perform(post("/api/preferences")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(TestUtil.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(preferences)))
             .andExpect(status().isBadRequest());
 
@@ -207,7 +207,7 @@ public class PreferencesResourceIT {
         // Get all the preferencesList
         restPreferencesMockMvc.perform(get("/api/preferences?sort=id,desc"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(preferences.getId().intValue())))
             .andExpect(jsonPath("$.[*].weeklyGoal").value(hasItem(DEFAULT_WEEKLY_GOAL)))
             .andExpect(jsonPath("$.[*].weightUnits").value(hasItem(DEFAULT_WEIGHT_UNITS.toString())));
@@ -222,7 +222,7 @@ public class PreferencesResourceIT {
         // Get the preferences
         restPreferencesMockMvc.perform(get("/api/preferences/{id}", preferences.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(preferences.getId().intValue()))
             .andExpect(jsonPath("$.weeklyGoal").value(DEFAULT_WEEKLY_GOAL))
             .andExpect(jsonPath("$.weightUnits").value(DEFAULT_WEIGHT_UNITS.toString()));
@@ -253,7 +253,7 @@ public class PreferencesResourceIT {
             .weightUnits(UPDATED_WEIGHT_UNITS);
 
         restPreferencesMockMvc.perform(put("/api/preferences")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(TestUtil.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(updatedPreferences)))
             .andExpect(status().isOk());
 
@@ -277,7 +277,7 @@ public class PreferencesResourceIT {
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restPreferencesMockMvc.perform(put("/api/preferences")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(TestUtil.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(preferences)))
             .andExpect(status().isBadRequest());
 
@@ -299,7 +299,7 @@ public class PreferencesResourceIT {
 
         // Delete the preferences
         restPreferencesMockMvc.perform(delete("/api/preferences/{id}", preferences.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
+            .accept(TestUtil.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
@@ -320,24 +320,9 @@ public class PreferencesResourceIT {
         // Search the preferences
         restPreferencesMockMvc.perform(get("/api/_search/preferences?query=id:" + preferences.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(preferences.getId().intValue())))
             .andExpect(jsonPath("$.[*].weeklyGoal").value(hasItem(DEFAULT_WEEKLY_GOAL)))
             .andExpect(jsonPath("$.[*].weightUnits").value(hasItem(DEFAULT_WEIGHT_UNITS.toString())));
-    }
-
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(Preferences.class);
-        Preferences preferences1 = new Preferences();
-        preferences1.setId(1L);
-        Preferences preferences2 = new Preferences();
-        preferences2.setId(preferences1.getId());
-        assertThat(preferences1).isEqualTo(preferences2);
-        preferences2.setId(2L);
-        assertThat(preferences1).isNotEqualTo(preferences2);
-        preferences1.setId(null);
-        assertThat(preferences1).isNotEqualTo(preferences2);
     }
 }

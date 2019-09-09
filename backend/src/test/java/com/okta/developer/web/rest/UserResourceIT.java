@@ -7,45 +7,43 @@ import com.okta.developer.domain.User;
 import com.okta.developer.repository.UserRepository;
 import com.okta.developer.repository.search.UserSearchRepository;
 import com.okta.developer.security.AuthoritiesConstants;
-
-import com.okta.developer.service.UserService;
 import com.okta.developer.service.dto.UserDTO;
 import com.okta.developer.service.mapper.UserMapper;
-import com.okta.developer.web.rest.errors.ExceptionTranslator;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.CacheManager;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.Instant;
 import java.util.*;
+import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Integration tests for the {@link UserResource} REST controller.
  */
+@AutoConfigureMockMvc
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 @SpringBootTest(classes = {HealthPointsApp.class, TestSecurityConfiguration.class})
 public class UserResourceIT {
 
     private static final String DEFAULT_LOGIN = "johndoe";
 
     private static final String DEFAULT_ID = "id1";
-
-    private static final String DEFAULT_PASSWORD = "passjohndoe";
 
     private static final String DEFAULT_EMAIL = "johndoe@localhost";
 
@@ -69,19 +67,7 @@ public class UserResourceIT {
     private UserSearchRepository mockUserSearchRepository;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private UserMapper userMapper;
-
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
 
     @Autowired
     private EntityManager em;
@@ -89,6 +75,7 @@ public class UserResourceIT {
     @Autowired
     private CacheManager cacheManager;
 
+    @Autowired
     private MockMvc restUserMockMvc;
 
     private User user;
@@ -97,13 +84,6 @@ public class UserResourceIT {
     public void setup() {
         cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).clear();
         cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).clear();
-        UserResource userResource = new UserResource(userService, mockUserSearchRepository);
-
-        this.restUserMockMvc = MockMvcBuilders.standaloneSetup(userResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setMessageConverters(jacksonMessageConverter)
-            .build();
     }
 
     /**
@@ -143,7 +123,7 @@ public class UserResourceIT {
         restUserMockMvc.perform(get("/api/users?sort=id,desc")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].login").value(hasItem(DEFAULT_LOGIN)))
             .andExpect(jsonPath("$.[*].firstName").value(hasItem(DEFAULT_FIRSTNAME)))
             .andExpect(jsonPath("$.[*].lastName").value(hasItem(DEFAULT_LASTNAME)))
@@ -164,7 +144,7 @@ public class UserResourceIT {
         // Get the user
         restUserMockMvc.perform(get("/api/users/{login}", user.getLogin()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.login").value(user.getLogin()))
             .andExpect(jsonPath("$.firstName").value(DEFAULT_FIRSTNAME))
             .andExpect(jsonPath("$.lastName").value(DEFAULT_LASTNAME))
@@ -186,10 +166,10 @@ public class UserResourceIT {
     @Transactional
     public void getAllAuthorities() throws Exception {
         restUserMockMvc.perform(get("/api/users/authorities")
-            .accept(TestUtil.APPLICATION_JSON_UTF8)
-            .contentType(TestUtil.APPLICATION_JSON_UTF8))
+            .accept(TestUtil.APPLICATION_JSON)
+            .contentType(TestUtil.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$").value(hasItems(AuthoritiesConstants.USER, AuthoritiesConstants.ADMIN)));
     }
@@ -292,5 +272,9 @@ public class UserResourceIT {
         authorityB.setName(AuthoritiesConstants.USER);
         assertThat(authorityA).isEqualTo(authorityB);
         assertThat(authorityA.hashCode()).isEqualTo(authorityB.hashCode());
+    }
+
+    private void assertPersistedUsers(Consumer<List<User>> userAssertion) {
+        userAssertion.accept(userRepository.findAll());
     }
 }

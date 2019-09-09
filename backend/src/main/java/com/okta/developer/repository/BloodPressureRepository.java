@@ -1,6 +1,7 @@
 package com.okta.developer.repository;
 
 import com.okta.developer.domain.BloodPressure;
+
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 

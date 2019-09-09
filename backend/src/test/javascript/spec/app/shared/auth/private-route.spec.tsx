@@ -41,7 +41,6 @@ describe('private-route component', () => {
     const renderedRoute = route.find(Route);
     expect(renderedRoute.length).toEqual(1);
     expect(renderedRoute.props().path).toEqual('/');
-    // tslint:disable-next-line:no-unused-expression
     expect(renderedRoute.props().render).toBeDefined();
     const renderFn: Function = renderedRoute.props().render;
     const comp = shallow(
@@ -73,7 +72,7 @@ describe('private-route component', () => {
 
 describe('hasAnyAuthority', () => {
   // All tests will go here
-  it('Should return false when authorities is invlaid', () => {
+  it('Should return false when authorities is invalid', () => {
     expect(hasAnyAuthority(undefined, undefined)).toEqual(false);
     expect(hasAnyAuthority(null, [])).toEqual(false);
     expect(hasAnyAuthority([], [])).toEqual(false);
@@ -92,7 +91,7 @@ describe('hasAnyAuthority', () => {
     expect(hasAnyAuthority(['ROLE_USER', 'ROLE_ADMIN'], ['ROLE_ADMIN'])).toEqual(true);
   });
 
-  it('Should return false when authorities is valid and hasAnyAuthorities does not contains an authority', () => {
+  it('Should return false when authorities is valid and hasAnyAuthorities does not contain an authority', () => {
     expect(hasAnyAuthority(['ROLE_USER'], ['ROLE_ADMIN'])).toEqual(false);
     expect(hasAnyAuthority(['ROLE_USER', 'ROLE_ADMIN'], ['ROLE_USERSS'])).toEqual(false);
     expect(hasAnyAuthority(['ROLE_USER', 'ROLE_ADMIN'], ['ROLEUSER', 'ROLEADMIN'])).toEqual(false);

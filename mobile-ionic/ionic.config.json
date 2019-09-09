@@ -1,7 +1,5 @@
 {
   "name": "mobile-ionic",
-  "integrations": {
-    "cordova": {}
-  },
+  "integrations": {},
   "type": "angular"
 }

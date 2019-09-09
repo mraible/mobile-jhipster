@@ -40,7 +40,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * Integration tests for the {@Link BloodPressureResource} REST controller.
+ * Integration tests for the {@link BloodPressureResource} REST controller.
  */
 @SpringBootTest(classes = {HealthPointsApp.class, TestSecurityConfiguration.class})
 public class BloodPressureResourceIT {
@@ -135,7 +135,7 @@ public class BloodPressureResourceIT {
 
         // Create the BloodPressure
         restBloodPressureMockMvc.perform(post("/api/blood-pressures")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(TestUtil.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(bloodPressure)))
             .andExpect(status().isCreated());
 
@@ -161,7 +161,7 @@ public class BloodPressureResourceIT {
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restBloodPressureMockMvc.perform(post("/api/blood-pressures")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(TestUtil.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(bloodPressure)))
             .andExpect(status().isBadRequest());
 
@@ -184,7 +184,7 @@ public class BloodPressureResourceIT {
         // Create the BloodPressure, which fails.
 
         restBloodPressureMockMvc.perform(post("/api/blood-pressures")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(TestUtil.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(bloodPressure)))
             .andExpect(status().isBadRequest());
 
@@ -202,7 +202,7 @@ public class BloodPressureResourceIT {
         // Create the BloodPressure, which fails.
 
         restBloodPressureMockMvc.perform(post("/api/blood-pressures")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(TestUtil.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(bloodPressure)))
             .andExpect(status().isBadRequest());
 
@@ -220,7 +220,7 @@ public class BloodPressureResourceIT {
         // Create the BloodPressure, which fails.
 
         restBloodPressureMockMvc.perform(post("/api/blood-pressures")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(TestUtil.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(bloodPressure)))
             .andExpect(status().isBadRequest());
 
@@ -237,7 +237,7 @@ public class BloodPressureResourceIT {
         // Get all the bloodPressureList
         restBloodPressureMockMvc.perform(get("/api/blood-pressures?sort=id,desc"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(bloodPressure.getId().intValue())))
             .andExpect(jsonPath("$.[*].timestamp").value(hasItem(sameInstant(DEFAULT_TIMESTAMP))))
             .andExpect(jsonPath("$.[*].systolic").value(hasItem(DEFAULT_SYSTOLIC)))
@@ -253,7 +253,7 @@ public class BloodPressureResourceIT {
         // Get the bloodPressure
         restBloodPressureMockMvc.perform(get("/api/blood-pressures/{id}", bloodPressure.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(bloodPressure.getId().intValue()))
             .andExpect(jsonPath("$.timestamp").value(sameInstant(DEFAULT_TIMESTAMP)))
             .andExpect(jsonPath("$.systolic").value(DEFAULT_SYSTOLIC))
@@ -286,7 +286,7 @@ public class BloodPressureResourceIT {
             .diastolic(UPDATED_DIASTOLIC);
 
         restBloodPressureMockMvc.perform(put("/api/blood-pressures")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(TestUtil.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(updatedBloodPressure)))
             .andExpect(status().isOk());
 
@@ -311,7 +311,7 @@ public class BloodPressureResourceIT {
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restBloodPressureMockMvc.perform(put("/api/blood-pressures")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(TestUtil.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(bloodPressure)))
             .andExpect(status().isBadRequest());
 
@@ -333,7 +333,7 @@ public class BloodPressureResourceIT {
 
         // Delete the bloodPressure
         restBloodPressureMockMvc.perform(delete("/api/blood-pressures/{id}", bloodPressure.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
+            .accept(TestUtil.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
@@ -354,25 +354,10 @@ public class BloodPressureResourceIT {
         // Search the bloodPressure
         restBloodPressureMockMvc.perform(get("/api/_search/blood-pressures?query=id:" + bloodPressure.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(bloodPressure.getId().intValue())))
             .andExpect(jsonPath("$.[*].timestamp").value(hasItem(sameInstant(DEFAULT_TIMESTAMP))))
             .andExpect(jsonPath("$.[*].systolic").value(hasItem(DEFAULT_SYSTOLIC)))
             .andExpect(jsonPath("$.[*].diastolic").value(hasItem(DEFAULT_DIASTOLIC)));
-    }
-
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(BloodPressure.class);
-        BloodPressure bloodPressure1 = new BloodPressure();
-        bloodPressure1.setId(1L);
-        BloodPressure bloodPressure2 = new BloodPressure();
-        bloodPressure2.setId(bloodPressure1.getId());
-        assertThat(bloodPressure1).isEqualTo(bloodPressure2);
-        bloodPressure2.setId(2L);
-        assertThat(bloodPressure1).isNotEqualTo(bloodPressure2);
-        bloodPressure1.setId(null);
-        assertThat(bloodPressure1).isNotEqualTo(bloodPressure2);
     }
 }

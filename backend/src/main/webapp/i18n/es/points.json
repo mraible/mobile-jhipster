@@ -5,8 +5,8 @@
         "title": "Points",
         "createLabel": "Crear nuevo Points",
         "createOrEditLabel": "Crear o editar Points",
-        "search": "Search for Points",
-        "notFound": "No Points found"
+        "search": "Buscar Points",
+        "notFound": "Ningún Points encontrado"
       },
       "created": "Un nuevo Points ha sido creado con el identificador {{ param }}",
       "updated": "Un Points ha sido actualizado con el identificador {{ param }}",
