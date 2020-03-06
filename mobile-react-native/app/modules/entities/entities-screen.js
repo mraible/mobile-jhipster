@@ -6,6 +6,10 @@ import { connect } from 'react-redux'
 import RoundedButton from '../../shared/components/rounded-button/rounded-button'
 import {
   loginScreen,
+  pointEntityScreen,
+  bloodPressureEntityScreen,
+  weightEntityScreen,
+  preferenceEntityScreen,
   // ignite-jhipster-entity-screen-import-needle
 } from '../../navigation/layouts'
 /* eslint-enable */
@@ -17,6 +21,10 @@ class EntitiesScreen extends React.Component {
     return (
       <ScrollView style={styles.container}>
         <Text style={styles.centerText}>JHipster Entities will appear below</Text>
+        <RoundedButton text="Point" onPress={pointEntityScreen} testID="pointEntityScreenButton" />
+        <RoundedButton text="BloodPressure" onPress={bloodPressureEntityScreen} testID="bloodPressureEntityScreenButton" />
+        <RoundedButton text="Weight" onPress={weightEntityScreen} testID="weightEntityScreenButton" />
+        <RoundedButton text="Preference" onPress={preferenceEntityScreen} testID="preferenceEntityScreenButton" />
         {/* ignite-jhipster-entity-screen-needle */}
       </ScrollView>
     )

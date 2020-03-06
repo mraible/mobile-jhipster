@@ -108,8 +108,6 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 
 . In the `mobile-react-native` directory, run `react-native run-ios`
 
-. Add `healthpoints://authorize` as redirect URI in http://localhost:9080/auth/[Keycloak]
-
 . To run on Android, use `react-native run-android`
 
 . For AVD to communicate with your API and Keycloak, add some port mappings
