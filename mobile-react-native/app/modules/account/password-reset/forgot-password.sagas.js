@@ -3,7 +3,7 @@ import { call, put } from 'redux-saga/effects'
 import ForgotPasswordActions from './forgot-password.reducer'
 
 // attempts to request a password reset
-export function * forgotPassword (api, { email }) {
+export function* forgotPassword(api, { email }) {
   const response = yield call(api.forgotPassword, email)
   // success?
   if (response.ok) {
@@ -11,6 +11,8 @@ export function * forgotPassword (api, { email }) {
     yield put(ForgotPasswordActions.forgotPasswordSuccess(response.data))
   } else {
     console.tron.log('ForgotPassword - FAIL')
-    yield put(ForgotPasswordActions.forgotPasswordFailure('WRONG'))
+    yield put(
+      ForgotPasswordActions.forgotPasswordFailure((response.data && response.data.title) || 'Something when wrong resetting your password'),
+    )
   }
 }

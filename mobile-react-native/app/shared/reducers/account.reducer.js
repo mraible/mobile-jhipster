@@ -8,7 +8,7 @@ const { Types, Creators } = createActions({
   accountFailure: ['error'],
   accountUpdateRequest: ['account'],
   accountUpdateSuccess: [],
-  accountUpdateFailure: ['error']
+  accountUpdateFailure: ['error'],
 })
 
 export const AccountTypes = Types
@@ -20,13 +20,13 @@ export const INITIAL_STATE = Immutable({
   account: null,
   error: null,
   fetching: false,
-  updating: false
+  updating: false,
 })
 
 /* ------------- Reducers ------------- */
 
 // we're attempting to account
-export const request = (state) => state.merge({ fetching: true })
+export const request = state => state.merge({ fetching: true })
 
 // we've successfully logged in
 export const success = (state, data) => {
@@ -38,10 +38,10 @@ export const success = (state, data) => {
 export const failure = (state, { error }) => state.merge({ fetching: false, updating: false, account: null, error })
 
 // we're attempting to updating account settings
-export const updateRequest = (state) => state.merge({ updating: true })
+export const updateRequest = state => state.merge({ updating: true })
 
 // we've successfully updated the account settings
-export const updateSuccess = (state) => state.merge({ error: null, updating: false })
+export const updateSuccess = state => state.merge({ error: null, updating: false })
 
 // we've had a problem updating the account settings
 export const updateFailure = (state, { error }) => state.merge({ updating: false, error })
@@ -54,11 +54,11 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.ACCOUNT_FAILURE]: failure,
   [Types.ACCOUNT_UPDATE_REQUEST]: updateRequest,
   [Types.ACCOUNT_UPDATE_SUCCESS]: updateSuccess,
-  [Types.ACCOUNT_UPDATE_FAILURE]: updateFailure
+  [Types.ACCOUNT_UPDATE_FAILURE]: updateFailure,
 })
 
 /* ------------- Selectors ------------- */
 // Is the current user logged in?
 export const isLoggedIn = accountState => accountState.account !== null
 
-export const getLogin = accountState => accountState.account !== null ? accountState.account.login : 'anonymousUser'
+export const getLogin = accountState => (accountState.account !== null ? accountState.account.login : 'anonymousUser')

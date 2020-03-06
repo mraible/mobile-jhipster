@@ -4,7 +4,7 @@ import AccountActions from '../reducers/account.reducer'
 import { callApi } from './call-api.saga'
 
 // attempts to account
-export function * getAccount (api) {
+export function* getAccount(api) {
   const response = yield call(api.getAccount)
 
   // success?
@@ -13,12 +13,12 @@ export function * getAccount (api) {
     yield put(AccountActions.accountSuccess(response.data))
   } else {
     console.tron.log('Account - FAIL')
-    yield put(AccountActions.accountFailure('WRONG'))
+    yield put(AccountActions.accountFailure((response.data && response.data.detail) || 'Failed to get account'))
   }
 }
 
 // attempts to update account settings
-export function * updateAccount (api, action) {
+export function* updateAccount(api, action) {
   const { account } = action
   const apiCall = call(api.updateAccount, account)
   const response = yield call(callApi, apiCall)
@@ -29,6 +29,6 @@ export function * updateAccount (api, action) {
     yield put(AccountActions.accountUpdateSuccess())
   } else {
     console.tron.log('AccountUpdate - FAIL')
-    yield put(AccountActions.accountUpdateFailure('WRONG'))
+    yield put(AccountActions.accountUpdateFailure((response.data && response.data.detail) || 'Failed to update account'))
   }
 }

@@ -5,7 +5,7 @@ import LoginActions from '../../../../app/modules/login/login.reducer'
 import AccountActions from '../../../../app/shared/reducers/account.reducer'
 import AppStateActions from '../../../../app/shared/reducers/app-state.reducer'
 
-const stepper = (fn) => (mock) => fn.next(mock).value
+const stepper = fn => mock => fn.next(mock).value
 
 test('calls the right actions on startup', () => {
   const step = stepper(startup())

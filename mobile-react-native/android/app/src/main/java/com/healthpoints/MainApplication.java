@@ -1,23 +1,19 @@
 package com.healthpoints;
 
 import android.app.Application;
+import android.content.Context;
 
+import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
-import com.rnappauth.RNAppAuthPackage;
-import com.psykar.cookiemanager.CookieManagerPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
-import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.facebook.react.bridge.JavaScriptExecutorFactory;
+import java.util.List;
 
 import com.reactnativenavigation.NavigationApplication;
 import com.reactnativenavigation.react.NavigationReactNativeHost;
 import com.reactnativenavigation.react.ReactGateway;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class MainApplication extends NavigationApplication {
   @Override
@@ -36,17 +32,16 @@ public class MainApplication extends NavigationApplication {
     return BuildConfig.DEBUG;
   }
 
+  protected List<ReactPackage> getPackages() {
+    @SuppressWarnings("UnnecessaryLocalVariable")
+    List<ReactPackage> packages = new PackageList(this).getPackages();
+    // Packages that cannot be autolinked yet can be added manually here, for example:
+    // packages.add(new MyReactNativePackage());
+    return packages;
+  }
+
   @Override
   public List<ReactPackage> createAdditionalReactPackages() {
     return getPackages();
-  }
-
-  protected List<ReactPackage> getPackages() {
-    return Arrays.<ReactPackage>asList(
-        new MainReactPackage(),
-            new RNAppAuthPackage(),
-            new CookieManagerPackage(),
-            new VectorIconsPackage()
-    );
   }
 }

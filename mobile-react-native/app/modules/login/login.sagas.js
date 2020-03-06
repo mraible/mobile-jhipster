@@ -7,9 +7,9 @@ import LoginActions from './login.reducer'
 import AccountActions from '../../shared/reducers/account.reducer'
 import AppConfig from '../../config/app-config'
 
-export const selectAuthToken = (state) => state.login.authToken
+export const selectAuthToken = state => state.login.authToken
 // attempts to login
-export function * login (api) {
+export function* login(api) {
   // get the oauth issuer information from the backend
   const authInfo = yield call(api.getOauthInfo)
   if (authInfo.ok) {
@@ -18,7 +18,7 @@ export function * login (api) {
       issuer,
       clientId,
       scopes: ['openid', 'profile', 'email', 'address', 'phone', 'offline_access'],
-      redirectUrl: `${AppConfig.appUrlScheme}://authorize`
+      redirectUrl: `${AppConfig.appUrlScheme}://authorize`,
     }
     if (__DEV__ && Platform.OS === 'android') {
       // this allows connections to a keycloak instance using http:// in dev
@@ -34,15 +34,15 @@ export function * login (api) {
       yield put({ type: 'RELOGIN_OK' })
     } catch (error) {
       console.tron.log(error)
-      yield put(LoginActions.loginFailure('WRONG'))
+      yield put(LoginActions.loginFailure('Login failed'))
     }
   } else {
-    yield put(LoginActions.loginFailure('WRONG'))
+    yield put(LoginActions.loginFailure((authInfo.data && authInfo.data.detail) || 'Could not connect to OAuth2 Provider'))
   }
 }
 
 // attempts to logout
-export function * logout (api) {
+export function* logout(api) {
   yield CookieManager.clearAll()
   yield call(api.removeAuthToken)
   yield put(AccountActions.accountRequest())
@@ -50,7 +50,7 @@ export function * logout (api) {
   yield put({ type: 'RELOGIN_ABORT' })
 }
 // loads the login
-export function * loginLoad (api) {
+export function* loginLoad(api) {
   const authToken = yield select(selectAuthToken)
   // only set the token if we have it
   if (authToken) {

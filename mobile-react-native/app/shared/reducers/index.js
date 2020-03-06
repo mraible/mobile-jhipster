@@ -9,16 +9,12 @@ import ReduxPersist from '../../config/redux-persist'
 export const reducers = combineReducers({
   appState: require('./app-state.reducer').reducer,
   users: require('./user.reducer').reducer,
-  points: require('../../modules/entities/points/points.reducer').reducer,
-  bloodPressures: require('../../modules/entities/blood-pressure/blood-pressure.reducer').reducer,
-  weights: require('../../modules/entities/weight/weight.reducer').reducer,
-  preferences: require('../../modules/entities/preferences/preferences.reducer').reducer,
   // ignite-jhipster-redux-store-import-needle
   account: require('./account.reducer').reducer,
   login: require('../../modules/login/login.reducer').reducer,
   register: require('../../modules/account/register/register.reducer').reducer,
   changePassword: require('../../modules/account/password/change-password.reducer').reducer,
-  forgotPassword: require('../../modules/account/password-reset/forgot-password.reducer').reducer
+  forgotPassword: require('../../modules/account/password-reset/forgot-password.reducer').reducer,
 })
 
 export default () => {

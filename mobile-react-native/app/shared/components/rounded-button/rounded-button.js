@@ -9,15 +9,15 @@ export default class RoundedButton extends React.Component {
     text: PropTypes.string,
     children: PropTypes.string,
     navigator: PropTypes.object,
-    testID: PropTypes.string
+    testID: PropTypes.string,
   }
 
-  getText () {
+  getText() {
     const buttonText = this.props.text || this.props.children || ''
     return buttonText.toUpperCase()
   }
 
-  render () {
+  render() {
     return (
       <TouchableOpacity testID={this.props.testID} style={styles.button} onPress={this.props.onPress}>
         <Text style={styles.buttonText}>{this.getText()}</Text>

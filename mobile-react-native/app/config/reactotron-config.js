@@ -2,15 +2,16 @@ import Immutable from 'seamless-immutable'
 import Reactotron from 'reactotron-react-native'
 import { reactotronRedux as reduxPlugin } from 'reactotron-redux'
 import sagaPlugin from 'reactotron-redux-saga'
+import AsyncStorage from '@react-native-community/async-storage'
 
 import Config from './debug-config'
 
 if (Config.useReactotron) {
-  Reactotron
-    .configure({
-      // host: '10.0.3.2' // default is localhost (on android don't forget to `adb reverse tcp:9090 tcp:9090`)
-      name: 'Ignite JHipster App' // would you like to see your app's name?,
-    })
+  Reactotron.configure({
+    // host: '10.0.3.2' // default is localhost (on android don't forget to `adb reverse tcp:9090 tcp:9090`)
+    name: 'Ignite JHipster App', // would you like to see your app's name?,
+  })
+    .setAsyncStorageHandler(AsyncStorage)
     .useReactNative({ asyncStorage: false })
     .use(reduxPlugin({ onRestore: Immutable }))
     .use(sagaPlugin())
@@ -37,6 +38,6 @@ if (Config.useReactotron) {
     error: noop,
     warn: noop,
     image: noop,
-    reportError: noop
+    reportError: noop,
   }
 }

@@ -11,17 +11,19 @@ export default class AlertMessage extends React.Component {
     title: PropTypes.string,
     icon: PropTypes.string,
     style: PropTypes.object,
-    show: PropTypes.bool
+    show: PropTypes.bool,
   }
 
-  render () {
-    let messageComponent = null
+  render() {
+    const messageComponent = null
     if (this.props.show) {
       const { title } = this.props
       return (
         <View style={[styles.container, this.props.style]}>
           <View style={styles.contentContainer}>
-            <Text allowFontScaling={false} style={styles.message}>{title && title.toUpperCase()}</Text>
+            <Text allowFontScaling={false} style={styles.message}>
+              {title && title.toUpperCase()}
+            </Text>
           </View>
         </View>
       )

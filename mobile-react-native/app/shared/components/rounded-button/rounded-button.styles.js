@@ -9,13 +9,13 @@ export default StyleSheet.create({
     marginHorizontal: Metrics.section,
     marginVertical: Metrics.baseMargin,
     backgroundColor: Colors.fire,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   buttonText: {
     color: Colors.snow,
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: Fonts.size.medium,
-    marginVertical: Metrics.baseMargin
-  }
+    marginVertical: Metrics.baseMargin,
+  },
 })

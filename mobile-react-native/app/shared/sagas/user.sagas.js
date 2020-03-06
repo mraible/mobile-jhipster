@@ -2,7 +2,7 @@ import { call, put } from 'redux-saga/effects'
 import UserActions from '../reducers/user.reducer'
 import { callApi } from './call-api.saga'
 
-export function * getUser (api, action) {
+export function* getUser(api, action) {
   const { userId } = action
   // make the call to the api
   const apiCall = call(api.getUser, userId)
@@ -16,7 +16,7 @@ export function * getUser (api, action) {
   }
 }
 
-export function * getUsers (api, action) {
+export function* getUsers(api, action) {
   const { options } = action
   // make the call to the api
   const apiCall = call(api.getUsers, options)
@@ -30,7 +30,7 @@ export function * getUsers (api, action) {
   }
 }
 
-export function * updateUser (api, action) {
+export function* updateUser(api, action) {
   const { user } = action
   // make the call to the api
   const idIsNotNull = !!user.id
@@ -45,7 +45,7 @@ export function * updateUser (api, action) {
   }
 }
 
-export function * deleteUser (api, action) {
+export function* deleteUser(api, action) {
   const { userId } = action
   // make the call to the api
   const apiCall = call(api.deleteUser, userId)

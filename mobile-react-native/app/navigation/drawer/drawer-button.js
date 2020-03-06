@@ -7,10 +7,10 @@ class DrawerButton extends React.Component {
   static propTypes = {
     text: PropTypes.string,
     onPress: PropTypes.func,
-    testID: PropTypes.string
+    testID: PropTypes.string,
   }
 
-  render () {
+  render() {
     return (
       <TouchableOpacity testID={this.props.testID} onPress={this.props.onPress}>
         <Text style={styles.text}>{this.props.text}</Text>

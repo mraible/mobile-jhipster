@@ -6,7 +6,7 @@ import renderer from 'react-test-renderer'
 import RoundedButton from '../../../../../app/shared/components/rounded-button/rounded-button'
 
 test('RoundedButton component renders correctly', () => {
-  const tree = renderer.create(<RoundedButton onPress={() => {}} text='howdy' />).toJSON()
+  const tree = renderer.create(<RoundedButton onPress={() => {}} text="howdy" />).toJSON()
   expect(tree).toMatchSnapshot()
 })
 
@@ -23,7 +23,7 @@ test('RoundedButton component with no content prop renders correctly', () => {
 test('onPress', () => {
   let i = 0
   const onPress = () => i++
-  const wrapperPress = shallow(<RoundedButton onPress={onPress} text='hi' />)
+  const wrapperPress = shallow(<RoundedButton onPress={onPress} text="hi" />)
 
   expect(wrapperPress.prop('onPress')).toBe(onPress) // the component's onPress uses the right handler
   expect(i).toBe(0)

@@ -5,14 +5,14 @@ import { login, logout, loginLoad, selectAuthToken } from '../../../../app/modul
 import LoginActions from '../../../../app/modules/login/login.reducer'
 import AccountActions from '../../../../app/shared/reducers/account.reducer'
 
-const stepper = (fn) => (mock) => fn.next(mock).value
+const stepper = fn => mock => fn.next(mock).value
 
 test('login success path', () => {
   const oauthInfo = FixtureAPI.getOauthInfo()
   const step = stepper(login(FixtureAPI, oauthInfo))
   const sampleOauthResponse = {
     accessToken: 'test-access-token',
-    refreshToken: 'test-refresh-token'
+    refreshToken: 'test-refresh-token',
   }
   expect(step(oauthInfo)).toEqual(call(FixtureAPI.getOauthInfo))
   // await the response from the oauth2 issuer
@@ -32,7 +32,7 @@ test('login failure path', () => {
 
   // set response.ok to false as if the oauth issuer is down
   response.ok = false
-  expect(step(response)).toEqual(put(LoginActions.loginFailure('WRONG')))
+  expect(step(response)).toEqual(put(LoginActions.loginFailure('Could not connect to OAuth2 Provider')))
 })
 test('login load path with no token', () => {
   const step = stepper(loginLoad(FixtureAPI))

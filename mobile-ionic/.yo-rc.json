@@ -1,0 +1,7 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "backendPath": "../backend"
+    }
+  }
+}

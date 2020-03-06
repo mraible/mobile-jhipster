@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { ScrollView, Image, BackHandler } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 
-import { entitiesScreen } from '../layouts'
+import { entitiesScreen, storybookScreen } from '../layouts'
 import { connect } from 'react-redux'
 
 import styles from './drawer-content.styles'
@@ -13,22 +13,22 @@ import LoginActions from '../../modules/login/login.reducer'
 import { isLoggedIn } from '../../shared/reducers/account.reducer'
 
 class DrawerContent extends Component {
-  constructor (context, props) {
+  constructor(context, props) {
     super(context, props)
     Navigation.events().bindComponent(this)
   }
 
-  hideSideMenu () {
+  hideSideMenu() {
     Navigation.mergeOptions(this.props.componentId, {
       sideMenu: {
         left: {
-          visible: false
-        }
-      }
+          visible: false,
+        },
+      },
     })
   }
 
-  componentDidMount () {
+  componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', () => {
       this.hideSideMenu()
     })
@@ -46,35 +46,43 @@ class DrawerContent extends Component {
     this.hideSideMenu()
     this.props.logout()
   }
+  handlePressStorybook = () => {
+    this.hideSideMenu()
+    storybookScreen()
+  }
 
-  render () {
+  render() {
     return (
       <ScrollView style={styles.container}>
-        <Image testID='drawerLogo' source={Images.logoJhipster} style={styles.logo} />
-        {!this.props.loggedIn && (<DrawerButton testID='loginDrawerButton' text='Login' onPress={this.handlePressLogin} />)}
+        <Image testID="drawerLogo" source={Images.logoJhipster} style={styles.logo} />
+        {!this.props.loggedIn && <DrawerButton testID="loginDrawerButton" text="Login" onPress={this.handlePressLogin} />}
 
-        {this.props.loggedIn && (<DrawerButton testID='entitiesDrawerButton' text='Entities' onPress={this.handlePressEntities} />)}
-        {this.props.loggedIn && (<DrawerButton testID='logoutDrawerButton' text='Logout' onPress={this.handlePressLogout} />)}
+        {this.props.loggedIn && <DrawerButton testID="entitiesDrawerButton" text="Entities" onPress={this.handlePressEntities} />}
+        {this.props.loggedIn && <DrawerButton testID="logoutDrawerButton" text="Logout" onPress={this.handlePressLogout} />}
+        {__DEV__ && <DrawerButton testID="storybookDrawerButton" text="Storybook" onPress={this.handlePressStorybook} />}
       </ScrollView>
     )
   }
 }
 
 DrawerContent.contextTypes = {
-  drawer: PropTypes.object
+  drawer: PropTypes.object,
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
-    loggedIn: isLoggedIn(state.account)
+    loggedIn: isLoggedIn(state.account),
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     login: () => dispatch(LoginActions.loginRequest()),
-    logout: () => dispatch(LoginActions.logoutRequest())
+    logout: () => dispatch(LoginActions.logoutRequest()),
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DrawerContent)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(DrawerContent)

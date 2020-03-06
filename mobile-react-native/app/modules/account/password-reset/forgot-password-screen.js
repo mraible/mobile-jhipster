@@ -8,75 +8,68 @@ import t from 'tcomb-form-native'
 import ForgotPasswordActions from './forgot-password.reducer'
 import styles from './forgot-password-screen.styles'
 
-let Form = t.form.Form
+const Form = t.form.Form
 
 class ForgotPasswordScreen extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     Navigation.events().bindComponent(this)
     this.state = {
       formModel: t.struct({
-        email: t.String
+        email: t.String,
       }),
       formValue: this.props.forgotPassword,
       formOptions: {
         email: {
           returnKeyType: 'done',
-          onSubmitEditing: () => this.submitForm()
-        }
+          onSubmitEditing: () => this.submitForm(),
+        },
       },
-      success: false
     }
     this.submitForm = this.submitForm.bind(this)
     this.formChange = this.formChange.bind(this)
   }
 
-  submitForm () {
-    this.setState({
-      success: false
-    })
+  submitForm() {
     // call getValue() to get the values of the form
-    const value = this.refs.form.getValue()
-    if (value) { // if validation fails, value will be null
+    const value = this.form.getValue()
+    if (value) {
+      // if validation fails, value will be null
       this.props.resetPassword(value.email)
     }
   }
 
-  componentWillReceiveProps (newProps) {
-    // Did the update attempt complete?
-    if (!newProps.fetching) {
-      if (newProps.error) {
-        if (newProps.error === 'WRONG') {
-          Alert.alert('Error', 'Something when wrong resetting your password', [{ text: 'OK' }])
-        }
+  componentDidUpdate(prevProps) {
+    if (prevProps.fetching && !this.props.fetching) {
+      if (this.props.error) {
+        Alert.alert('Error', this.props.error, [{ text: 'OK' }])
       } else {
-        this.setState({
-          success: true
-        })
         Alert.alert('Success', 'Password reset email sent', [{ text: 'OK' }])
         Navigation.popToRoot(this.props.componentId)
       }
     }
   }
 
-  formChange (newValue) {
+  formChange(newValue) {
     this.setState({
-      formValue: newValue
+      formValue: newValue,
     })
   }
 
-  render () {
+  render() {
     return (
       <KeyboardAwareScrollView>
         <ScrollView style={styles.container}>
           <Form
-            ref='form'
+            ref={c => {
+              this.form = c
+            }}
             type={this.state.formModel}
             options={this.state.formOptions}
             value={this.state.formValue}
             onChange={this.formChange}
           />
-          <TouchableHighlight style={styles.button} onPress={this.submitForm} underlayColor='#99d9f4'>
+          <TouchableHighlight style={styles.button} onPress={this.submitForm} underlayColor="#99d9f4">
             <Text style={styles.buttonText}>Reset</Text>
           </TouchableHighlight>
         </ScrollView>
@@ -85,17 +78,20 @@ class ForgotPasswordScreen extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     fetching: state.forgotPassword.fetching,
-    error: state.forgotPassword.error
+    error: state.forgotPassword.error,
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    resetPassword: (email) => dispatch(ForgotPasswordActions.forgotPasswordRequest(email))
+    resetPassword: email => dispatch(ForgotPasswordActions.forgotPasswordRequest(email)),
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ForgotPasswordScreen)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ForgotPasswordScreen)

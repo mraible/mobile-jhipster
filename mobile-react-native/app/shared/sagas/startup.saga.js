@@ -4,14 +4,14 @@ import LoginActions from '../../modules/login/login.reducer'
 import AccountActions from '../reducers/account.reducer'
 
 // process STARTUP actions
-export function * startup (action) {
+export function* startup(action) {
   if (__DEV__ && console.tron) {
     // straight-up string logging
-    console.tron.log('Hello, I\'m an example of how to log via Reactotron.')
+    console.tron.log("Hello, I'm an example of how to log via Reactotron.")
 
     // logging an object for better clarity
     console.tron.log({
-      message: 'pass objects for better logging'
+      message: 'pass objects for better logging',
     })
 
     // fully customized!
@@ -23,8 +23,8 @@ export function * startup (action) {
       value: {
         '💃': 'Welcome to the future!',
         subObject,
-        someGeneratorFunction: startup
-      }
+        someGeneratorFunction: startup,
+      },
     })
   }
 

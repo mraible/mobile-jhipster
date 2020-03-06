@@ -4,7 +4,7 @@ import FixtureAPI from '../../../../../app/shared/services/fixture-api'
 import { register } from '../../../../../app/modules/account/register/register.sagas'
 import RegisterActions from '../../../../../app/modules/account/register/register.reducer'
 
-const stepper = (fn) => (mock) => fn.next(mock).value
+const stepper = fn => mock => fn.next(mock).value
 
 test('register success path', () => {
   const response = FixtureAPI.register({ user: 'user' })
@@ -21,5 +21,5 @@ test('register failure path', () => {
   // Call the API with a failing registration
   expect(step({ user: 'user-bad-bad' })).toEqual(call(FixtureAPI.register, 'user-bad'))
   // Finish the saga with failure
-  expect(step(response)).toEqual(put(RegisterActions.registerFailure(response.data)))
+  expect(step(response)).toEqual(put(RegisterActions.registerFailure(response.data.title)))
 })

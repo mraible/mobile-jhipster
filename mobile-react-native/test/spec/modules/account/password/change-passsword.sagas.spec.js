@@ -4,7 +4,7 @@ import FixtureAPI from '../../../../../app/shared/services/fixture-api'
 import { changePassword } from '../../../../../app/modules/account/password/change-password.sagas'
 import ChangePasswordActions from '../../../../../app/modules/account/password/change-password.reducer'
 
-const stepper = (fn) => (mock) => fn.next(mock).value
+const stepper = fn => mock => fn.next(mock).value
 
 test('change password success path', () => {
   const response = FixtureAPI.changePassword({ currentPassword: 'valid-password', newPassword: 'valid-password' })
@@ -21,5 +21,5 @@ test('change password failure path', () => {
   // Step 1: Hit the api
   step()
   // Step 2: Successful return and data!
-  expect(step(response)).toEqual(put(ChangePasswordActions.changePasswordFailure('WRONG')))
+  expect(step(response)).toEqual(put(ChangePasswordActions.changePasswordFailure('Failed to change password')))
 })

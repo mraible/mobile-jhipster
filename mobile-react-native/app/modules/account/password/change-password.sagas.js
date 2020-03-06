@@ -4,7 +4,7 @@ import ChangePasswordActions from './change-password.reducer'
 import { callApi } from '../../../shared/sagas/call-api.saga'
 
 // attempts to request a password change
-export function * changePassword (api, { currentPassword, newPassword }) {
+export function* changePassword(api, { currentPassword, newPassword }) {
   const apiCall = call(api.changePassword, currentPassword, newPassword)
   const response = yield call(callApi, apiCall)
   // success?
@@ -13,6 +13,6 @@ export function * changePassword (api, { currentPassword, newPassword }) {
     yield put(ChangePasswordActions.changePasswordSuccess())
   } else {
     console.tron.log('ChangePassword - FAIL')
-    yield put(ChangePasswordActions.changePasswordFailure('WRONG'))
+    yield put(ChangePasswordActions.changePasswordFailure((response.data && response.data.title) || 'Failed to change password'))
   }
 }

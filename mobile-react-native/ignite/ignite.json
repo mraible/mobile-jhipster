@@ -1,6 +1,6 @@
 {
   "name": "HealthPoints",
-  "createdWith": "3.1.5",
+  "createdWith": "3.5.1",
   "boilerplate": "ignite-jhipster",
   "jhipsterDirectory": "../backend",
   "authType": "oauth2",
@@ -13,5 +13,5 @@
     "import-jdl": "ignite-jhipster",
     "upgrade": "ignite-jhipster"
   },
-  "boilerplateVersion": "3.1.2"
+  "boilerplateVersion": "3.4.0"
 }

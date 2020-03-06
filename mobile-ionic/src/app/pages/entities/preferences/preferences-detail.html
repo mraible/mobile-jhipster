@@ -1,0 +1,35 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <ion-title>
+            Preferences
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+    <ion-list>
+        <ion-item>
+            <ion-label position="fixed">Weekly Goal</ion-label>
+            <div item-content>
+                <span>{{preferences.weeklyGoal}}</span>
+            </div>
+        </ion-item>
+        <ion-item>
+            <ion-label position="fixed">Weight Units</ion-label>
+            <div item-content>
+                <span>{{preferences.weightUnits}}</span>
+            </div>
+        </ion-item>
+        <ion-item>
+            <ion-label>User</ion-label>
+            <div item-content>{{preferences.user?.login}}</div>
+        </ion-item>
+    </ion-list>
+
+    <ion-button expand="block" color="primary" (click)="open(preferences)">{{ 'EDIT_BUTTON' | translate }}</ion-button>
+    <ion-button expand="block" color="danger" (click)="deleteModal(preferences)">{{ 'DELETE_BUTTON' | translate }}</ion-button>
+
+</ion-content>

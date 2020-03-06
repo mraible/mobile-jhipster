@@ -3,7 +3,7 @@ import { put } from 'redux-saga/effects'
 import { getUser, getUsers, updateUser, deleteUser } from '../../../../app/shared/sagas/user.sagas'
 import UserActions from '../../../../app/shared/reducers/user.reducer'
 
-const stepper = (fn) => (mock) => fn.next(mock).value
+const stepper = fn => mock => fn.next(mock).value
 
 test('get success path', () => {
   const response = FixtureAPI.getUser(1)

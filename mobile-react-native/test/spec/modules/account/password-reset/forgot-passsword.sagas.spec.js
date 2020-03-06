@@ -4,7 +4,7 @@ import FixtureAPI from '../../../../../app/shared/services/fixture-api'
 import { forgotPassword } from '../../../../../app/modules/account/password-reset/forgot-password.sagas'
 import ForgotPasswordActions from '../../../../../app/modules/account/password-reset/forgot-password.reducer'
 
-const stepper = (fn) => (mock) => fn.next(mock).value
+const stepper = fn => mock => fn.next(mock).value
 
 test('forgot password success path', () => {
   const response = FixtureAPI.forgotPassword({ email: 'valid@gmail.com' })
@@ -21,5 +21,5 @@ test('forgot password failure path', () => {
   // Step 1: Hit the api
   expect(step(response)).toEqual(call(FixtureAPI.forgotPassword, 'not-valid@gmail.com'))
   // Step 2: Successful return and data!
-  expect(step(response)).toEqual(put(ForgotPasswordActions.forgotPasswordFailure('WRONG')))
+  expect(step(response)).toEqual(put(ForgotPasswordActions.forgotPasswordFailure('Something when wrong resetting your password')))
 })

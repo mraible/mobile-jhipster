@@ -12,7 +12,7 @@ import styles from './register-screen.styles'
 let Form = t.form.Form
 
 class RegisterScreen extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     Navigation.events().bindComponent(this)
     this.state = {
@@ -21,7 +21,7 @@ class RegisterScreen extends React.Component {
         password: t.String,
         confirmPassword: t.String,
         email: t.String,
-        langKey: t.String
+        langKey: t.String,
       }),
       accountValue: { login: null, password: null, confirmPassword: null, email: null, langKey: 'en' },
       options: {
@@ -29,40 +29,37 @@ class RegisterScreen extends React.Component {
           login: {
             label: 'Username',
             returnKeyType: 'next',
-            onSubmitEditing: () => this.refs.form.getComponent('password').refs.input.focus()
+            onSubmitEditing: () => this.form.getComponent('password').refs.input.focus(),
           },
           password: {
             secureTextEntry: true,
             returnKeyType: 'next',
-            onSubmitEditing: () => this.refs.form.getComponent('confirmPassword').refs.input.focus()
+            onSubmitEditing: () => this.form.getComponent('confirmPassword').refs.input.focus(),
           },
           confirmPassword: {
             secureTextEntry: true,
             returnKeyType: 'next',
-            onSubmitEditing: () => this.refs.form.getComponent('email').refs.input.focus()
+            onSubmitEditing: () => this.form.getComponent('email').refs.input.focus(),
           },
           email: {
             returnKeyType: 'done',
-            onSubmitEditing: () => this.submitUpdate()
+            onSubmitEditing: () => this.submitUpdate(),
           },
           langKey: {
-            hidden: true
-          }
-        }
+            hidden: true,
+          },
+        },
       },
-      success: false
     }
     this.submitUpdate = this.submitUpdate.bind(this)
     this.accountChange = this.accountChange.bind(this)
   }
 
-  submitUpdate () {
-    this.setState({
-      success: false
-    })
+  submitUpdate() {
     // call getValue() to get the values of the form
-    const value = this.refs.form.getValue()
-    if (value) { // if validation fails, value will be null
+    const value = this.form.getValue()
+    if (value) {
+      // if validation fails, value will be null
       if (value.password !== value.confirmPassword) {
         Alert.alert('Error', 'Passwords do not match', [{ text: 'OK' }])
         return
@@ -71,39 +68,37 @@ class RegisterScreen extends React.Component {
     }
   }
 
-  componentWillReceiveProps (newProps) {
-    // Did the register attempt complete?
-    if (!newProps.fetching) {
-      if (newProps.error) {
-        Alert.alert('Error', (newProps.error && newProps.error.title) ? newProps.error.title : '', [{ text: 'OK' }])
+  componentDidUpdate(prevProps) {
+    if (prevProps.fetching && !this.props.fetching) {
+      if (this.props.error) {
+        Alert.alert('Error', this.props.error, [{ text: 'OK' }])
       } else {
-        this.setState({
-          success: true
-        })
         Navigation.popToRoot(this.props.componentId)
         Alert.alert('Registration Successful', 'Please check your email', [{ text: 'OK' }])
       }
     }
   }
 
-  accountChange (newValue) {
+  accountChange(newValue) {
     this.setState({
-      accountValue: newValue
+      accountValue: newValue,
     })
   }
 
-  render () {
+  render() {
     return (
       <KeyboardAwareScrollView>
         <ScrollView style={styles.container}>
           <Form
-            ref='form'
+            ref={c => {
+              this.form = c
+            }}
             type={this.state.accountModel}
             options={this.state.options}
             value={this.state.accountValue}
             onChange={this.accountChange}
           />
-          <TouchableHighlight style={styles.button} onPress={this.submitUpdate} underlayColor='#99d9f4'>
+          <TouchableHighlight style={styles.button} onPress={this.submitUpdate} underlayColor="#99d9f4">
             <Text style={styles.buttonText}>Register</Text>
           </TouchableHighlight>
         </ScrollView>
@@ -112,17 +107,20 @@ class RegisterScreen extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     fetching: state.register.fetching,
-    error: state.register.error
+    error: state.register.error,
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    register: (account) => dispatch(RegisterActions.registerRequest(account))
+    register: account => dispatch(RegisterActions.registerRequest(account)),
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(RegisterScreen)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(RegisterScreen)

@@ -12,28 +12,26 @@ class LoginScreen extends React.Component {
   static propTypes = {
     dispatch: PropTypes.func,
     fetching: PropTypes.bool,
-    attemptLogin: PropTypes.func
+    attemptLogin: PropTypes.func,
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props)
     Navigation.events().bindComponent(this)
     this.state = {
       username: '',
       password: '',
       visibleHeight: Metrics.screenHeight,
-      topLogo: { width: Metrics.screenWidth }
+      topLogo: { width: Metrics.screenWidth },
     }
   }
 
-  componentWillReceiveProps (newProps) {
-    // Did the login attempt complete?
-    if (!newProps.fetching) {
-      if (newProps.error) {
-        if (newProps.error === 'WRONG') {
-          Alert.alert('Error', 'Invalid login', [{ text: 'OK' }])
-        }
-      } else if (newProps.account) {
+  componentDidUpdate(prevProps) {
+    if (!this.props.fetching) {
+      if (prevProps.fetching && this.props.error) {
+        Alert.alert('Error', this.props.error, [{ text: 'OK' }])
+      }
+      if (!prevProps.account && this.props.account) {
         Navigation.dismissModal(this.props.componentId)
       }
     }
@@ -49,67 +47,76 @@ class LoginScreen extends React.Component {
     Navigation.dismissModal(this.props.componentId)
   }
 
-  handleChangeUsername = (text) => {
+  handleChangeUsername = text => {
     this.setState({ username: text })
   }
 
-  handleChangePassword = (text) => {
+  handleChangePassword = text => {
     this.setState({ password: text })
   }
 
-  render () {
+  render() {
     const { username, password } = this.state
     const { fetching } = this.props
     const editable = !fetching
     const textInputStyle = editable ? styles.textInput : styles.textInputReadonly
     return (
-      <ScrollView contentContainerStyle={{ justifyContent: 'center' }} style={[styles.container, { height: this.state.visibleHeight }]} keyboardShouldPersistTaps='always'>
+      <ScrollView
+        contentContainerStyle={styles.contentContainer}
+        style={[styles.container, { height: this.state.visibleHeight }]}
+        keyboardShouldPersistTaps="always">
         <Image source={Images.logoLogin} style={[styles.topLogo, this.state.topLogo]} />
         <View style={styles.form}>
           <View style={styles.row}>
             <Text style={styles.rowLabel}>Username</Text>
             <TextInput
-              ref='username'
-              testID='loginScreenUsername'
+              ref={c => {
+                this.usernameInput = c
+              }}
+              testID="loginScreenUsername"
               style={textInputStyle}
               value={username}
               editable={editable}
-              keyboardType='default'
-              returnKeyType='next'
-              autoCapitalize='none'
+              keyboardType="default"
+              returnKeyType="next"
+              autoCapitalize="none"
               autoCorrect={false}
               onChangeText={this.handleChangeUsername}
-              underlineColorAndroid='transparent'
-              onSubmitEditing={() => this.refs.password.focus()}
-              placeholder='Username' />
+              underlineColorAndroid="transparent"
+              onSubmitEditing={() => this.passwordInput.focus()}
+              placeholder="Username"
+            />
           </View>
 
           <View style={styles.row}>
             <Text style={styles.rowLabel}>Password</Text>
             <TextInput
-              ref='password'
-              testID='loginScreenPassword'
+              ref={c => {
+                this.passwordInput = c
+              }}
+              testID="loginScreenPassword"
               style={textInputStyle}
               value={password}
               editable={editable}
-              keyboardType='default'
-              returnKeyType='go'
-              autoCapitalize='none'
+              keyboardType="default"
+              returnKeyType="go"
+              autoCapitalize="none"
               autoCorrect={false}
               secureTextEntry
               onChangeText={this.handleChangePassword}
-              underlineColorAndroid='transparent'
+              underlineColorAndroid="transparent"
               onSubmitEditing={this.handlePressLogin}
-              placeholder='Password' />
+              placeholder="Password"
+            />
           </View>
 
           <View style={[styles.loginRow]}>
-            <TouchableOpacity testID='loginScreenLoginButton' style={styles.loginButtonWrapper} onPress={this.handlePressLogin}>
+            <TouchableOpacity testID="loginScreenLoginButton" style={styles.loginButtonWrapper} onPress={this.handlePressLogin}>
               <View style={styles.loginButton}>
                 <Text style={styles.loginText}>Sign In</Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity testID='loginScreenCancelButton' style={styles.loginButtonWrapper} onPress={this.handlePressCancel}>
+            <TouchableOpacity testID="loginScreenCancelButton" style={styles.loginButtonWrapper} onPress={this.handlePressCancel}>
               <View style={styles.loginButton}>
                 <Text style={styles.loginText}>Cancel</Text>
               </View>
@@ -121,19 +128,22 @@ class LoginScreen extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     account: state.account.account,
     fetching: state.login.fetching,
-    error: state.login.error
+    error: state.login.error,
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     attemptLogin: (username, password) => dispatch(LoginActions.loginRequest(username, password)),
-    logout: () => dispatch(LoginActions.logoutRequest())
+    logout: () => dispatch(LoginActions.logoutRequest()),
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(LoginScreen)

@@ -3,7 +3,7 @@ import { call, put } from 'redux-saga/effects'
 import RegisterActions from './register.reducer'
 
 // attempts to register
-export function * register (api, { user }) {
+export function* register(api, { user }) {
   const response = yield call(api.register, user)
   // success?
   if (response.ok) {
@@ -11,6 +11,6 @@ export function * register (api, { user }) {
     yield put(RegisterActions.registerSuccess())
   } else {
     console.tron.log('Register - FAIL')
-    yield put(RegisterActions.registerFailure(response.data))
+    yield put(RegisterActions.registerFailure((response.data && response.data.title) || 'Registration failed'))
   }
 }
