@@ -140,7 +140,7 @@ This example uses the following open source libraries:
 
 * [JHipster](https://www.jhipster.tech)
 * [Ignite JHipster](https://github.com/ruddell/ignite-jhipster)
-* [Ionic 4 JHipster](https://github.com/oktadeveloper/generator-jhipster-ionic)
+* [Ionic for JHipster](https://github.com/oktadeveloper/generator-jhipster-ionic)
 
 ## Help
 
