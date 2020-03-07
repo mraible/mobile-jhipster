@@ -16,8 +16,8 @@
 logging:
   level:
     ROOT: INFO
-    com.okta.developer: INFO
     io.github.jhipster: INFO
+    com.okta.developer: INFO
 
 management:
   metrics:
@@ -40,8 +40,7 @@ spring:
       poolName: Hikari
       auto-commit: false
   jpa:
-    database-platform: io.github.jhipster.domain.util.FixedPostgreSQL95Dialect
-    database: POSTGRESQL
+    database-platform: io.github.jhipster.domain.util.FixedPostgreSQL10Dialect
     show-sql: false
     properties:
       hibernate.id.new_generator_mappings: true
@@ -49,6 +48,12 @@ spring:
       hibernate.cache.use_second_level_cache: true
       hibernate.cache.use_query_cache: false
       hibernate.generate_statistics: false
+      # modify batch size as necessary
+      hibernate.jdbc.batch_size: 25
+      hibernate.order_inserts: true
+      hibernate.order_updates: true
+      hibernate.query.fail_on_pagination_over_collection_fetch: true
+      hibernate.query.in_clause_parameter_padding: true
   data:
     jest:
       uri: http://localhost:9200
@@ -108,7 +113,6 @@ jhipster:
       time-to-live-seconds: 3600 # By default objects stay 1 hour in the cache
       max-entries: 1000 # Number of objects in each cache entry
   mail: # specific JHipster mail property, for standard properties see MailProperties
-    from: HealthPoints@localhost
     base-url: http://my-server-url-to-change # Modify according to your server's URL
   metrics:
     logs: # Reports metrics in the logs
@@ -121,6 +125,9 @@ jhipster:
       host: localhost
       port: 5000
       queue-size: 512
+  audit-events:
+    retention-period: 30 # Number of days before audit events are deleted.
+
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class

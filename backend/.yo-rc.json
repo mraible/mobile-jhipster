@@ -24,15 +24,19 @@
     "buildTool": "gradle",
     "clientFramework": "react",
     "useSass": true,
-    "jhipsterVersion": "6.1.2",
+    "jhipsterVersion": "6.7.1",
+    "creationTimestamp": 1583524080362,
     "skipUserManagement": true,
     "clientPackageManager": "npm",
     "cacheProvider": "ehcache",
-    "serverPort": "8080",
     "clientTheme": "none",
+    "clientThemeVariant": "",
+    "serverPort": "8080",
+    "embeddableLaunchScript": false,
     "entitySuffix": "",
     "dtoSuffix": "DTO",
-    "otherModules": []
+    "otherModules": [],
+    "blueprints": []
   },
   "entities": ["Points", "BloodPressure", "Weight", "Preferences"]
 }

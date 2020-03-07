@@ -55,12 +55,13 @@ export class PointsUpdatePage implements OnInit {
             this.updateForm(response.data);
             this.points = response.data;
             this.isNew = this.points.id === null || this.points.id === undefined;
+
             if (this.isNew) {
-                this.points.date = new Date().toISOString().split('T')[0];
-                this.points.alcohol = 1;
-                this.points.exercise = 1;
-                this.points.meals = 1;
-                this.updateForm(this.points);
+              this.points.date = new Date().toISOString().split('T')[0];
+              this.points.alcohol = 1;
+              this.points.exercise = 1;
+              this.points.meals = 1;
+              this.updateForm(this.points);
             }
         });
     }

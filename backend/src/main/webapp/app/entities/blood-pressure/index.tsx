@@ -11,12 +11,12 @@ import BloodPressureDeleteDialog from './blood-pressure-delete-dialog';
 const Routes = ({ match }) => (
   <>
     <Switch>
+      <ErrorBoundaryRoute exact path={`${match.url}/:id/delete`} component={BloodPressureDeleteDialog} />
       <ErrorBoundaryRoute exact path={`${match.url}/new`} component={BloodPressureUpdate} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id/edit`} component={BloodPressureUpdate} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id`} component={BloodPressureDetail} />
       <ErrorBoundaryRoute path={match.url} component={BloodPressure} />
     </Switch>
-    <ErrorBoundaryRoute path={`${match.url}/:id/delete`} component={BloodPressureDeleteDialog} />
   </>
 );
 

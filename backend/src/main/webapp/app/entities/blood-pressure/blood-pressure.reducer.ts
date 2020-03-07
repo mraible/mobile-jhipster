@@ -73,7 +73,7 @@ export default (state: BloodPressureState = initialState, action): BloodPressure
         errorMessage: action.payload
       };
     case SUCCESS(ACTION_TYPES.SEARCH_BLOODPRESSURES):
-    case SUCCESS(ACTION_TYPES.FETCH_BLOODPRESSURE_LIST):
+    case SUCCESS(ACTION_TYPES.FETCH_BLOODPRESSURE_LIST): {
       const links = parseHeaderForLinks(action.payload.headers.link);
 
       return {
@@ -83,6 +83,7 @@ export default (state: BloodPressureState = initialState, action): BloodPressure
         entities: loadMoreDataWhenScrolled(state.entities, action.payload.data, links),
         totalItems: parseInt(action.payload.headers['x-total-count'], 10)
       };
+    }
     case SUCCESS(ACTION_TYPES.FETCH_BLOODPRESSURE):
       return {
         ...state,

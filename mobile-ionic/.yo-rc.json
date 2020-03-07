@@ -1,5 +1,5 @@
 {
-  "generator-jhipster-ionic": {
+  "generator-jhipster": {
     "promptValues": {
       "backendPath": "../backend"
     }

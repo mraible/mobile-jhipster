@@ -5,8 +5,8 @@
         "title": "Weights",
         "createLabel": "Crear nuevo Weight",
         "createOrEditLabel": "Crear o editar Weight",
-        "search": "Search for Weight",
-        "notFound": "No Weight found"
+        "search": "Buscar Weight",
+        "notFound": "Ningún Weights encontrado"
       },
       "created": "Un nuevo Weight ha sido creado con el identificador {{ param }}",
       "updated": "Un Weight ha sido actualizado con el identificador {{ param }}",

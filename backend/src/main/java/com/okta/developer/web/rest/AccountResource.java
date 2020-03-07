@@ -9,8 +9,8 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.servlet.http.HttpServletRequest;
+
 import java.security.Principal;
 
 /**
@@ -21,6 +21,9 @@ import java.security.Principal;
 public class AccountResource {
 
     private static class AccountResourceException extends RuntimeException {
+
+        private static final long serialVersionUID = 1L;
+
         private AccountResourceException(String message) {
             super(message);
         }
@@ -32,18 +35,6 @@ public class AccountResource {
 
     public AccountResource(UserService userService) {
         this.userService = userService;
-    }
-
-    /**
-     * {@code GET  /authenticate} : check if the user is authenticated, and return its login.
-     *
-     * @param request the HTTP request.
-     * @return the login if the user is authenticated.
-     */
-    @GetMapping("/authenticate")
-    public String isAuthenticated(HttpServletRequest request) {
-        log.debug("REST request to check if the current user is authenticated");
-        return request.getRemoteUser();
     }
 
     /**

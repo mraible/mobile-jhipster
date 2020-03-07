@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * Integration tests for the {@Link PointsResource} REST controller.
+ * Integration tests for the {@link PointsResource} REST controller.
  */
 @SpringBootTest(classes = {HealthPointsApp.class, TestSecurityConfiguration.class})
 public class PointsResourceIT {
@@ -142,7 +142,7 @@ public class PointsResourceIT {
 
         // Create the Points
         restPointsMockMvc.perform(post("/api/points")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(TestUtil.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(points)))
             .andExpect(status().isCreated());
 
@@ -170,7 +170,7 @@ public class PointsResourceIT {
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restPointsMockMvc.perform(post("/api/points")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(TestUtil.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(points)))
             .andExpect(status().isBadRequest());
 
@@ -193,7 +193,7 @@ public class PointsResourceIT {
         // Create the Points, which fails.
 
         restPointsMockMvc.perform(post("/api/points")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(TestUtil.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(points)))
             .andExpect(status().isBadRequest());
 
@@ -210,13 +210,13 @@ public class PointsResourceIT {
         // Get all the pointsList
         restPointsMockMvc.perform(get("/api/points?sort=id,desc"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(points.getId().intValue())))
             .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
             .andExpect(jsonPath("$.[*].exercise").value(hasItem(DEFAULT_EXERCISE)))
             .andExpect(jsonPath("$.[*].meals").value(hasItem(DEFAULT_MEALS)))
             .andExpect(jsonPath("$.[*].alcohol").value(hasItem(DEFAULT_ALCOHOL)))
-            .andExpect(jsonPath("$.[*].notes").value(hasItem(DEFAULT_NOTES.toString())));
+            .andExpect(jsonPath("$.[*].notes").value(hasItem(DEFAULT_NOTES)));
     }
     
     @Test
@@ -228,13 +228,13 @@ public class PointsResourceIT {
         // Get the points
         restPointsMockMvc.perform(get("/api/points/{id}", points.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(points.getId().intValue()))
             .andExpect(jsonPath("$.date").value(DEFAULT_DATE.toString()))
             .andExpect(jsonPath("$.exercise").value(DEFAULT_EXERCISE))
             .andExpect(jsonPath("$.meals").value(DEFAULT_MEALS))
             .andExpect(jsonPath("$.alcohol").value(DEFAULT_ALCOHOL))
-            .andExpect(jsonPath("$.notes").value(DEFAULT_NOTES.toString()));
+            .andExpect(jsonPath("$.notes").value(DEFAULT_NOTES));
     }
 
     @Test
@@ -265,7 +265,7 @@ public class PointsResourceIT {
             .notes(UPDATED_NOTES);
 
         restPointsMockMvc.perform(put("/api/points")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(TestUtil.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(updatedPoints)))
             .andExpect(status().isOk());
 
@@ -292,7 +292,7 @@ public class PointsResourceIT {
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restPointsMockMvc.perform(put("/api/points")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(TestUtil.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(points)))
             .andExpect(status().isBadRequest());
 
@@ -314,7 +314,7 @@ public class PointsResourceIT {
 
         // Delete the points
         restPointsMockMvc.perform(delete("/api/points/{id}", points.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
+            .accept(TestUtil.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
@@ -335,27 +335,12 @@ public class PointsResourceIT {
         // Search the points
         restPointsMockMvc.perform(get("/api/_search/points?query=id:" + points.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(points.getId().intValue())))
             .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
             .andExpect(jsonPath("$.[*].exercise").value(hasItem(DEFAULT_EXERCISE)))
             .andExpect(jsonPath("$.[*].meals").value(hasItem(DEFAULT_MEALS)))
             .andExpect(jsonPath("$.[*].alcohol").value(hasItem(DEFAULT_ALCOHOL)))
             .andExpect(jsonPath("$.[*].notes").value(hasItem(DEFAULT_NOTES)));
-    }
-
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(Points.class);
-        Points points1 = new Points();
-        points1.setId(1L);
-        Points points2 = new Points();
-        points2.setId(points1.getId());
-        assertThat(points1).isEqualTo(points2);
-        points2.setId(2L);
-        assertThat(points1).isNotEqualTo(points2);
-        points1.setId(null);
-        assertThat(points1).isNotEqualTo(points2);
     }
 }

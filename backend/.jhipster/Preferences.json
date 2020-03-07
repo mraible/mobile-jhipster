@@ -9,8 +9,8 @@
                 "min",
                 "max"
             ],
-            "fieldValidateRulesMin": 10,
-            "fieldValidateRulesMax": 21
+            "fieldValidateRulesMin": "10",
+            "fieldValidateRulesMax": "21"
         },
         {
             "fieldName": "weightUnits",
@@ -31,13 +31,14 @@
             "ownerSide": true
         }
     ],
-    "changelogDate": "20190724042933",
+    "changelogDate": "20200306195236",
     "entityTableName": "preferences",
     "dto": "no",
     "pagination": "no",
     "service": "no",
     "jpaMetamodelFiltering": false,
     "fluentMethods": true,
+    "readOnly": false,
     "clientRootFolder": "",
     "applications": [
         "HealthPoints"

@@ -41,7 +41,7 @@ export class LoginPage extends Page {
   async login(username: string, password: string) {
     // Entering non angular site, tell webdriver to switch to synchronous mode.
     await browser.waitForAngularEnabled(false);
-    await browser.sleep(500);
+    await browser.sleep(1000);
 
     if (await this.username.isPresent()) {
       await this.username.sendKeys(username);

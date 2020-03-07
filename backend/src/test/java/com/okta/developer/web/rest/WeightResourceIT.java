@@ -40,7 +40,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * Integration tests for the {@Link WeightResource} REST controller.
+ * Integration tests for the {@link WeightResource} REST controller.
  */
 @SpringBootTest(classes = {HealthPointsApp.class, TestSecurityConfiguration.class})
 public class WeightResourceIT {
@@ -130,7 +130,7 @@ public class WeightResourceIT {
 
         // Create the Weight
         restWeightMockMvc.perform(post("/api/weights")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(TestUtil.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(weight)))
             .andExpect(status().isCreated());
 
@@ -155,7 +155,7 @@ public class WeightResourceIT {
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restWeightMockMvc.perform(post("/api/weights")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(TestUtil.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(weight)))
             .andExpect(status().isBadRequest());
 
@@ -178,7 +178,7 @@ public class WeightResourceIT {
         // Create the Weight, which fails.
 
         restWeightMockMvc.perform(post("/api/weights")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(TestUtil.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(weight)))
             .andExpect(status().isBadRequest());
 
@@ -196,7 +196,7 @@ public class WeightResourceIT {
         // Create the Weight, which fails.
 
         restWeightMockMvc.perform(post("/api/weights")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(TestUtil.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(weight)))
             .andExpect(status().isBadRequest());
 
@@ -213,7 +213,7 @@ public class WeightResourceIT {
         // Get all the weightList
         restWeightMockMvc.perform(get("/api/weights?sort=id,desc"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(weight.getId().intValue())))
             .andExpect(jsonPath("$.[*].timestamp").value(hasItem(sameInstant(DEFAULT_TIMESTAMP))))
             .andExpect(jsonPath("$.[*].weight").value(hasItem(DEFAULT_WEIGHT.doubleValue())));
@@ -228,7 +228,7 @@ public class WeightResourceIT {
         // Get the weight
         restWeightMockMvc.perform(get("/api/weights/{id}", weight.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(weight.getId().intValue()))
             .andExpect(jsonPath("$.timestamp").value(sameInstant(DEFAULT_TIMESTAMP)))
             .andExpect(jsonPath("$.weight").value(DEFAULT_WEIGHT.doubleValue()));
@@ -259,7 +259,7 @@ public class WeightResourceIT {
             .weight(UPDATED_WEIGHT);
 
         restWeightMockMvc.perform(put("/api/weights")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(TestUtil.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(updatedWeight)))
             .andExpect(status().isOk());
 
@@ -283,7 +283,7 @@ public class WeightResourceIT {
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restWeightMockMvc.perform(put("/api/weights")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(TestUtil.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(weight)))
             .andExpect(status().isBadRequest());
 
@@ -305,7 +305,7 @@ public class WeightResourceIT {
 
         // Delete the weight
         restWeightMockMvc.perform(delete("/api/weights/{id}", weight.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
+            .accept(TestUtil.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
@@ -326,24 +326,9 @@ public class WeightResourceIT {
         // Search the weight
         restWeightMockMvc.perform(get("/api/_search/weights?query=id:" + weight.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(weight.getId().intValue())))
             .andExpect(jsonPath("$.[*].timestamp").value(hasItem(sameInstant(DEFAULT_TIMESTAMP))))
             .andExpect(jsonPath("$.[*].weight").value(hasItem(DEFAULT_WEIGHT.doubleValue())));
-    }
-
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(Weight.class);
-        Weight weight1 = new Weight();
-        weight1.setId(1L);
-        Weight weight2 = new Weight();
-        weight2.setId(weight1.getId());
-        assertThat(weight1).isEqualTo(weight2);
-        weight2.setId(2L);
-        assertThat(weight1).isNotEqualTo(weight2);
-        weight1.setId(null);
-        assertThat(weight1).isNotEqualTo(weight2);
     }
 }

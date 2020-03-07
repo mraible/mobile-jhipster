@@ -22,7 +22,7 @@ management:
         include: ['configprops', 'env', 'health', 'info', 'jhimetrics', 'logfile', 'loggers', 'prometheus', 'threaddump']
   endpoint:
     health:
-      show-details: when-authorized
+      show-details: when_authorized
       roles: 'ROLE_ADMIN'
     jhimetrics:
       enabled: true
@@ -100,6 +100,9 @@ spring:
         size: 2
   thymeleaf:
     mode: HTML
+  output:
+    ansi:
+      console-available: true
   security:
     oauth2:
       client:
@@ -152,6 +155,11 @@ jhipster:
     contact-email:
     license:
     license-url:
+  security:
+    oauth2:
+      audience:
+        - account
+        - api://default
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class

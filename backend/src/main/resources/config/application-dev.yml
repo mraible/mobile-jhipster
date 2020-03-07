@@ -34,7 +34,7 @@ spring:
   devtools:
     restart:
       enabled: true
-      additional-exclude: .h2.server.properties
+      additional-exclude: static/**,.h2.server.properties
     livereload:
       enabled: false # we use Webpack dev server + BrowserSync for livereload
   jackson:
@@ -52,8 +52,6 @@ spring:
     console:
       enabled: false
   jpa:
-    database-platform: io.github.jhipster.domain.util.FixedH2Dialect
-    database: H2
     show-sql: true
     properties:
       hibernate.id.new_generator_mappings: true
@@ -102,7 +100,6 @@ jhipster:
     allow-credentials: true
     max-age: 1800
   mail: # specific JHipster mail property, for standard properties see MailProperties
-    from: HealthPoints@localhost
     base-url: http://127.0.0.1:8080
   metrics:
     logs: # Reports metrics in the logs
@@ -115,6 +112,9 @@ jhipster:
       host: localhost
       port: 5000
       queue-size: 512
+  audit-events:
+    retention-period: 30 # Number of days before audit events are deleted.
+
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class

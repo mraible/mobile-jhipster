@@ -1,10 +1,10 @@
 const mock: any = (): any => {
   let storage: any = {};
   return {
-    clear: (): any => storage = {},
-    getItem: (key: any): any => key in storage ? storage[key] : null,
+    clear: (): any => (storage = {}),
+    getItem: (key: any): any => (key in storage ? storage[key] : null),
     removeItem: (key: any): boolean => delete storage[key],
-    setItem: (key: any, value: any): string => storage[key] = value || ''
+    setItem: (key: any, value: any): string => (storage[key] = value || '')
   };
 };
 

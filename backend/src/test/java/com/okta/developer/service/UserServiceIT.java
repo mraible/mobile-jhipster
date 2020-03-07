@@ -134,13 +134,13 @@ public class UserServiceIT {
     @Test
     @Transactional
     public void testUserDetailsWithLangKey() {
-        userDetails.put("langKey", "DEFAULT_LANGKEY");
+        userDetails.put("langKey", DEFAULT_LANGKEY);
         userDetails.put("locale", "en-US");
 
         OAuth2AuthenticationToken authentication = createMockOAuth2AuthenticationToken(userDetails);
         UserDTO userDTO = userService.getUserFromAuthentication(authentication);
 
-        assertThat(userDTO.getLangKey()).isEqualTo("DEFAULT_LANGKEY");
+        assertThat(userDTO.getLangKey()).isEqualTo(DEFAULT_LANGKEY);
     }
 
     @Test
@@ -156,7 +156,7 @@ public class UserServiceIT {
 
     @Test
     @Transactional
-    public void testUserDetailsWithUSLocale() {
+    public void testUserDetailsWithUSLocaleUnderscore() {
         userDetails.put("locale", "en_US");
 
         OAuth2AuthenticationToken authentication = createMockOAuth2AuthenticationToken(userDetails);
@@ -167,7 +167,7 @@ public class UserServiceIT {
 
     @Test
     @Transactional
-    public void testUserDetailsWithUSLocale2() {
+    public void testUserDetailsWithUSLocaleDash() {
         userDetails.put("locale", "en-US");
 
         OAuth2AuthenticationToken authentication = createMockOAuth2AuthenticationToken(userDetails);

@@ -1,6 +1,7 @@
 import { ExpectedConditions, ElementArrayFinder, ElementFinder, browser, by, element } from 'protractor';
 
-const waitUntilDisplayedTimeout = 30000;
+const waitUntilDisplayedTimeout = browser.params.waitTimeoutInMillis || 30000;
+const logWaitErrors = browser.params.logWaitErrors || false;
 
 export const checkSelectorExist = (selector: ElementFinder) => selector !== undefined;
 
@@ -67,4 +68,50 @@ export const waitUntilCount = async (
     timeout,
     `Failed while waiting for "${elementArrayFinder.locator()}" to have ${expectedCount} elements.`
   );
+};
+
+/**
+ * Returns a void promise on any element present inside an array to become
+ * visible. If no element is visible within threshold time, promise will
+ * be rejected.
+ */
+export const waitUntilAnyDisplayed = async (selectors: ElementFinder[], timeout = waitUntilDisplayedTimeout): Promise<void> => {
+  await browser.wait(
+    ExpectedConditions.or(...selectors.map(selector => ExpectedConditions.visibilityOf(selector))),
+    timeout,
+    `"${selectors.map(selector => selector.locator())}" are not visible.`
+  );
+};
+
+/**
+ * Returns a boolean if an element is visible on screen. It's a wrapper on
+ * isDisplayed() to gracefully handle the scenario when an element is not
+ * present in the DOM.
+ */
+export const isVisible = async (selector: ElementFinder) => {
+  try {
+    return await selector.isDisplayed();
+  } catch (e) {
+    if (logWaitErrors) {
+      console.warn(e.message);
+    }
+  }
+  return false;
+};
+
+/**
+ * Waits for an element to be clickable and trigger click event.
+ *
+ * @param selector
+ */
+export const click = async (selector: ElementFinder) => {
+  await waitUntilClickable(selector);
+  await selector.click();
+};
+
+/**
+ * Returns a promise that evaluates to the number of rows inside table body.
+ */
+export const getRecordsCount = async (table: ElementFinder): Promise<number> => {
+  return await table.all(by.css('tbody tr')).count();
 };

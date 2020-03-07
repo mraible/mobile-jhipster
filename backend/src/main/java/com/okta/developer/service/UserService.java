@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Service class for managing users.
@@ -65,7 +64,9 @@ public class UserService {
             .ifPresent(user -> {
                 user.setFirstName(firstName);
                 user.setLastName(lastName);
-                user.setEmail(email.toLowerCase());
+                if (email != null) {
+                    user.setEmail(email.toLowerCase());
+                }
                 user.setLangKey(langKey);
                 user.setImageUrl(imageUrl);
                 userSearchRepository.save(user);
@@ -90,7 +91,9 @@ public class UserService {
                 user.setLogin(userDTO.getLogin().toLowerCase());
                 user.setFirstName(userDTO.getFirstName());
                 user.setLastName(userDTO.getLastName());
-                user.setEmail(userDTO.getEmail().toLowerCase());
+                if (userDTO.getEmail() != null) {
+                    user.setEmail(userDTO.getEmail().toLowerCase());
+                }
                 user.setImageUrl(userDTO.getImageUrl());
                 user.setActivated(userDTO.isActivated());
                 user.setLangKey(userDTO.getLangKey());
@@ -165,7 +168,7 @@ public class UserService {
             // if IdP sends last updated information, use it to determine if an update should happen
             if (details.get("updated_at") != null) {
                 Instant dbModifiedDate = existingUser.get().getLastModifiedDate();
-                Instant idpModifiedDate = new Date(Long.valueOf((Integer) details.get("updated_at"))).toInstant();
+                Instant idpModifiedDate = (Instant) details.get("updated_at");
                 if (idpModifiedDate.isAfter(dbModifiedDate)) {
                     log.debug("Updating user '{}' in local database", user.getLogin());
                     updateUser(user.getFirstName(), user.getLastName(), user.getEmail(),
@@ -247,9 +250,9 @@ public class UserService {
             // trim off country code if it exists
             String locale = (String) details.get("locale");
             if (locale.contains("_")) {
-                locale = locale.substring(0, locale.indexOf("_"));
+                locale = locale.substring(0, locale.indexOf('_'));
             } else if (locale.contains("-")) {
-                locale = locale.substring(0, locale.indexOf("-"));
+                locale = locale.substring(0, locale.indexOf('-'));
             }
             user.setLangKey(locale.toLowerCase());
         } else {
@@ -265,6 +268,8 @@ public class UserService {
 
     private void clearUserCaches(User user) {
         Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE)).evict(user.getLogin());
-        Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE)).evict(user.getEmail());
+        if (user.getEmail() != null) {
+            Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE)).evict(user.getEmail());
+        }
     }
 }

@@ -121,7 +121,8 @@ describe('Authentication reducer tests', () => {
           locale: 'en'
         }
       ];
-      await store.dispatch(getSession()).then(() => expect(store.getActions()).toEqual(expectedActions));
+      await store.dispatch(getSession());
+      expect(store.getActions()).toEqual(expectedActions);
     });
 
     it('dispatches LOGOUT actions', async () => {
