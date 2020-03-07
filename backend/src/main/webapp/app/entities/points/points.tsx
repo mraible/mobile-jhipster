@@ -47,6 +47,12 @@ export const Points = (props: IPointsProps) => {
         ...paginationState,
         activePage: 1
       });
+      props.getSearchEntities(
+        search,
+        paginationState.activePage - 1,
+        paginationState.itemsPerPage,
+        `${paginationState.sort},${paginationState.order}`
+      );
     }
   };
 
@@ -56,6 +62,7 @@ export const Points = (props: IPointsProps) => {
       ...paginationState,
       activePage: 1
     });
+    props.getEntities();
   };
 
   const handleSearch = event => setSearch(event.target.value);

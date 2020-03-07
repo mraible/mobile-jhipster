@@ -45,12 +45,6 @@ export const BloodPressure = (props: IBloodPressureProps) => {
     resetAll();
   }, []);
 
-  useEffect(() => {
-    if (props.updateSuccess) {
-      getAllEntities();
-    }
-  });
-
   const startSearching = () => {
     if (search) {
       props.reset();
@@ -58,6 +52,12 @@ export const BloodPressure = (props: IBloodPressureProps) => {
         ...paginationState,
         activePage: 1
       });
+      props.getSearchEntities(
+        search,
+        paginationState.activePage - 1,
+        paginationState.itemsPerPage,
+        `${paginationState.sort},${paginationState.order}`
+      );
     }
   };
 
@@ -68,6 +68,7 @@ export const BloodPressure = (props: IBloodPressureProps) => {
       ...paginationState,
       activePage: 1
     });
+    props.getEntities();
   };
 
   const handleSearch = event => setSearch(event.target.value);

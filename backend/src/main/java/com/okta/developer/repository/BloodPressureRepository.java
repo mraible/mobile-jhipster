@@ -16,5 +16,4 @@ public interface BloodPressureRepository extends JpaRepository<BloodPressure, Lo
 
     @Query("select bloodPressure from BloodPressure bloodPressure where bloodPressure.user.login = ?#{principal.preferredUsername}")
     List<BloodPressure> findByUserIsCurrentUser();
-
 }

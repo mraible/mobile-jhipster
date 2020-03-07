@@ -7,7 +7,7 @@ import { Account } from 'src/model/account.model';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss']
+  styleUrls: ['home.page.scss'],
 })
 export class HomePage implements OnInit {
   account: Account;
@@ -15,7 +15,7 @@ export class HomePage implements OnInit {
   constructor(public navController: NavController, private accountService: AccountService, private loginService: LoginService) {}
 
   ngOnInit() {
-    this.accountService.identity().then(account => {
+    this.accountService.identity().then((account) => {
       if (account === null) {
         this.goBackToHomePage();
       } else {

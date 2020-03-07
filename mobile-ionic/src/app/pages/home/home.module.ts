@@ -12,14 +12,14 @@ const routes: Routes = [
     path: '',
     component: HomePage,
     data: {
-      authorities: ['ROLE_USER']
+      authorities: ['ROLE_USER'],
     },
-    canActivate: [UserRouteAccessService]
-  }
+    canActivate: [UserRouteAccessService],
+  },
 ];
 
 @NgModule({
   imports: [IonicModule, CommonModule, FormsModule, TranslateModule, RouterModule.forChild(routes)],
-  declarations: [HomePage]
+  declarations: [HomePage],
 })
 export class HomePageModule {}

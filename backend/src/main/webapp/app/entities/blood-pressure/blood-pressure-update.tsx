@@ -48,6 +48,7 @@ export const BloodPressureUpdate = (props: IBloodPressureUpdateProps) => {
         ...bloodPressureEntity,
         ...values
       };
+      entity.user = users[values.user];
 
       if (isNew) {
         props.createEntity(entity);
@@ -130,11 +131,11 @@ export const BloodPressureUpdate = (props: IBloodPressureUpdateProps) => {
                 <Label for="blood-pressure-user">
                   <Translate contentKey="healthPointsApp.bloodPressure.user">User</Translate>
                 </Label>
-                <AvInput id="blood-pressure-user" type="select" className="form-control" name="user.id">
+                <AvInput id="blood-pressure-user" type="select" className="form-control" name="user">
                   <option value="" key="0" />
                   {users
-                    ? users.map(otherEntity => (
-                        <option value={otherEntity.id} key={otherEntity.id}>
+                    ? users.map((otherEntity, index) => (
+                        <option value={index} key={otherEntity.id}>
                           {otherEntity.login}
                         </option>
                       ))

@@ -4,7 +4,7 @@ import { AccountService } from '../auth/account.service';
 import { AuthService } from '../../auth/auth.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LoginService {
   constructor(private accountService: AccountService, private authService: AuthService, private translate: TranslateService) {}
@@ -12,8 +12,8 @@ export class LoginService {
   login() {
     this.authService
       .signIn()
-      .then(data => {
-        this.accountService.identity(true).then(account => {
+      .then((data) => {
+        this.accountService.identity(true).then((account) => {
           // After the login the language will be changed to
           // the language selected by the user during his registration
           if (account !== null) {
@@ -21,7 +21,7 @@ export class LoginService {
           }
         });
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(`Sign in error: ${error}`);
       });
   }

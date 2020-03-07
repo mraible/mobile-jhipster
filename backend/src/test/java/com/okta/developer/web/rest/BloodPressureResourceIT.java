@@ -5,23 +5,21 @@ import com.okta.developer.config.TestSecurityConfiguration;
 import com.okta.developer.domain.BloodPressure;
 import com.okta.developer.repository.BloodPressureRepository;
 import com.okta.developer.repository.search.BloodPressureSearchRepository;
-import com.okta.developer.web.rest.errors.ExceptionTranslator;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mock;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
-
 import javax.persistence.EntityManager;
 import java.time.Instant;
 import java.time.ZonedDateTime;
@@ -31,10 +29,10 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.okta.developer.web.rest.TestUtil.sameInstant;
-import static com.okta.developer.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -42,7 +40,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Integration tests for the {@link BloodPressureResource} REST controller.
  */
-@SpringBootTest(classes = {HealthPointsApp.class, TestSecurityConfiguration.class})
+@SpringBootTest(classes = { HealthPointsApp.class, TestSecurityConfiguration.class })
+@ExtendWith(MockitoExtension.class)
+@AutoConfigureMockMvc
+@WithMockUser
 public class BloodPressureResourceIT {
 
     private static final ZonedDateTime DEFAULT_TIMESTAMP = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
@@ -66,35 +67,12 @@ public class BloodPressureResourceIT {
     private BloodPressureSearchRepository mockBloodPressureSearchRepository;
 
     @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restBloodPressureMockMvc;
 
     private BloodPressure bloodPressure;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final BloodPressureResource bloodPressureResource = new BloodPressureResource(bloodPressureRepository, mockBloodPressureSearchRepository);
-        this.restBloodPressureMockMvc = MockMvcBuilders.standaloneSetup(bloodPressureResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
 
     /**
      * Create an entity for this test.
@@ -134,8 +112,8 @@ public class BloodPressureResourceIT {
         int databaseSizeBeforeCreate = bloodPressureRepository.findAll().size();
 
         // Create the BloodPressure
-        restBloodPressureMockMvc.perform(post("/api/blood-pressures")
-            .contentType(TestUtil.APPLICATION_JSON)
+        restBloodPressureMockMvc.perform(post("/api/blood-pressures").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(bloodPressure)))
             .andExpect(status().isCreated());
 
@@ -160,8 +138,8 @@ public class BloodPressureResourceIT {
         bloodPressure.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restBloodPressureMockMvc.perform(post("/api/blood-pressures")
-            .contentType(TestUtil.APPLICATION_JSON)
+        restBloodPressureMockMvc.perform(post("/api/blood-pressures").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(bloodPressure)))
             .andExpect(status().isBadRequest());
 
@@ -183,8 +161,8 @@ public class BloodPressureResourceIT {
 
         // Create the BloodPressure, which fails.
 
-        restBloodPressureMockMvc.perform(post("/api/blood-pressures")
-            .contentType(TestUtil.APPLICATION_JSON)
+        restBloodPressureMockMvc.perform(post("/api/blood-pressures").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(bloodPressure)))
             .andExpect(status().isBadRequest());
 
@@ -201,8 +179,8 @@ public class BloodPressureResourceIT {
 
         // Create the BloodPressure, which fails.
 
-        restBloodPressureMockMvc.perform(post("/api/blood-pressures")
-            .contentType(TestUtil.APPLICATION_JSON)
+        restBloodPressureMockMvc.perform(post("/api/blood-pressures").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(bloodPressure)))
             .andExpect(status().isBadRequest());
 
@@ -219,8 +197,8 @@ public class BloodPressureResourceIT {
 
         // Create the BloodPressure, which fails.
 
-        restBloodPressureMockMvc.perform(post("/api/blood-pressures")
-            .contentType(TestUtil.APPLICATION_JSON)
+        restBloodPressureMockMvc.perform(post("/api/blood-pressures").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(bloodPressure)))
             .andExpect(status().isBadRequest());
 
@@ -285,8 +263,8 @@ public class BloodPressureResourceIT {
             .systolic(UPDATED_SYSTOLIC)
             .diastolic(UPDATED_DIASTOLIC);
 
-        restBloodPressureMockMvc.perform(put("/api/blood-pressures")
-            .contentType(TestUtil.APPLICATION_JSON)
+        restBloodPressureMockMvc.perform(put("/api/blood-pressures").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(updatedBloodPressure)))
             .andExpect(status().isOk());
 
@@ -310,8 +288,8 @@ public class BloodPressureResourceIT {
         // Create the BloodPressure
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restBloodPressureMockMvc.perform(put("/api/blood-pressures")
-            .contentType(TestUtil.APPLICATION_JSON)
+        restBloodPressureMockMvc.perform(put("/api/blood-pressures").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(bloodPressure)))
             .andExpect(status().isBadRequest());
 
@@ -332,8 +310,8 @@ public class BloodPressureResourceIT {
         int databaseSizeBeforeDelete = bloodPressureRepository.findAll().size();
 
         // Delete the bloodPressure
-        restBloodPressureMockMvc.perform(delete("/api/blood-pressures/{id}", bloodPressure.getId())
-            .accept(TestUtil.APPLICATION_JSON))
+        restBloodPressureMockMvc.perform(delete("/api/blood-pressures/{id}", bloodPressure.getId()).with(csrf())
+            .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

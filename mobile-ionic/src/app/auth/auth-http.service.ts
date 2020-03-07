@@ -3,7 +3,7 @@ import { Requestor, TokenResponse } from '@openid/appauth';
 import { AuthService } from './auth.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthHttpService {
   constructor(private requestor: Requestor, private auth: AuthService) {}
@@ -14,7 +14,7 @@ export class AuthHttpService {
       url: url,
       method: method,
       data: JSON.stringify(body),
-      headers: this.addHeaders(token)
+      headers: this.addHeaders(token),
     });
   }
 
@@ -22,7 +22,7 @@ export class AuthHttpService {
     return token
       ? {
           Authorization: `${token.tokenType === 'bearer' ? 'Bearer' : token.tokenType} ${token.accessToken}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         }
       : {};
   }

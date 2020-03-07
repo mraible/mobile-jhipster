@@ -12,14 +12,14 @@ const routes: Routes = [
     path: '',
     component: AccountPage,
     data: {
-      authorities: ['ROLE_USER']
+      authorities: ['ROLE_USER'],
     },
-    canActivate: [UserRouteAccessService]
-  }
+    canActivate: [UserRouteAccessService],
+  },
 ];
 
 @NgModule({
   imports: [IonicModule, CommonModule, FormsModule, RouterModule.forChild(routes), TranslateModule],
-  declarations: [AccountPage]
+  declarations: [AccountPage],
 })
 export class AccountPageModule {}

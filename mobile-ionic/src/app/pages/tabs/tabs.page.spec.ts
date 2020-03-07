@@ -14,7 +14,7 @@ describe('TabsPage', () => {
       declarations: [TabsPage],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       imports: [HttpClientTestingModule, TranslateModule.forChild()],
-      providers: [TranslateStore]
+      providers: [TranslateStore],
     }).compileComponents();
   }));
 

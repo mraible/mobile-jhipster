@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { XhrSettings } from 'ionic-appauth/lib/cordova';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class NgHttpService implements Requestor {
   constructor(private http: HttpClient) {}
@@ -38,7 +38,7 @@ export class NgHttpService implements Requestor {
     let httpHeaders: HttpHeaders = new HttpHeaders();
 
     if (headers !== undefined) {
-      Object.keys(headers).forEach(key => {
+      Object.keys(headers).forEach((key) => {
         httpHeaders = httpHeaders.append(key, headers[key]);
       });
     }

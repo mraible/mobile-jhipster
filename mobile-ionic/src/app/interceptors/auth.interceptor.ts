@@ -15,11 +15,9 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private async handleAccess(request: HttpRequest<any>, next: HttpHandler): Promise<HttpEvent<any>> {
-    if (
-      !request ||
-      !request.url ||
-      (/^http/.test(request.url) && !request.url.startsWith(ApiService.API_URL) && !request.url.startsWith(this.servicesEndpoint))
-    ) {
+    // prettier-ignore
+    if (!request || !request.url || (/^http/.test(request.url) &&
+      !request.url.startsWith(ApiService.API_URL) && !request.url.startsWith(this.servicesEndpoint))) {
       return next.handle(request).toPromise();
     }
 
@@ -28,8 +26,8 @@ export class AuthInterceptor implements HttpInterceptor {
       if (!!token) {
         request = request.clone({
           setHeaders: {
-            Authorization: `Bearer ${token.accessToken}`
-          }
+            Authorization: `Bearer ${token.accessToken}`,
+          },
         });
       }
     } catch (err) {

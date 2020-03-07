@@ -6,7 +6,7 @@ import { AuthActions, IAuthAction } from 'ionic-appauth';
 import { NavController } from '@ionic/angular';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthGuardService implements CanActivate {
   constructor(private authService: AuthService, private navCtrl: NavController) {}
@@ -14,7 +14,7 @@ export class AuthGuardService implements CanActivate {
   public async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
     const authenticated: boolean = await this.authService.authObservable
       .pipe(
-        skipWhile(action => action.action === AuthActions.Default),
+        skipWhile((action) => action.action === AuthActions.Default),
         take(1),
         map((action: IAuthAction) => action.tokenResponse !== undefined)
       )

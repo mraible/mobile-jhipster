@@ -22,8 +22,8 @@ describe('WelcomePage', () => {
         HttpClientTestingModule,
         IonicStorageModule.forRoot(),
         RouterTestingModule,
-        AuthModule
-      ]
+        AuthModule,
+      ],
     }).compileComponents();
   }));
 

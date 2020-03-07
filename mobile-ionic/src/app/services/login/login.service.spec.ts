@@ -9,7 +9,13 @@ import { AuthModule } from '../../auth/auth.module';
 describe('LoginService', () => {
   beforeEach(() =>
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, NgxWebstorageModule.forRoot(), TranslateModule.forRoot(), IonicStorageModule.forRoot(), AuthModule]
+      imports: [
+        HttpClientTestingModule,
+        NgxWebstorageModule.forRoot(),
+        TranslateModule.forRoot(),
+        IonicStorageModule.forRoot(),
+        AuthModule,
+      ],
     })
   );
 

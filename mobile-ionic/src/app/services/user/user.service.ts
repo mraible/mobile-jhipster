@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { ApiService } from '../api/api.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
   constructor(public apiService: ApiService) {}

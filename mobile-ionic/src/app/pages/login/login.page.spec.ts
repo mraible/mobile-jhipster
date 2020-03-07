@@ -22,8 +22,8 @@ describe('LoginPage', () => {
         NgxWebstorageModule.forRoot(),
         HttpClientTestingModule,
         IonicStorageModule.forRoot(),
-        AuthModule
-      ]
+        AuthModule,
+      ],
     }).compileComponents();
   }));
 

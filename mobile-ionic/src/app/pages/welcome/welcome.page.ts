@@ -8,13 +8,13 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-welcome',
   templateUrl: 'welcome.page.html',
-  styleUrls: ['welcome.page.scss']
+  styleUrls: ['welcome.page.scss'],
 })
 export class WelcomePage implements OnInit {
   constructor(private authService: AuthService, private navController: NavController, private router: Router) {}
 
   ngOnInit() {
-    this.authService.authObservable.subscribe(action => {
+    this.authService.authObservable.subscribe((action) => {
       if (action.action === AuthActions.SignInSuccess || action.action === AuthActions.AutoSignInSuccess) {
         console.log('action', action);
         this.navController.navigateRoot('/tabs');
@@ -24,7 +24,7 @@ export class WelcomePage implements OnInit {
     });
 
     // todo: figure out why access denied is happening
-    this.router.events.subscribe(e => {
+    this.router.events.subscribe((e) => {
       if (e instanceof NavigationEnd) {
         // console.log('url', e.url);
       }
@@ -32,6 +32,6 @@ export class WelcomePage implements OnInit {
   }
 
   signIn() {
-    this.authService.signIn().catch(error => console.error(`Sign in error: ${error}`));
+    this.authService.signIn().catch((error) => console.error(`Sign in error: ${error}`));
   }
 }

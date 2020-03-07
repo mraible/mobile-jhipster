@@ -15,7 +15,7 @@ describe('EntitiesPage', () => {
     TestBed.configureTestingModule({
       declarations: [EntitiesPage],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      imports: [TranslateModule.forRoot(), RouterTestingModule, NgxWebstorageModule.forRoot(), HttpClientTestingModule]
+      imports: [TranslateModule.forRoot(), RouterTestingModule, NgxWebstorageModule.forRoot(), HttpClientTestingModule],
     }).compileComponents();
   }));
 

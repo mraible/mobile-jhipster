@@ -5,23 +5,21 @@ import com.okta.developer.config.TestSecurityConfiguration;
 import com.okta.developer.domain.Weight;
 import com.okta.developer.repository.WeightRepository;
 import com.okta.developer.repository.search.WeightSearchRepository;
-import com.okta.developer.web.rest.errors.ExceptionTranslator;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mock;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
-
 import javax.persistence.EntityManager;
 import java.time.Instant;
 import java.time.ZonedDateTime;
@@ -31,10 +29,10 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.okta.developer.web.rest.TestUtil.sameInstant;
-import static com.okta.developer.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -42,7 +40,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Integration tests for the {@link WeightResource} REST controller.
  */
-@SpringBootTest(classes = {HealthPointsApp.class, TestSecurityConfiguration.class})
+@SpringBootTest(classes = { HealthPointsApp.class, TestSecurityConfiguration.class })
+@ExtendWith(MockitoExtension.class)
+@AutoConfigureMockMvc
+@WithMockUser
 public class WeightResourceIT {
 
     private static final ZonedDateTime DEFAULT_TIMESTAMP = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
@@ -63,35 +64,12 @@ public class WeightResourceIT {
     private WeightSearchRepository mockWeightSearchRepository;
 
     @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restWeightMockMvc;
 
     private Weight weight;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final WeightResource weightResource = new WeightResource(weightRepository, mockWeightSearchRepository);
-        this.restWeightMockMvc = MockMvcBuilders.standaloneSetup(weightResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
 
     /**
      * Create an entity for this test.
@@ -129,8 +107,8 @@ public class WeightResourceIT {
         int databaseSizeBeforeCreate = weightRepository.findAll().size();
 
         // Create the Weight
-        restWeightMockMvc.perform(post("/api/weights")
-            .contentType(TestUtil.APPLICATION_JSON)
+        restWeightMockMvc.perform(post("/api/weights").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(weight)))
             .andExpect(status().isCreated());
 
@@ -154,8 +132,8 @@ public class WeightResourceIT {
         weight.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restWeightMockMvc.perform(post("/api/weights")
-            .contentType(TestUtil.APPLICATION_JSON)
+        restWeightMockMvc.perform(post("/api/weights").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(weight)))
             .andExpect(status().isBadRequest());
 
@@ -177,8 +155,8 @@ public class WeightResourceIT {
 
         // Create the Weight, which fails.
 
-        restWeightMockMvc.perform(post("/api/weights")
-            .contentType(TestUtil.APPLICATION_JSON)
+        restWeightMockMvc.perform(post("/api/weights").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(weight)))
             .andExpect(status().isBadRequest());
 
@@ -195,8 +173,8 @@ public class WeightResourceIT {
 
         // Create the Weight, which fails.
 
-        restWeightMockMvc.perform(post("/api/weights")
-            .contentType(TestUtil.APPLICATION_JSON)
+        restWeightMockMvc.perform(post("/api/weights").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(weight)))
             .andExpect(status().isBadRequest());
 
@@ -258,8 +236,8 @@ public class WeightResourceIT {
             .timestamp(UPDATED_TIMESTAMP)
             .weight(UPDATED_WEIGHT);
 
-        restWeightMockMvc.perform(put("/api/weights")
-            .contentType(TestUtil.APPLICATION_JSON)
+        restWeightMockMvc.perform(put("/api/weights").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(updatedWeight)))
             .andExpect(status().isOk());
 
@@ -282,8 +260,8 @@ public class WeightResourceIT {
         // Create the Weight
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restWeightMockMvc.perform(put("/api/weights")
-            .contentType(TestUtil.APPLICATION_JSON)
+        restWeightMockMvc.perform(put("/api/weights").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(weight)))
             .andExpect(status().isBadRequest());
 
@@ -304,8 +282,8 @@ public class WeightResourceIT {
         int databaseSizeBeforeDelete = weightRepository.findAll().size();
 
         // Delete the weight
-        restWeightMockMvc.perform(delete("/api/weights/{id}", weight.getId())
-            .accept(TestUtil.APPLICATION_JSON))
+        restWeightMockMvc.perform(delete("/api/weights/{id}", weight.getId()).with(csrf())
+            .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

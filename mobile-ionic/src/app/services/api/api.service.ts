@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApiService {
   public static API_URL = environment.apiUrl;
@@ -13,7 +13,7 @@ export class ApiService {
   get(endpoint: string, params?: any, reqOpts?: any) {
     if (!reqOpts) {
       reqOpts = {
-        params: new HttpParams()
+        params: new HttpParams(),
       };
     }
 

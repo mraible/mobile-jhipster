@@ -6,7 +6,7 @@ import { AuthService } from '../../auth/auth.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
-  styleUrls: ['./login.page.scss']
+  styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
   action: IAuthAction;
@@ -14,7 +14,7 @@ export class LoginPage implements OnInit {
   constructor(private authService: AuthService, private navCtrl: NavController) {}
 
   ngOnInit() {
-    this.authService.authObservable.subscribe(action => {
+    this.authService.authObservable.subscribe((action) => {
       this.action = action;
       if (action.action === AuthActions.SignInSuccess) {
         this.navCtrl.navigateRoot('tabs');

@@ -6,7 +6,7 @@ import { Account } from 'src/model/account.model';
 import { ApiService } from '../api/api.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AccountService {
   private userIdentity: any;
@@ -53,7 +53,7 @@ export class AccountService {
     }
 
     return this.identity().then(
-      id => {
+      (id) => {
         return Promise.resolve(id.authorities && id.authorities.includes(authority));
       },
       () => {
@@ -76,7 +76,7 @@ export class AccountService {
     // retrieve the userIdentity data from the server, update the identity object, and then resolve.
     return this.fetch()
       .toPromise()
-      .then(response => {
+      .then((response) => {
         const account = response.body;
         if (account) {
           this.userIdentity = account;
@@ -93,7 +93,7 @@ export class AccountService {
         this.authenticationState.next(this.userIdentity);
         return this.userIdentity;
       })
-      .catch(err => {
+      .catch((err) => {
         this.userIdentity = null;
         this.authenticated = false;
         this.authenticationState.next(this.userIdentity);

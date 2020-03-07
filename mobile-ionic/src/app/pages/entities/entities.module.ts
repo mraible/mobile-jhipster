@@ -12,31 +12,15 @@ const routes: Routes = [
     path: '',
     component: EntitiesPage,
     data: {
-      authorities: ['ROLE_USER']
+      authorities: ['ROLE_USER'],
     },
-    canActivate: [UserRouteAccessService]
-  }
-  , {
-    path: 'points',
-    loadChildren: './points/points.module#PointsPageModule'
-  }
-  , {
-    path: 'blood-pressure',
-    loadChildren: './blood-pressure/blood-pressure.module#BloodPressurePageModule'
-  }
-  , {
-    path: 'weight',
-    loadChildren: './weight/weight.module#WeightPageModule'
-  }
-  , {
-    path: 'preferences',
-    loadChildren: './preferences/preferences.module#PreferencesPageModule'
-  }
+    canActivate: [UserRouteAccessService],
+  },
   /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
 ];
 
 @NgModule({
   imports: [IonicModule, CommonModule, FormsModule, RouterModule.forChild(routes), TranslateModule],
-  declarations: [EntitiesPage]
+  declarations: [EntitiesPage],
 })
 export class EntitiesPageModule {}

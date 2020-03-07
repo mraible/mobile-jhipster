@@ -1,26 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col, Label } from 'reactstrap';
-import { AvFeedback, AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
-import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction } from 'react-jhipster';
+import { Button, Col, Label, Row } from 'reactstrap';
+import { AvField, AvForm, AvGroup, AvInput } from 'availity-reactstrap-validation';
+import { Translate, translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
-
-import { IUser } from 'app/shared/model/user.model';
 import { getUsers } from 'app/shared/reducers/user-management';
-import { getEntity, updateEntity, createEntity, reset } from './points.reducer';
-import { IPoints } from 'app/shared/model/points.model';
-import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
-import { mapIdList } from 'app/shared/util/entity-utils';
+import { createEntity, getEntity, reset, updateEntity } from './points.reducer';
 
-export interface IPointsUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export interface IPointsUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {
+}
 
 export const PointsUpdate = (props: IPointsUpdateProps) => {
   const [userId, setUserId] = useState('0');
   const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.id);
 
-  const { pointsEntity, users, loading, updating } = props;
+  const {pointsEntity, users, loading, updating} = props;
 
   const handleClose = () => {
     props.history.push('/points' + props.location.search);
@@ -48,6 +44,7 @@ export const PointsUpdate = (props: IPointsUpdateProps) => {
         ...pointsEntity,
         ...values
       };
+      entity.user = users[values.user];
 
       if (isNew) {
         props.createEntity(entity);
@@ -77,7 +74,7 @@ export const PointsUpdate = (props: IPointsUpdateProps) => {
                   <Label for="points-id">
                     <Translate contentKey="global.field.id">ID</Translate>
                   </Label>
-                  <AvInput id="points-id" type="text" className="form-control" name="id" required readOnly />
+                  <AvInput id="points-id" type="text" className="form-control" name="id" required readOnly/>
                 </AvGroup>
               ) : null}
               <AvGroup>
@@ -90,27 +87,30 @@ export const PointsUpdate = (props: IPointsUpdateProps) => {
                   className="form-control"
                   name="date"
                   validate={{
-                    required: { value: true, errorMessage: translate('entity.validation.required') }
+                    required: {value: true, errorMessage: translate('entity.validation.required')}
                   }}
                 />
               </AvGroup>
-              <AvGroup>
-                <Label id="exerciseLabel" for="points-exercise">
+              <AvGroup check>
+                <AvInput id="points-exercise" type="checkbox"
+                         name="exercise" trueValue={1} falseValue={0}/>
+                <Label check id="exerciseLabel" for="points-exercise">
                   <Translate contentKey="healthPointsApp.points.exercise">Exercise</Translate>
                 </Label>
-                <AvField id="points-exercise" type="string" className="form-control" name="exercise" />
               </AvGroup>
-              <AvGroup>
-                <Label id="mealsLabel" for="points-meals">
+              <AvGroup check>
+                <AvInput id="points-meals" type="checkbox"
+                         name="meals" trueValue={1} falseValue={0}/>
+                <Label check id="mealsLabel" for="points-meals">
                   <Translate contentKey="healthPointsApp.points.meals">Meals</Translate>
                 </Label>
-                <AvField id="points-meals" type="string" className="form-control" name="meals" />
               </AvGroup>
-              <AvGroup>
-                <Label id="alcoholLabel" for="points-alcohol">
+              <AvGroup check>
+                <AvInput id="points-alcohol" type="checkbox"
+                         name="alcohol" trueValue={1} falseValue={0}/>
+                <Label check id="alcoholLabel" for="points-alcohol">
                   <Translate contentKey="healthPointsApp.points.alcohol">Alcohol</Translate>
                 </Label>
-                <AvField id="points-alcohol" type="string" className="form-control" name="alcohol" />
               </AvGroup>
               <AvGroup>
                 <Label id="notesLabel" for="points-notes">
@@ -121,7 +121,7 @@ export const PointsUpdate = (props: IPointsUpdateProps) => {
                   type="text"
                   name="notes"
                   validate={{
-                    maxLength: { value: 140, errorMessage: translate('entity.validation.maxlength', { max: 140 }) }
+                    maxLength: {value: 140, errorMessage: translate('entity.validation.maxlength', {max: 140})}
                   }}
                 />
               </AvGroup>
@@ -129,19 +129,19 @@ export const PointsUpdate = (props: IPointsUpdateProps) => {
                 <Label for="points-user">
                   <Translate contentKey="healthPointsApp.points.user">User</Translate>
                 </Label>
-                <AvInput id="points-user" type="select" className="form-control" name="user.id">
-                  <option value="" key="0" />
+                <AvInput id="points-user" type="select" className="form-control" name="user">
+                  <option value="" key="0"/>
                   {users
-                    ? users.map(otherEntity => (
-                        <option value={otherEntity.id} key={otherEntity.id}>
-                          {otherEntity.login}
-                        </option>
-                      ))
+                    ? users.map((otherEntity, index) => (
+                      <option value={index} key={otherEntity.id}>
+                        {otherEntity.login}
+                      </option>
+                    ))
                     : null}
                 </AvInput>
               </AvGroup>
               <Button tag={Link} id="cancel-save" to="/points" replace color="info">
-                <FontAwesomeIcon icon="arrow-left" />
+                <FontAwesomeIcon icon="arrow-left"/>
                 &nbsp;
                 <span className="d-none d-md-inline">
                   <Translate contentKey="entity.action.back">Back</Translate>
@@ -149,7 +149,7 @@ export const PointsUpdate = (props: IPointsUpdateProps) => {
               </Button>
               &nbsp;
               <Button color="primary" id="save-entity" type="submit" disabled={updating}>
-                <FontAwesomeIcon icon="save" />
+                <FontAwesomeIcon icon="save"/>
                 &nbsp;
                 <Translate contentKey="entity.action.save">Save</Translate>
               </Button>

@@ -15,7 +15,7 @@ describe('AccountPage', () => {
     TestBed.configureTestingModule({
       declarations: [AccountPage],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      imports: [TranslateModule.forRoot(), RouterTestingModule, NgxWebstorageModule.forRoot(), HttpClientTestingModule]
+      imports: [TranslateModule.forRoot(), RouterTestingModule, NgxWebstorageModule.forRoot(), HttpClientTestingModule],
     }).compileComponents();
   }));
 

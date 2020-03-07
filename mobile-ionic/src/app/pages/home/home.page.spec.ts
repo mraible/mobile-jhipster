@@ -22,8 +22,8 @@ describe('HomePage', () => {
         NgxWebstorageModule.forRoot(),
         HttpClientTestingModule,
         IonicStorageModule.forRoot(),
-        AuthModule
-      ]
+        AuthModule,
+      ],
     }).compileComponents();
   }));
 

@@ -16,5 +16,4 @@ public interface PointsRepository extends JpaRepository<Points, Long> {
 
     @Query("select points from Points points where points.user.login = ?#{principal.preferredUsername}")
     List<Points> findByUserIsCurrentUser();
-
 }

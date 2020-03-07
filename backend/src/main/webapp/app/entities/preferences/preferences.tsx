@@ -18,7 +18,7 @@ export const Preferences = (props: IPreferencesProps) => {
 
   useEffect(() => {
     props.getEntities();
-  }, [search]);
+  }, []);
 
   const startSearching = () => {
     if (search) {
@@ -28,6 +28,7 @@ export const Preferences = (props: IPreferencesProps) => {
 
   const clear = () => {
     setSearch('');
+    props.getEntities();
   };
 
   const handleSearch = event => setSearch(event.target.value);

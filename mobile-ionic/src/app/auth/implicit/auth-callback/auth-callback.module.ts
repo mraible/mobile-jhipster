@@ -10,12 +10,12 @@ import { AuthCallbackPage } from './auth-callback.page';
 const routes: Routes = [
   {
     path: '',
-    component: AuthCallbackPage
-  }
+    component: AuthCallbackPage,
+  },
 ];
 
 @NgModule({
   imports: [CommonModule, FormsModule, IonicModule, RouterModule.forChild(routes)],
-  declarations: [AuthCallbackPage]
+  declarations: [AuthCallbackPage],
 })
 export class AuthCallbackPageModule {}

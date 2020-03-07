@@ -7,7 +7,7 @@ import { TranslateModule } from '@ngx-translate/core';
 describe('UserService', () => {
   beforeEach(() =>
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule]
+      imports: [HttpClientTestingModule],
     })
   );
 

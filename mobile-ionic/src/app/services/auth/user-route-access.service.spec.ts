@@ -8,7 +8,7 @@ import { IonicStorageModule } from '@ionic/storage';
 describe('UserRouteAccessService', () => {
   beforeEach(() =>
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule, NgxWebstorageModule.forRoot(), IonicStorageModule.forRoot()]
+      imports: [HttpClientTestingModule, RouterTestingModule, NgxWebstorageModule.forRoot(), IonicStorageModule.forRoot()],
     })
   );
 

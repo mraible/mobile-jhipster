@@ -14,18 +14,18 @@ import { Browser } from 'ionic-appauth';
     {
       provide: StorageBackend,
       useFactory: storageFactory,
-      deps: [Platform]
+      deps: [Platform],
     },
     {
       provide: Requestor,
       useFactory: httpFactory,
-      deps: [Platform, HttpClient]
+      deps: [Platform, HttpClient],
     },
     {
       provide: Browser,
       useFactory: browserFactory,
-      deps: [Platform]
-    }
-  ]
+      deps: [Platform],
+    },
+  ],
 })
 export class AuthModule {}

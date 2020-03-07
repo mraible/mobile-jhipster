@@ -9,12 +9,12 @@ import { WelcomePage } from './welcome.page';
 const routes: Routes = [
   {
     path: '',
-    component: WelcomePage
-  }
+    component: WelcomePage,
+  },
 ];
 
 @NgModule({
   imports: [IonicModule, CommonModule, FormsModule, RouterModule.forChild(routes), TranslateModule],
-  declarations: [WelcomePage]
+  declarations: [WelcomePage],
 })
 export class WelcomePageModule {}

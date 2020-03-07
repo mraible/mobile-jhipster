@@ -10,12 +10,12 @@ import { EndSessionPage } from './end-session.page';
 const routes: Routes = [
   {
     path: '',
-    component: EndSessionPage
-  }
+    component: EndSessionPage,
+  },
 ];
 
 @NgModule({
   imports: [CommonModule, FormsModule, IonicModule, RouterModule.forChild(routes)],
-  declarations: [EndSessionPage]
+  declarations: [EndSessionPage],
 })
 export class EndSessionPageModule {}

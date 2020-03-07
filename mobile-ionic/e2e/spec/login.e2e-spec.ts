@@ -4,6 +4,8 @@ import { LoginPage } from '../pages/login.po';
 describe('Login', () => {
 
   let loginPage;
+  const username = process.env.E2E_USERNAME || 'admin';
+  const password = process.env.E2E_PASSWORD || 'admin';
 
   beforeEach(async () => {
     loginPage = new LoginPage();
@@ -17,7 +19,7 @@ describe('Login', () => {
 
   it('should fail to login with bad password', async () => {
     await loginPage.signInButton.click();
-    await loginPage.login('admin', 'foo');
+    await loginPage.login(username, 'foo');
     // Keycloak
     const alert = element(by.css('.alert-error'));
     if (await alert.isPresent()) {
@@ -31,7 +33,7 @@ describe('Login', () => {
 
   it('should login successfully with admin account', async () => {
     await loginPage.signInButton.click();
-    await loginPage.login('admin', 'admin'); // use process.env.E2E_USERNAME if you want to use env variables
+    await loginPage.login(username, password);
 
     const welcome = /Welcome, Admin/;
     await browser.wait(ec.visibilityOf(loginPage.logoutButton));

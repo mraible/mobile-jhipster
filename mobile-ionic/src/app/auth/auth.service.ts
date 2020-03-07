@@ -9,7 +9,7 @@ interface AuthConfig {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService extends IonicAuth {
   constructor(requestor: Requestor, storage: StorageBackend, browser: Browser, private platform: Platform, private ngZone: NgZone) {
@@ -20,7 +20,7 @@ export class AuthService extends IonicAuth {
 
   public async startUpAsync() {
     if (this.platform.is('cordova')) {
-      (<any>window).handleOpenURL = callbackUrl => {
+      (<any>window).handleOpenURL = (callbackUrl) => {
         this.ngZone.run(() => {
           this.handleCallback(callbackUrl);
         });
@@ -36,8 +36,8 @@ export class AuthService extends IonicAuth {
 
   private async addConfig() {
     const scopes = 'openid profile offline_access';
-    const redirectUri = this.onDevice() ? 'dev.localhost.ionic:/callback' : 'http://localhost:8100/implicit/callback';
-    const logoutRedirectUri = this.onDevice() ? 'dev.localhost.ionic:/logout' : 'http://localhost:8100/implicit/logout';
+    const redirectUri = this.onDevice() ? 'dev.localhost.ionic:/callback' : window.location.origin + '/implicit/callback';
+    const logoutRedirectUri = this.onDevice() ? 'dev.localhost.ionic:/logout' : window.location.origin + '/implicit/callback';
     const AUTH_CONFIG_URI = 'http://localhost:8080/api/auth-info';
 
     if (await this.storage.getItem(AUTH_CONFIG_URI)) {
@@ -48,16 +48,16 @@ export class AuthService extends IonicAuth {
       this.requestor.xhr({ method: 'GET', url: AUTH_CONFIG_URI }).then(
         async (data: any) => {
           this.authConfig = {
-            identity_client: '0oa330agwhKz3NDp7357',
+            identity_client: data.clientId,
             identity_server: data.issuer,
             redirect_url: redirectUri,
             end_session_redirect_url: logoutRedirectUri,
             scopes,
-            usePkce: true
+            usePkce: true,
           };
           await this.storage.setItem(AUTH_CONFIG_URI, JSON.stringify(this.authConfig));
         },
-        error => {
+        (error) => {
           console.error('ERROR fetching authentication information, defaulting to Keycloak settings');
           console.error(error);
           this.authConfig = {
@@ -66,7 +66,7 @@ export class AuthService extends IonicAuth {
             redirect_url: redirectUri,
             end_session_redirect_url: logoutRedirectUri,
             scopes,
-            usePkce: true
+            usePkce: true,
           };
         }
       );

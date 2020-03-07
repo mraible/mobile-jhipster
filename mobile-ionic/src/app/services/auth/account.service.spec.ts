@@ -6,7 +6,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 describe('AccountService', () => {
   beforeEach(() =>
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, NgxWebstorageModule.forRoot()]
+      imports: [HttpClientTestingModule, NgxWebstorageModule.forRoot()],
     })
   );
 
