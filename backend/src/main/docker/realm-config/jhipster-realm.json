@@ -690,6 +690,7 @@
         "http://127.0.0.1:*",
         "https://127.0.0.1:*",
         "dev.localhost.ionic:*",
+        "healthpoints://*",
         "healthpoints://*"
       ],
       "webOrigins": ["*"],

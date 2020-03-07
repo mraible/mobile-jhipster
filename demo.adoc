@@ -63,7 +63,6 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 . Modify `points-update.ts` to use booleans for points in the `save()` method
 
   const points = this.createFromForm();
-
   // convert booleans to ints
   points.exercise = points.exercise ? 1 : 0;
   points.meals = points.meals ? 1 : 0;
@@ -106,9 +105,9 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 
 . Rename `HealthPoints` to `mobile-react-native`
 
-. In the `mobile-react-native` directory, run `react-native run-ios`
+. In the `mobile-react-native` directory, run `npx react-native run-ios`
 
-. To run on Android, use `react-native run-android`
+. To run on Android, use `npx react-native run-android`
 
 . For AVD to communicate with your API and Keycloak, add some port mappings
 
@@ -165,23 +164,21 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
     return entity
   }
 
-. Add default form values in `componentWillMount()` [`rn-defaultValues`]
+. Add default form values in the `constructor()` [`rn-defaultValues`]
 
-  componentWillMount () {
-    if (this.props.data.entityId) {
-      this.props.getPoint(this.props.data.entityId)
-    } else {
-      this.setState({
-        formValue: {
-          id: null,
-          date: new Date(),
-          exercise: true,
-          meals: true,
-          alcohol: true
-        }
-      })
-    }
-    this.props.getAllUsers()
+  if (props.data && props.data.entityId) {
+    this.state.isNewEntity = false
+    this.props.getPoint(props.data.entityId)
+  } else {
+    this.setState({
+      formValue: {
+        id: null,
+        date: new Date(),
+        exercise: true,
+        meals: true,
+        alcohol: true
+      }
+    })
   }
 
 . Refresh your app in Simulator using kbd:[{commandkey} + R]

@@ -48,7 +48,7 @@ export class AuthService extends IonicAuth {
       this.requestor.xhr({ method: 'GET', url: AUTH_CONFIG_URI }).then(
         async (data: any) => {
           this.authConfig = {
-            identity_client: data.clientId,
+            identity_client: '0oa330agwhKz3NDp7357',
             identity_server: data.issuer,
             redirect_url: redirectUri,
             end_session_redirect_url: logoutRedirectUri,
