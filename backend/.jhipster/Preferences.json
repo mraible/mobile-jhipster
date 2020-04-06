@@ -31,7 +31,7 @@
             "ownerSide": true
         }
     ],
-    "changelogDate": "20200306195236",
+    "changelogDate": "20200406215900",
     "entityTableName": "preferences",
     "dto": "no",
     "pagination": "no",
@@ -39,6 +39,7 @@
     "jpaMetamodelFiltering": false,
     "fluentMethods": true,
     "readOnly": false,
+    "embedded": false,
     "clientRootFolder": "",
     "applications": [
         "HealthPoints"

@@ -1,22 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Col, Label, Row } from 'reactstrap';
-import { AvField, AvForm, AvGroup, AvInput } from 'availity-reactstrap-validation';
-import { Translate, translate } from 'react-jhipster';
+import { Button, Row, Col, Label } from 'reactstrap';
+import { AvFeedback, AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
+import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
-import { getUsers } from 'app/shared/reducers/user-management';
-import { createEntity, getEntity, reset, updateEntity } from './points.reducer';
 
-export interface IPointsUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {
-}
+import { IUser } from 'app/shared/model/user.model';
+import { getUsers } from 'app/shared/reducers/user-management';
+import { getEntity, updateEntity, createEntity, reset } from './points.reducer';
+import { IPoints } from 'app/shared/model/points.model';
+import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
+import { mapIdList } from 'app/shared/util/entity-utils';
+
+export interface IPointsUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export const PointsUpdate = (props: IPointsUpdateProps) => {
   const [userId, setUserId] = useState('0');
   const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.id);
 
-  const {pointsEntity, users, loading, updating} = props;
+  const { pointsEntity, users, loading, updating } = props;
 
   const handleClose = () => {
     props.history.push('/points' + props.location.search);
@@ -74,7 +78,7 @@ export const PointsUpdate = (props: IPointsUpdateProps) => {
                   <Label for="points-id">
                     <Translate contentKey="global.field.id">ID</Translate>
                   </Label>
-                  <AvInput id="points-id" type="text" className="form-control" name="id" required readOnly/>
+                  <AvInput id="points-id" type="text" className="form-control" name="id" required readOnly />
                 </AvGroup>
               ) : null}
               <AvGroup>
@@ -87,7 +91,7 @@ export const PointsUpdate = (props: IPointsUpdateProps) => {
                   className="form-control"
                   name="date"
                   validate={{
-                    required: {value: true, errorMessage: translate('entity.validation.required')}
+                    required: { value: true, errorMessage: translate('entity.validation.required') }
                   }}
                 />
               </AvGroup>
@@ -121,7 +125,7 @@ export const PointsUpdate = (props: IPointsUpdateProps) => {
                   type="text"
                   name="notes"
                   validate={{
-                    maxLength: {value: 140, errorMessage: translate('entity.validation.maxlength', {max: 140})}
+                    maxLength: { value: 140, errorMessage: translate('entity.validation.maxlength', { max: 140 }) }
                   }}
                 />
               </AvGroup>
@@ -130,18 +134,18 @@ export const PointsUpdate = (props: IPointsUpdateProps) => {
                   <Translate contentKey="healthPointsApp.points.user">User</Translate>
                 </Label>
                 <AvInput id="points-user" type="select" className="form-control" name="user">
-                  <option value="" key="0"/>
+                  <option value="" key="0" />
                   {users
                     ? users.map((otherEntity, index) => (
-                      <option value={index} key={otherEntity.id}>
-                        {otherEntity.login}
-                      </option>
-                    ))
+                        <option value={index} key={otherEntity.id}>
+                          {otherEntity.login}
+                        </option>
+                      ))
                     : null}
                 </AvInput>
               </AvGroup>
               <Button tag={Link} id="cancel-save" to="/points" replace color="info">
-                <FontAwesomeIcon icon="arrow-left"/>
+                <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">
                   <Translate contentKey="entity.action.back">Back</Translate>
@@ -149,7 +153,7 @@ export const PointsUpdate = (props: IPointsUpdateProps) => {
               </Button>
               &nbsp;
               <Button color="primary" id="save-entity" type="submit" disabled={updating}>
-                <FontAwesomeIcon icon="save"/>
+                <FontAwesomeIcon icon="save" />
                 &nbsp;
                 <Translate contentKey="entity.action.save">Save</Translate>
               </Button>
