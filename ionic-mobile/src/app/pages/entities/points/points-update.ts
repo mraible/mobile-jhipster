@@ -54,6 +54,11 @@ export class PointsUpdatePage implements OnInit {
     this.activatedRoute.data.subscribe((response) => {
       this.points = response.data;
       this.isNew = this.points.id === null || this.points.id === undefined;
+      if (this.isNew) {
+        this.points.alcohol = 1;
+        this.points.exercise = 1;
+        this.points.meals = 1;
+      }
       this.updateForm(this.points);
     });
   }
@@ -73,6 +78,10 @@ export class PointsUpdatePage implements OnInit {
   save() {
     this.isSaving = true;
     const points = this.createFromForm();
+    // convert booleans to ints
+    points.exercise = points.exercise ? 1 : 0;
+    points.meals = points.meals ? 1 : 0;
+    points.alcohol = points.alcohol ? 1 : 0;
     points.date = new Date(points.date).toISOString().split('T')[0];
     if (!this.isNew) {
       this.subscribeToSaveResponse(this.pointsService.update(points));
