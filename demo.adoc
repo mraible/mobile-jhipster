@@ -28,9 +28,8 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
   take backend
   jhipster import-jdl ../app.jh
 
-. Start Docker containers:
+. Start Keycloak:
 
-  docker-compose -f src/main/docker/elasticsearch.yml up -d
   docker-compose -f src/main/docker/keycloak.yml up -d
 
 //  docker-compose -f src/main/docker/sonar.yml up -d
