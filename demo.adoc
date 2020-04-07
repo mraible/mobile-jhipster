@@ -32,6 +32,7 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 
   docker-compose -f src/main/docker/elasticsearch.yml up -d
   docker-compose -f src/main/docker/keycloak.yml up -d
+
 //  docker-compose -f src/main/docker/sonar.yml up -d
 
 . Start app using `./gradlew`, show project in IDE, and browse `http://localhost:8080`
@@ -189,7 +190,7 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
     })
   }
 
-. Refresh your app in Simulator using kbd:[{commandkey} + R]
+. Refresh your app in Simulator using kbd:[{commandkey} + R] or by hitting kbd:[R] twice in Android
 
 TIP: To debug React Native, I recommend https://github.com/infinitered/reactotron[Reactotron] and using `console.tron.log()` instead of `console.log()`.
 
