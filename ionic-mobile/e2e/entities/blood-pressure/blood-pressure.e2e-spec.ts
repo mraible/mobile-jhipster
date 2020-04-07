@@ -2,7 +2,7 @@ import { browser, by, element, ExpectedConditions as ec } from 'protractor';
 import { LoginPage } from '../../pages/login.po';
 import { BloodPressureComponentsPage, BloodPressureDetailPage, BloodPressureUpdatePage } from './blood-pressure.po';
 
-fdescribe('BloodPressure e2e test', () => {
+describe('BloodPressure e2e test', () => {
   let loginPage: LoginPage;
   let bloodPressureComponentsPage: BloodPressureComponentsPage;
   let bloodPressureUpdatePage: BloodPressureUpdatePage;

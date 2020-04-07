@@ -13,7 +13,7 @@ describe('Preferences e2e test', () => {
   let lastElement: any;
   let isVisible = false;
 
-  const weeklyGoal = '5';
+  const weeklyGoal = '10';
 
   beforeAll(async () => {
     loginPage = new LoginPage();

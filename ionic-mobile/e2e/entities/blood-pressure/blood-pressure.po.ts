@@ -1,4 +1,5 @@
 import { element, by } from 'protractor';
+
 export class BloodPressureComponentsPage {
   createButton = element(by.css('ion-fab-button'));
   viewButtons = element.all(by.css('ion-item'));

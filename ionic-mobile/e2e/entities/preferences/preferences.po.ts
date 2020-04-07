@@ -1,10 +1,11 @@
-import { element, by, ElementFinder } from 'protractor';
+import { element, by, browser } from 'protractor';
+
 export class PreferencesComponentsPage {
   createButton = element(by.css('ion-fab-button'));
   viewButtons = element.all(by.css('ion-item'));
   title = element.all(by.css('ion-title')).get(2);
   noResult = element(by.cssContainingText('ion-label', 'No Preferences found.'));
-  entities = element.all(by.css('ion-text'));
+  entities = element.all(by.css('page-preferences ion-item'));
 
   async clickOnCreateButton(): Promise<void> {
     await this.createButton.click();
@@ -39,6 +40,7 @@ export class PreferencesUpdatePage {
   }
   async weightUnitsSelectLastOption(): Promise<void> {
     await this.weightUnitsSelect.click();
+    await browser.sleep(500);
     await element.all(by.className('alert-radio')).last().click();
     await element.all(by.className('alert-button')).last().click();
   }
