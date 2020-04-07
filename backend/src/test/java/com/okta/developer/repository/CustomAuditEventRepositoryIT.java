@@ -1,6 +1,7 @@
 package com.okta.developer.repository;
 
 import com.okta.developer.HealthPointsApp;
+
 import com.okta.developer.config.Constants;
 import com.okta.developer.config.TestSecurityConfiguration;
 import com.okta.developer.config.audit.AuditEventConverter;

@@ -18,8 +18,11 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 === Spring Boot API
 
 . Install JHipster: `npm install -g generator-jhipster`
+
 . Create a new directory to hold all the projects: `mkdir mobile-jhipster`
+
 . Download https://github.com/jhipster/jdl-samples/blob/master/21-points.jh[21-Points Health JDL] into the root directory.
+
 . Create a `backend` directory and run import-jdl from it:
 
   take backend
@@ -29,19 +32,24 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 
   docker-compose -f src/main/docker/elasticsearch.yml up -d
   docker-compose -f src/main/docker/keycloak.yml up -d
-  docker-compose -f src/main/docker/sonar.yml up -d
+//  docker-compose -f src/main/docker/sonar.yml up -d
 
 . Start app using `./gradlew`, show project in IDE, and browse `http://localhost:8080`
 
+. Run `npm start`, show Add Points screen, then change `points-update.tsx` to use checkboxes [`react-checkboxes`]
+
+. Turn off faker in `application-dev.yml` and `rm -rf build/h2db`
+////
 . Ensure coverage with Sonar (results at http://localhost:9001):
 
   ./gradlew -Pprod clean check sonarqube -Dsonar.host.url=http://localhost:9001
+////
 
 === Ionic App
 
 . Install Ionic CLI and Ionic for JHipster
 
-  npm i -g generator-jhipster-ionic ionic yo
+  npm i -g generator-jhipster-ionic @ionic/cli yo
 
 . Create an Ionic app named `mobile-ionic`
 
@@ -51,10 +59,7 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 
 . Generate entities
 
-  yo jhipster-ionic:entity points
-  yo jhipster-ionic:entity bloodPressure
-  yo jhipster-ionic:entity weight
-  yo jhipster-ionic:entity preferences
+  ionic4j import-jdl ../app.jh
 
 . Restart app and show generated entity screens
 
@@ -71,11 +76,9 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 . Update `points-update.ts` to set defaults in `ngOnInit(()`
 
   if (this.isNew) {
-    this.points.date = new Date().toISOString().split('T')[0];
     this.points.alcohol = 1;
     this.points.exercise = 1;
     this.points.meals = 1;
-    this.updateForm(this.points);
   }
 
 . Run app in iOS Simulator
@@ -83,6 +86,7 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
   ionic cordova prepare ios
   open platforms/ios/MyApp.xcworkspace
 
+////
 . Run app using Android Studio
 
   ionic cordova prepare android
@@ -92,7 +96,7 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 
   adb reverse tcp:8080 tcp:8080
   adb reverse tcp:9080 tcp:9080
-
+////
 === React Native App
 
 . Install Ignite CLI and Ignite JHipster
@@ -105,9 +109,11 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 
 . Rename `HealthPoints` to `mobile-react-native`
 
-. In the `mobile-react-native` directory, run `npx react-native run-ios`
+. In the `mobile-react-native` directory, run `npm run ios`
 
-. To run on Android, use `npx react-native run-android`
+. To run on Android, use `npm run android`
+
+. Add `healthpoints://authorize` as a Login redirect URI in Keycloak
 
 . For AVD to communicate with your API and Keycloak, add some port mappings
 
@@ -182,8 +188,6 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
   }
 
 . Refresh your app in Simulator using kbd:[{commandkey} + R]
-
-. Tweak React App in JHipster (`points-update.tsx`) to use checkboxes [`react-checkboxes`]
 
 TIP: To debug React Native, I recommend https://github.com/infinitered/reactotron[Reactotron] and using `console.tron.log()` instead of `console.log()`.
 

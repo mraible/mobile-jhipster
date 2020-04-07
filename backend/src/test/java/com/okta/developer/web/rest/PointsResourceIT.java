@@ -5,33 +5,31 @@ import com.okta.developer.config.TestSecurityConfiguration;
 import com.okta.developer.domain.Points;
 import com.okta.developer.repository.PointsRepository;
 import com.okta.developer.repository.search.PointsSearchRepository;
-import com.okta.developer.web.rest.errors.ExceptionTranslator;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mock;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
-
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 
-import static com.okta.developer.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -39,7 +37,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Integration tests for the {@link PointsResource} REST controller.
  */
-@SpringBootTest(classes = {HealthPointsApp.class, TestSecurityConfiguration.class})
+@SpringBootTest(classes = { HealthPointsApp.class, TestSecurityConfiguration.class })
+@ExtendWith(MockitoExtension.class)
+@AutoConfigureMockMvc
+@WithMockUser
 public class PointsResourceIT {
 
     private static final LocalDate DEFAULT_DATE = LocalDate.ofEpochDay(0L);
@@ -69,35 +70,12 @@ public class PointsResourceIT {
     private PointsSearchRepository mockPointsSearchRepository;
 
     @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restPointsMockMvc;
 
     private Points points;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final PointsResource pointsResource = new PointsResource(pointsRepository, mockPointsSearchRepository);
-        this.restPointsMockMvc = MockMvcBuilders.standaloneSetup(pointsResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
 
     /**
      * Create an entity for this test.
@@ -141,8 +119,8 @@ public class PointsResourceIT {
         int databaseSizeBeforeCreate = pointsRepository.findAll().size();
 
         // Create the Points
-        restPointsMockMvc.perform(post("/api/points")
-            .contentType(TestUtil.APPLICATION_JSON)
+        restPointsMockMvc.perform(post("/api/points").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(points)))
             .andExpect(status().isCreated());
 
@@ -169,8 +147,8 @@ public class PointsResourceIT {
         points.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restPointsMockMvc.perform(post("/api/points")
-            .contentType(TestUtil.APPLICATION_JSON)
+        restPointsMockMvc.perform(post("/api/points").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(points)))
             .andExpect(status().isBadRequest());
 
@@ -192,8 +170,8 @@ public class PointsResourceIT {
 
         // Create the Points, which fails.
 
-        restPointsMockMvc.perform(post("/api/points")
-            .contentType(TestUtil.APPLICATION_JSON)
+        restPointsMockMvc.perform(post("/api/points").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(points)))
             .andExpect(status().isBadRequest());
 
@@ -264,8 +242,8 @@ public class PointsResourceIT {
             .alcohol(UPDATED_ALCOHOL)
             .notes(UPDATED_NOTES);
 
-        restPointsMockMvc.perform(put("/api/points")
-            .contentType(TestUtil.APPLICATION_JSON)
+        restPointsMockMvc.perform(put("/api/points").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(updatedPoints)))
             .andExpect(status().isOk());
 
@@ -291,8 +269,8 @@ public class PointsResourceIT {
         // Create the Points
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restPointsMockMvc.perform(put("/api/points")
-            .contentType(TestUtil.APPLICATION_JSON)
+        restPointsMockMvc.perform(put("/api/points").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(points)))
             .andExpect(status().isBadRequest());
 
@@ -313,8 +291,8 @@ public class PointsResourceIT {
         int databaseSizeBeforeDelete = pointsRepository.findAll().size();
 
         // Delete the points
-        restPointsMockMvc.perform(delete("/api/points/{id}", points.getId())
-            .accept(TestUtil.APPLICATION_JSON))
+        restPointsMockMvc.perform(delete("/api/points/{id}", points.getId()).with(csrf())
+            .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

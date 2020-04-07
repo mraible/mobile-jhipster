@@ -274,13 +274,6 @@ describe('Entities reducer tests', () => {
         {
           type: SUCCESS(ACTION_TYPES.UPDATE_PREFERENCES),
           payload: resolvedObject
-        },
-        {
-          type: REQUEST(ACTION_TYPES.FETCH_PREFERENCES_LIST)
-        },
-        {
-          type: SUCCESS(ACTION_TYPES.FETCH_PREFERENCES_LIST),
-          payload: resolvedObject
         }
       ];
       await store.dispatch(updateEntity({ id: 1 })).then(() => expect(store.getActions()).toEqual(expectedActions));
@@ -293,13 +286,6 @@ describe('Entities reducer tests', () => {
         },
         {
           type: SUCCESS(ACTION_TYPES.DELETE_PREFERENCES),
-          payload: resolvedObject
-        },
-        {
-          type: REQUEST(ACTION_TYPES.FETCH_PREFERENCES_LIST)
-        },
-        {
-          type: SUCCESS(ACTION_TYPES.FETCH_PREFERENCES_LIST),
           payload: resolvedObject
         }
       ];

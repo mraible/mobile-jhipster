@@ -16,5 +16,4 @@ public interface WeightRepository extends JpaRepository<Weight, Long> {
 
     @Query("select weight from Weight weight where weight.user.login = ?#{principal.preferredUsername}")
     List<Weight> findByUserIsCurrentUser();
-
 }

@@ -25,7 +25,7 @@
             "otherEntityField": "login"
         }
     ],
-    "changelogDate": "20200306195036",
+    "changelogDate": "20200406215700",
     "entityTableName": "weight",
     "dto": "no",
     "pagination": "infinite-scroll",
@@ -33,6 +33,7 @@
     "jpaMetamodelFiltering": false,
     "fluentMethods": true,
     "readOnly": false,
+    "embedded": false,
     "clientRootFolder": "",
     "applications": [
         "HealthPoints"

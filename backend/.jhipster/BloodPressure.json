@@ -32,7 +32,7 @@
             "otherEntityField": "login"
         }
     ],
-    "changelogDate": "20200306194936",
+    "changelogDate": "20200406215600",
     "entityTableName": "blood_pressure",
     "dto": "no",
     "pagination": "infinite-scroll",
@@ -40,6 +40,7 @@
     "jpaMetamodelFiltering": false,
     "fluentMethods": true,
     "readOnly": false,
+    "embedded": false,
     "clientRootFolder": "",
     "applications": [
         "HealthPoints"
