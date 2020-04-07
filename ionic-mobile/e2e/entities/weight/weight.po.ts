@@ -1,4 +1,4 @@
-import { element, by } from 'protractor';
+import { element, by, browser, ElementFinder } from 'protractor';
 
 export class WeightComponentsPage {
   createButton = element(by.css('ion-fab-button'));

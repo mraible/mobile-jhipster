@@ -1,4 +1,4 @@
-import { element, by, browser } from 'protractor';
+import { element, by, browser, ElementFinder } from 'protractor';
 
 export class PreferencesComponentsPage {
   createButton = element(by.css('ion-fab-button'));

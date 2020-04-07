@@ -13,7 +13,7 @@ describe('Weight e2e test', () => {
   let lastElement: any;
   let isVisible = false;
 
-  const weight = '5';
+  const weight = '10';
 
   beforeAll(async () => {
     loginPage = new LoginPage();

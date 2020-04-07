@@ -13,9 +13,9 @@ describe('Points e2e test', () => {
   let lastElement: any;
   let isVisible = false;
 
-  const exercise = '5';
-  const meals = '5';
-  const alcohol = '5';
+  const exercise = '10';
+  const meals = '10';
+  const alcohol = '10';
   const notes = 'notes';
 
   beforeAll(async () => {

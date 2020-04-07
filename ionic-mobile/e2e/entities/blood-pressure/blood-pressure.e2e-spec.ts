@@ -13,8 +13,8 @@ describe('BloodPressure e2e test', () => {
   let lastElement: any;
   let isVisible = false;
 
-  const systolic = '5';
-  const diastolic = '5';
+  const systolic = '10';
+  const diastolic = '10';
 
   beforeAll(async () => {
     loginPage = new LoginPage();
