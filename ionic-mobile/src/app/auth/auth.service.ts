@@ -2,6 +2,7 @@ import { Requestor, StorageBackend } from '@openid/appauth';
 import { Platform } from '@ionic/angular';
 import { Injectable, NgZone } from '@angular/core';
 import { IonicAuth, Browser } from 'ionic-appauth';
+import { environment } from '../../environments/environment';
 
 interface AuthConfig {
   issuer: string;
@@ -37,8 +38,8 @@ export class AuthService extends IonicAuth {
   private async addConfig() {
     const scopes = 'openid profile offline_access';
     const redirectUri = this.onDevice() ? 'dev.localhost.ionic:/callback' : window.location.origin + '/implicit/callback';
-    const logoutRedirectUri = this.onDevice() ? 'dev.localhost.ionic:/logout' : window.location.origin + '/implicit/callback';
-    const AUTH_CONFIG_URI = 'http://localhost:8080/api/auth-info';
+    const logoutRedirectUri = this.onDevice() ? 'dev.localhost.ionic:/logout' : window.location.origin + '/implicit/logout';
+    const AUTH_CONFIG_URI = `${environment.apiUrl}/auth-info`;
 
     if (await this.storage.getItem(AUTH_CONFIG_URI)) {
       this.authConfig = JSON.parse(await this.storage.getItem(AUTH_CONFIG_URI));
@@ -48,7 +49,7 @@ export class AuthService extends IonicAuth {
       this.requestor.xhr({ method: 'GET', url: AUTH_CONFIG_URI }).then(
         async (data: any) => {
           this.authConfig = {
-            identity_client: data.clientId,
+            identity_client: '0oa3h35busNYg5g0C357',
             identity_server: data.issuer,
             redirect_url: redirectUri,
             end_session_redirect_url: logoutRedirectUri,

@@ -79,7 +79,6 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
     this.points.alcohol = 1;
     this.points.exercise = 1;
     this.points.meals = 1;
-    this.updateForm(this.points);
   }
 
 . Run app in iOS Simulator
@@ -110,9 +109,11 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 
 . Rename `HealthPoints` to `mobile-react-native`
 
-. In the `mobile-react-native` directory, run `npx react-native run-ios`
+. In the `mobile-react-native` directory, run `npm run ios`
 
-. To run on Android, use `npx react-native run-android`
+. To run on Android, use `npm run android`
+
+. Add `healthpoints://authorize` as a Login redirect URI in Keycloak
 
 . For AVD to communicate with your API and Keycloak, add some port mappings
 
