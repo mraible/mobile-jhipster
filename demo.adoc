@@ -42,7 +42,7 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 ////
 . Ensure coverage with Sonar (results at http://localhost:9001):
 
-  ./gradlew -Pprod clean check sonarqube -Dsonar.host.url=http://localhost:9001
+  ./gradlew -Pprod clean check jacocoTestReport sonarqube -Dsonar.host.url=http://localhost:9001
 ////
 
 === Ionic App
