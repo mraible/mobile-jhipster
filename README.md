@@ -32,11 +32,11 @@ docker-compose -f src/main/docker/keycloak.yml up -d
 To run the React Native app, install its dependencies:
 
 ```
-cd mobile-react-native
+cd react-native
 npm i
 ```
 
-You can run it on iOS using `react-native run-ios` or on Android with `react-native run-android`.
+You can run it on iOS using `npm run ios` or on Android with `npm run android`.
 
 You will need to run the following commands so your Android Virtual Device can talk to JHipster and Keycloak.
 
@@ -50,7 +50,7 @@ adb reverse tcp:9080 tcp:9080
 To run the Ionic app, install its dependencies:
 
 ```
-cd mobile-ionic
+cd ionic
 npm i
 ```
 
