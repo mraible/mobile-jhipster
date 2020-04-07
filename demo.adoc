@@ -51,9 +51,11 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 
   npm i -g generator-jhipster-ionic @ionic/cli yo
 
-. Create an Ionic app named `mobile-ionic`
+. Create an Ionic app named `HealthPoints`
 
   yo jhipster-ionic
+
+. Rename `HealthPoints` to `ionic`
 
 . Launch app and log in after running `ionic serve`
 
@@ -107,9 +109,9 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 
   ignite new HealthPoints -b ignite-jhipster
 
-. Rename `HealthPoints` to `mobile-react-native`
+. Rename `HealthPoints` to `react-native`
 
-. In the `mobile-react-native` directory, run `npm run ios`
+. In the `react-native` directory, run `npm run ios`
 
 . To run on Android, use `npm run android`
 
@@ -219,9 +221,9 @@ TIP: To debug React Native, I recommend https://github.com/infinitered/reactotro
   * For `given_name`, use expression `user.firstName`
   * For `family_name`, use expression `user.lastName`
 
-. Modify `mobile-react-native/app/modules/login/login.sagas.js` to use the generated client ID
+. Modify `react-native/app/modules/login/login.sagas.js` to use the generated client ID
 
-. Update `mobile-ionic/src/app/auth/auth.service.ts` to use client ID from Native Okta app
+. Update `ionic/src/app/auth/auth.service.ts` to use client ID from Native Okta app
 
 . Restart mobile apps and log in with Okta
 
