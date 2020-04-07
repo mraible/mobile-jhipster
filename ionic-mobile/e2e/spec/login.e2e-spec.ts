@@ -2,7 +2,6 @@ import { browser, by, element, ExpectedConditions as ec } from 'protractor';
 import { LoginPage } from '../pages/login.po';
 
 describe('Login', () => {
-
   let loginPage;
   const username = process.env.E2E_USERNAME || 'admin';
   const password = process.env.E2E_PASSWORD || 'admin';

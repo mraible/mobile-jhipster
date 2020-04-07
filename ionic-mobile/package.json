@@ -15,7 +15,7 @@
     "test:coverage": "jest --coverage",
     "e2e-test": "protractor ./e2e/protractor.conf.js",
     "e2e-update": "node node_modules/webdriver-manager/bin/webdriver-manager update --gecko false",
-    "prettier": "prettier --write \"{,src/**/}*.{js,json,html,md,ts,css,scss,yml}\" --loglevel silent"
+    "prettier": "prettier --write \"{,e2e/**/,src/**/}*.{js,json,html,md,ts,css,scss,yml}\" --loglevel silent"
   },
   "private": true,
   "dependencies": {
