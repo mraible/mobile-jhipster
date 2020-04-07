@@ -1,4 +1,4 @@
-import { element, by, browser, ElementFinder } from 'protractor';
+import { element, by } from 'protractor';
 
 export class BloodPressureComponentsPage {
   createButton = element(by.css('ion-fab-button'));
