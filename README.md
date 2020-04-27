@@ -2,7 +2,7 @@
 
 This set of apps was developed using [this demo script](https://github.com/mraible/mobile-jhipster/blob/master/demo.adoc). You can follow the steps to create your own versions, or just run the applications here.
 
-A presentation describing mobile development with JHipster is available [on Speaker Deck](https://speakerdeck.com/mraible/mobile-development-with-ionic-react-native-and-jhipster-acgnj-java-users-group-2019).
+See [Mobile Development with Ionic, React Native, and JHipster](https://developer.okta.com/blog/2020/04/27/mobile-development-ionic-react-native-jhipster) to see a demo of these apps being created.
 
 **Prerequisites:** [Java 8+](http://adoptopenjdk.com) and [Node.js](https://maven.apache.org). For React Native, you'll also need to install [CocoaPods](https://cocoapods.org/).
 
