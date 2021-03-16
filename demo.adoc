@@ -8,10 +8,8 @@ The brackets at the end of each step indicate the alias's or IntelliJ Live Templ
 
 **Prerequisites:**
 
-* https://adoptopenjdk.net/[Java 8+]
-* https://nodejs.org[Node 10+]
-* https://yarnpkg.com/lang/en/docs/cli/install/[Yarn]
-* https://cocoapods.org/[CocoaPods]
+* https://adoptopenjdk.net/[Java 11+]
+* https://nodejs.org[Node 14+]
 
 NOTE: I've purposely left the version numbers off this tutorial's `npm install` commands so the latest versions will be used. If you find issues with these steps, please file an issue for this repo.
 
@@ -63,7 +61,9 @@ toc::[]
 
 . Generate entities
 
-  ionic4j import-jdl ../app.jdl
+  yo jhipster-ionic:import-jdl ../app.jdl
++
+WARNING: I was unable to make this work with JHipster 7, so this code, nor the modifications below, are in this project.
 
 . Restart app and show generated entity screens
 
@@ -87,20 +87,32 @@ toc::[]
 
 . Run app in iOS Simulator
 
-  ionic cordova prepare ios
-  open platforms/ios/MyApp.xcworkspace
+  ionic build
+  ionic capacitor add ios
 
-////
-. Run app using Android Studio
+. Add your custom scheme to `ios/App/App/Info.plist`:
++
+[source,xml]
+----
+<key>CFBundleURLTypes</key>
+<array>
+  <dict>
+    <key>CFBundleURLName</key>
+    <string>com.getcapacitor.capacitor</string>
+    <key>CFBundleURLSchemes</key>
+    <array>
+      <string>capacitor</string>
+      <string>dev.localhost.ionic</string>
+    </array>
+  </dict>
+</array>
+----
 
-  ionic cordova prepare android
-  studio platforms/android
+. Open your project in Xcode and configure code signing.
 
-. For AVD to communicate with your API and Keycloak, you need to add some port mappings
+  npx cap open ios
 
-  adb reverse tcp:8080 tcp:8080
-  adb reverse tcp:9080 tcp:9080
-////
+. Then, run your app from Xcode.
 
 === React Native App
 
@@ -128,9 +140,9 @@ toc::[]
   adb reverse tcp:8080 tcp:8080
   adb reverse tcp:9080 tcp:9080
 
-// todo: document steps to make checkboxes in React Native
-
 . Refresh your app in Simulator using kbd:[{commandkey} + R] or by hitting kbd:[R] twice in Android
+
+// todo: document steps to make checkboxes in React Native
 
 === Flutter App
 
@@ -158,6 +170,8 @@ NOTE: This module currently only supports JWT auth. There's open issues for http
   cd flutter-app
   flutter run
 
+NOTE: I was unable to make this work with JHipster 7. See https://github.com/merlinofcha0s/generator-jhipster-flutter/issues/50[generator-jhipster-flutter/issues/50] for more information.
+
 === Use Okta for Identity
 
 . Install the https://cli.okta.com[Okta CLI] and run `okta register` to sign up for a new account. If you already have an account, run `okta login`.
@@ -172,24 +186,31 @@ NOTE: This module currently only supports JWT auth. There's open issues for http
 2. Creates `ROLE_ADMIN` and `ROLE_USER` groups that JHipster expects
 3. Adds your current user to the `ROLE_ADMIN` and `ROLE_USER` groups
 4. Creates a `groups` claim in your default authorization server and adds the user's groups to it
-
-**NOTE:** The `http://localhost:8761*` redirect URIs are for the JHipster Registry, which is often used when creating microservices with JHipster. The Okta CLI adds these by default.
++
+NOTE: The `http://localhost:8761*` redirect URIs are for the JHipster Registry, which is often used when creating microservices with JHipster. The Okta CLI adds these by default.
 
 . Create a **Native** app using `okta apps create` and use `http://localhost:19006/,https://auth.expo.io/@your-expo-username/reactNativeAppName` as redirect URIs.
 
   * `http://localhost:19006/,https://auth.expo.io/@mraible/HealthPoints`
 
-. Copy the client ID to `app/config/app-config.js`
+. Copy the client ID to `react-native/app/config/app-config.js`
 
-. Add `groups`, `given_name`, and `family_name` as claims to the access token.
+. Create another **Native** app for Ionic with the following redirect URIs:
 
-  * For `given_name`, use expression `user.firstName`
-  * For `family_name`, use expression `user.lastName`
-
-. Modify `react-native/app/modules/login/login.sagas.js` to use the generated client ID
+  * login: `http://localhost:8100/callback,dev.localhost.ionic:/callback`
+  * logout: `http://localhost:8100/logout,dev.localhost.ionic:/logout`
 
 . Update `ionic/src/app/auth/auth.service.ts` to use client ID from Native Okta app
 
 . Restart mobile apps and log in with Okta
 
-Source: https://developer.okta.com/blog/2019/06/24/ionic-4-angular-spring-boot-jhipster[Build Mobile Apps with Angular, Ionic 4, and Spring Boot] and https://developer.okta.com/blog/2018/10/10/react-native-spring-boot-mobile-app[Build a Mobile App with React Native and Spring Boot].
+==== Add Claims to Access Token
+
+NOTE: These steps are only necessary if you are using JHipster v6, or JHipster v7 with a Reactive JHipster backend.
+
+. Add `groups`, `given_name`, and `family_name` as claims to the access token.
+
+* For `given_name`, use expression `user.firstName`
+* For `family_name`, use expression `user.lastName`
+
+Source: https://developer.okta.com/blog/2019/06/24/ionic-4-angular-spring-boot-jhipster[Build Mobile Apps with Angular, Ionic 4, and Spring Boot] and https://jruddell.com/blog/jhipster-react-native[JHipster React Native Demo].

@@ -90,7 +90,7 @@ describe('Weight e2e test', () => {
     cy.get(entityCreateButtonSelector).click({ force: true });
     cy.getEntityCreateUpdateHeading('Weight');
 
-    cy.get(`[data-cy="timestamp"]`).type('2021-03-15T08:34').invoke('val').should('equal', '2021-03-15T08:34');
+    cy.get(`[data-cy="timestamp"]`).type('2021-03-16T20:16').invoke('val').should('equal', '2021-03-16T20:16');
 
     cy.get(`[data-cy="weight"]`).type('82456').should('have.value', '82456');
 

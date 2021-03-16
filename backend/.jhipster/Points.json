@@ -43,5 +43,5 @@
   "readOnly": false,
   "embedded": false,
   "applications": ["HealthPoints"],
-  "changelogDate": "20210316023830"
+  "changelogDate": "20210317142032"
 }

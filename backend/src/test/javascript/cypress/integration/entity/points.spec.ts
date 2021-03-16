@@ -90,7 +90,7 @@ describe('Points e2e test', () => {
     cy.get(entityCreateButtonSelector).click({ force: true });
     cy.getEntityCreateUpdateHeading('Points');
 
-    cy.get(`[data-cy="date"]`).type('2021-03-15').should('have.value', '2021-03-15');
+    cy.get(`[data-cy="date"]`).type('2021-03-17').should('have.value', '2021-03-17');
 
     cy.get(`[data-cy="exercise"]`).check().should('have.value', '1');
     cy.get(`[data-cy="meals"]`).check().should('have.value', '1');

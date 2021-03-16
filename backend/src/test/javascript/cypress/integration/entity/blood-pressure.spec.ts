@@ -90,7 +90,7 @@ describe('BloodPressure e2e test', () => {
     cy.get(entityCreateButtonSelector).click({ force: true });
     cy.getEntityCreateUpdateHeading('BloodPressure');
 
-    cy.get(`[data-cy="timestamp"]`).type('2021-03-15T23:48').invoke('val').should('equal', '2021-03-15T23:48');
+    cy.get(`[data-cy="timestamp"]`).type('2021-03-17T11:30').invoke('val').should('equal', '2021-03-17T11:30');
 
     cy.get(`[data-cy="systolic"]`).type('46531').should('have.value', '46531');
 
