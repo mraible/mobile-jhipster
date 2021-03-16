@@ -92,11 +92,9 @@ describe('Points e2e test', () => {
 
     cy.get(`[data-cy="date"]`).type('2021-03-15').should('have.value', '2021-03-15');
 
-    cy.get(`[data-cy="exercise"]`).type('49604').should('have.value', '49604');
-
-    cy.get(`[data-cy="meals"]`).type('54133').should('have.value', '54133');
-
-    cy.get(`[data-cy="alcohol"]`).type('8866').should('have.value', '8866');
+    cy.get(`[data-cy="exercise"]`).check().should('have.value', '1');
+    cy.get(`[data-cy="meals"]`).check().should('have.value', '1');
+    cy.get(`[data-cy="alcohol"]`).check().should('have.value', '1');
 
     cy.get(`[data-cy="notes"]`)
       .type('hacking killer Fantastic', { force: true })

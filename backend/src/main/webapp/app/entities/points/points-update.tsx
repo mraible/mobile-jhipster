@@ -96,19 +96,19 @@ export const PointsUpdate = (props: IPointsUpdateProps) => {
                 />
               </AvGroup>
               <AvGroup check>
-                <AvInput id="points-exercise" type="checkbox" name="exercise" trueValue={1} falseValue={0} />
+                <AvInput id="points-exercise" type="checkbox" name="exercise" data-cy="exercise" trueValue={1} falseValue={0} />
                 <Label check id="exerciseLabel" for="points-exercise">
                   <Translate contentKey="healthPointsApp.points.exercise">Exercise</Translate>
                 </Label>
               </AvGroup>
               <AvGroup check>
-                <AvInput id="points-meals" type="checkbox" name="meals" trueValue={1} falseValue={0} />
+                <AvInput id="points-meals" type="checkbox" name="meals" data-cy="meals" trueValue={1} falseValue={0} />
                 <Label check id="mealsLabel" for="points-meals">
                   <Translate contentKey="healthPointsApp.points.meals">Meals</Translate>
                 </Label>
               </AvGroup>
               <AvGroup check>
-                <AvInput id="points-alcohol" type="checkbox" name="alcohol" trueValue={1} falseValue={0} />
+                <AvInput id="points-alcohol" type="checkbox" name="alcohol" data-cy="alcohol" trueValue={1} falseValue={0} />
                 <Label check id="alcoholLabel" for="points-alcohol">
                   <Translate contentKey="healthPointsApp.points.alcohol">Alcohol</Translate>
                 </Label>
