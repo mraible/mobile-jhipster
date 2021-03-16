@@ -2,86 +2,57 @@ import React, { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, InputGroup, Col, Row, Table } from 'reactstrap';
-import { AvForm, AvGroup, AvInput } from 'availity-reactstrap-validation';
-import { Translate, translate, ICrudSearchAction, ICrudGetAllAction, TextFormat, getSortState, IPaginationBaseState } from 'react-jhipster';
+import { Button, Col, Row, Table } from 'reactstrap';
+import { Translate, TextFormat, getSortState, IPaginationBaseState } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
-import { getSearchEntities, getEntities, reset } from './weight.reducer';
+import { getEntities, reset } from './weight.reducer';
 import { IWeight } from 'app/shared/model/weight.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
+import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 
 export interface IWeightProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
 export const Weight = (props: IWeightProps) => {
-  const [search, setSearch] = useState('');
-  const [paginationState, setPaginationState] = useState(getSortState(props.location, ITEMS_PER_PAGE));
+  const [paginationState, setPaginationState] = useState(
+    overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
+  );
   const [sorting, setSorting] = useState(false);
 
   const getAllEntities = () => {
-    if (search) {
-      props.getSearchEntities(
-        search,
-        paginationState.activePage - 1,
-        paginationState.itemsPerPage,
-        `${paginationState.sort},${paginationState.order}`
-      );
-    } else {
-      props.getEntities(paginationState.activePage - 1, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`);
-    }
+    props.getEntities(paginationState.activePage - 1, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`);
   };
 
   const resetAll = () => {
     props.reset();
     setPaginationState({
       ...paginationState,
-      activePage: 1
+      activePage: 1,
     });
+    props.getEntities();
   };
 
   useEffect(() => {
     resetAll();
   }, []);
 
-  const startSearching = () => {
-    if (search) {
-      props.reset();
-      setPaginationState({
-        ...paginationState,
-        activePage: 1
-      });
-      props.getSearchEntities(
-        search,
-        paginationState.activePage - 1,
-        paginationState.itemsPerPage,
-        `${paginationState.sort},${paginationState.order}`
-      );
+  useEffect(() => {
+    if (props.updateSuccess) {
+      resetAll();
     }
-  };
-
-  const clear = () => {
-    props.reset();
-    setSearch('');
-    setPaginationState({
-      ...paginationState,
-      activePage: 1
-    });
-    props.getEntities();
-  };
-
-  const handleSearch = event => setSearch(event.target.value);
+  }, [props.updateSuccess]);
 
   useEffect(() => {
     getAllEntities();
   }, [paginationState.activePage]);
 
   const handleLoadMore = () => {
-    if (window.pageYOffset > 0) {
+    if ((window as any).pageYOffset > 0) {
       setPaginationState({
         ...paginationState,
-        activePage: paginationState.activePage + 1
+        activePage: paginationState.activePage + 1,
       });
     }
   };
@@ -91,7 +62,7 @@ export const Weight = (props: IWeightProps) => {
       getAllEntities();
       setSorting(false);
     }
-  }, [sorting, search]);
+  }, [sorting]);
 
   const sort = p => () => {
     props.reset();
@@ -99,45 +70,32 @@ export const Weight = (props: IWeightProps) => {
       ...paginationState,
       activePage: 1,
       order: paginationState.order === 'asc' ? 'desc' : 'asc',
-      sort: p
+      sort: p,
     });
     setSorting(true);
+  };
+
+  const handleSyncList = () => {
+    resetAll();
   };
 
   const { weightList, match, loading } = props;
   return (
     <div>
-      <h2 id="weight-heading">
+      <h2 id="weight-heading" data-cy="WeightHeading">
         <Translate contentKey="healthPointsApp.weight.home.title">Weights</Translate>
-        <Link to={`${match.url}/new`} className="btn btn-primary float-right jh-create-entity" id="jh-create-entity">
-          <FontAwesomeIcon icon="plus" />
-          &nbsp;
-          <Translate contentKey="healthPointsApp.weight.home.createLabel">Create new Weight</Translate>
-        </Link>
+        <div className="d-flex justify-content-end">
+          <Button className="mr-2" color="info" onClick={handleSyncList} disabled={loading}>
+            <FontAwesomeIcon icon="sync" spin={loading} />{' '}
+            <Translate contentKey="healthPointsApp.weight.home.refreshListLabel">Refresh List</Translate>
+          </Button>
+          <Link to={`${match.url}/new`} className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
+            <FontAwesomeIcon icon="plus" />
+            &nbsp;
+            <Translate contentKey="healthPointsApp.weight.home.createLabel">Create new Weight</Translate>
+          </Link>
+        </div>
       </h2>
-      <Row>
-        <Col sm="12">
-          <AvForm onSubmit={startSearching}>
-            <AvGroup>
-              <InputGroup>
-                <AvInput
-                  type="text"
-                  name="search"
-                  value={search}
-                  onChange={handleSearch}
-                  placeholder={translate('healthPointsApp.weight.home.search')}
-                />
-                <Button className="input-group-addon">
-                  <FontAwesomeIcon icon="search" />
-                </Button>
-                <Button type="reset" className="input-group-addon" onClick={clear}>
-                  <FontAwesomeIcon icon="trash" />
-                </Button>
-              </InputGroup>
-            </AvGroup>
-          </AvForm>
-        </Col>
-      </Row>
       <div className="table-responsive">
         <InfiniteScroll
           pageStart={paginationState.activePage}
@@ -152,7 +110,7 @@ export const Weight = (props: IWeightProps) => {
               <thead>
                 <tr>
                   <th className="hand" onClick={sort('id')}>
-                    <Translate contentKey="global.field.id">ID</Translate> <FontAwesomeIcon icon="sort" />
+                    <Translate contentKey="healthPointsApp.weight.id">ID</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
                   <th className="hand" onClick={sort('timestamp')}>
                     <Translate contentKey="healthPointsApp.weight.timestamp">Timestamp</Translate> <FontAwesomeIcon icon="sort" />
@@ -168,32 +126,31 @@ export const Weight = (props: IWeightProps) => {
               </thead>
               <tbody>
                 {weightList.map((weight, i) => (
-                  <tr key={`entity-${i}`}>
+                  <tr key={`entity-${i}`} data-cy="entityTable">
                     <td>
                       <Button tag={Link} to={`${match.url}/${weight.id}`} color="link" size="sm">
                         {weight.id}
                       </Button>
                     </td>
-                    <td>
-                      <TextFormat type="date" value={weight.timestamp} format={APP_DATE_FORMAT} />
-                    </td>
+                    <td>{weight.id}</td>
+                    <td>{weight.timestamp ? <TextFormat type="date" value={weight.timestamp} format={APP_DATE_FORMAT} /> : null}</td>
                     <td>{weight.weight}</td>
                     <td>{weight.user ? weight.user.login : ''}</td>
                     <td className="text-right">
                       <div className="btn-group flex-btn-group-container">
-                        <Button tag={Link} to={`${match.url}/${weight.id}`} color="info" size="sm">
+                        <Button tag={Link} to={`${match.url}/${weight.id}`} color="info" size="sm" data-cy="entityDetailsButton">
                           <FontAwesomeIcon icon="eye" />{' '}
                           <span className="d-none d-md-inline">
                             <Translate contentKey="entity.action.view">View</Translate>
                           </span>
                         </Button>
-                        <Button tag={Link} to={`${match.url}/${weight.id}/edit`} color="primary" size="sm">
+                        <Button tag={Link} to={`${match.url}/${weight.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
                           <FontAwesomeIcon icon="pencil-alt" />{' '}
                           <span className="d-none d-md-inline">
                             <Translate contentKey="entity.action.edit">Edit</Translate>
                           </span>
                         </Button>
-                        <Button tag={Link} to={`${match.url}/${weight.id}/delete`} color="danger" size="sm">
+                        <Button tag={Link} to={`${match.url}/${weight.id}/delete`} color="danger" size="sm" data-cy="entityDeleteButton">
                           <FontAwesomeIcon icon="trash" />{' '}
                           <span className="d-none d-md-inline">
                             <Translate contentKey="entity.action.delete">Delete</Translate>
@@ -224,13 +181,12 @@ const mapStateToProps = ({ weight }: IRootState) => ({
   totalItems: weight.totalItems,
   links: weight.links,
   entity: weight.entity,
-  updateSuccess: weight.updateSuccess
+  updateSuccess: weight.updateSuccess,
 });
 
 const mapDispatchToProps = {
-  getSearchEntities,
   getEntities,
-  reset
+  reset,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

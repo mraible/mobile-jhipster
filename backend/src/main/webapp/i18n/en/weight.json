@@ -3,9 +3,9 @@
     "weight": {
       "home": {
         "title": "Weights",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Weight",
         "createOrEditLabel": "Create or edit a Weight",
-        "search": "Search for Weight",
         "notFound": "No Weights found"
       },
       "created": "A new Weight is created with identifier {{ param }}",
@@ -17,6 +17,7 @@
       "detail": {
         "title": "Weight"
       },
+      "id": "ID",
       "timestamp": "Timestamp",
       "weight": "Weight",
       "user": "User"

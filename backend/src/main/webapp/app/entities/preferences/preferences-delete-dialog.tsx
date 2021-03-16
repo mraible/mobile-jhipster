@@ -2,10 +2,9 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
-import { Translate, ICrudGetAction, ICrudDeleteAction } from 'react-jhipster';
+import { Translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { IPreferences } from 'app/shared/model/preferences.model';
 import { IRootState } from 'app/shared/reducers';
 import { getEntity, deleteEntity } from './preferences.reducer';
 
@@ -33,7 +32,7 @@ export const PreferencesDeleteDialog = (props: IPreferencesDeleteDialogProps) =>
   const { preferencesEntity } = props;
   return (
     <Modal isOpen toggle={handleClose}>
-      <ModalHeader toggle={handleClose}>
+      <ModalHeader toggle={handleClose} data-cy="preferencesDeleteDialogHeading">
         <Translate contentKey="entity.delete.title">Confirm delete operation</Translate>
       </ModalHeader>
       <ModalBody id="healthPointsApp.preferences.delete.question">
@@ -47,7 +46,7 @@ export const PreferencesDeleteDialog = (props: IPreferencesDeleteDialogProps) =>
           &nbsp;
           <Translate contentKey="entity.action.cancel">Cancel</Translate>
         </Button>
-        <Button id="jhi-confirm-delete-preferences" color="danger" onClick={confirmDelete}>
+        <Button id="jhi-confirm-delete-preferences" data-cy="entityConfirmDeleteButton" color="danger" onClick={confirmDelete}>
           <FontAwesomeIcon icon="trash" />
           &nbsp;
           <Translate contentKey="entity.action.delete">Delete</Translate>
@@ -59,7 +58,7 @@ export const PreferencesDeleteDialog = (props: IPreferencesDeleteDialogProps) =>
 
 const mapStateToProps = ({ preferences }: IRootState) => ({
   preferencesEntity: preferences.entity,
-  updateSuccess: preferences.updateSuccess
+  updateSuccess: preferences.updateSuccess,
 });
 
 const mapDispatchToProps = { getEntity, deleteEntity };

@@ -8,18 +8,18 @@ export const ACTION_TYPES = {
   GET_SESSION: 'authentication/GET_SESSION',
   LOGOUT: 'authentication/LOGOUT',
   CLEAR_AUTH: 'authentication/CLEAR_AUTH',
-  ERROR_MESSAGE: 'authentication/ERROR_MESSAGE'
+  ERROR_MESSAGE: 'authentication/ERROR_MESSAGE',
 };
 
 const initialState = {
   loading: false,
   isAuthenticated: false,
   account: {} as any,
-  errorMessage: null as string, // Errors returned from server side
-  redirectMessage: null as string,
+  errorMessage: (null as unknown) as string, // Errors returned from server side
+  redirectMessage: (null as unknown) as string,
   sessionHasBeenFetched: false,
-  idToken: null as string,
-  logoutUrl: null as string
+  idToken: (null as unknown) as string,
+  logoutUrl: (null as unknown) as string,
 };
 
 export type AuthenticationState = Readonly<typeof initialState>;
@@ -31,7 +31,7 @@ export default (state: AuthenticationState = initialState, action): Authenticati
     case REQUEST(ACTION_TYPES.GET_SESSION):
       return {
         ...state,
-        loading: true
+        loading: true,
       };
     case FAILURE(ACTION_TYPES.GET_SESSION):
       return {
@@ -39,13 +39,13 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         loading: false,
         isAuthenticated: false,
         sessionHasBeenFetched: true,
-        errorMessage: action.payload
+        errorMessage: action.payload,
       };
     case SUCCESS(ACTION_TYPES.LOGOUT):
       return {
         ...initialState,
         idToken: action.payload.data.idToken,
-        logoutUrl: action.payload.data.logoutUrl
+        logoutUrl: action.payload.data.logoutUrl,
       };
     case SUCCESS(ACTION_TYPES.GET_SESSION): {
       const isAuthenticated = action.payload && action.payload.data && action.payload.data.activated;
@@ -54,19 +54,19 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         isAuthenticated,
         loading: false,
         sessionHasBeenFetched: true,
-        account: action.payload.data
+        account: action.payload.data,
       };
     }
     case ACTION_TYPES.ERROR_MESSAGE:
       return {
         ...initialState,
-        redirectMessage: action.message
+        redirectMessage: action.message,
       };
     case ACTION_TYPES.CLEAR_AUTH:
       return {
         ...state,
         loading: false,
-        isAuthenticated: false
+        isAuthenticated: false,
       };
     default:
       return state;
@@ -75,10 +75,10 @@ export default (state: AuthenticationState = initialState, action): Authenticati
 
 export const displayAuthError = message => ({ type: ACTION_TYPES.ERROR_MESSAGE, message });
 
-export const getSession = () => async (dispatch, getState) => {
+export const getSession: () => void = () => async (dispatch, getState) => {
   await dispatch({
     type: ACTION_TYPES.GET_SESSION,
-    payload: axios.get('api/account')
+    payload: axios.get('api/account'),
   });
 
   const { account } = getState().authentication;
@@ -88,10 +88,10 @@ export const getSession = () => async (dispatch, getState) => {
   }
 };
 
-export const logout = () => async dispatch => {
+export const logout: () => void = () => async dispatch => {
   await dispatch({
     type: ACTION_TYPES.LOGOUT,
-    payload: axios.post('api/logout', {})
+    payload: axios.post('api/logout', {}),
   });
 
   // fetch new csrf token
@@ -101,6 +101,6 @@ export const logout = () => async dispatch => {
 export const clearAuthentication = messageKey => (dispatch, getState) => {
   dispatch(displayAuthError(messageKey));
   dispatch({
-    type: ACTION_TYPES.CLEAR_AUTH
+    type: ACTION_TYPES.CLEAR_AUTH,
   });
 };

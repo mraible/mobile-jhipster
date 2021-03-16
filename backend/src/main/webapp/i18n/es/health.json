@@ -13,16 +13,17 @@
     "indicator": {
       "diskSpace": "Espacio en disco",
       "mail": "Email",
+      "livenessState": "Liveness state",
+      "readinessState": "Readiness state",
       "ping": "Application",
-      "elasticsearch": "Elasticsearch",
-      "db": "Database"
+      "r2dbc": "Database"
     },
     "table": {
       "service": "Nombre del servicio",
       "status": "Estado"
     },
     "status": {
-      "UNKNOWN": "UNKNOWN",
+      "UNKNOWN": "DESCONOCIDO",
       "UP": "LEVANTADO",
       "DOWN": "CAÍDO"
     }

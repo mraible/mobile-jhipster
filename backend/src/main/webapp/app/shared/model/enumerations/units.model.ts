@@ -1,4 +1,5 @@
-export const enum Units {
+export enum Units {
   KG = 'KG',
-  LB = 'LB'
+
+  LB = 'LB',
 }

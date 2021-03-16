@@ -1,48 +1,39 @@
 {
-    "name": "BloodPressure",
-    "fields": [
-        {
-            "fieldName": "timestamp",
-            "fieldType": "ZonedDateTime",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "systolic",
-            "fieldType": "Integer",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "diastolic",
-            "fieldType": "Integer",
-            "fieldValidateRules": [
-                "required"
-            ]
-        }
-    ],
-    "relationships": [
-        {
-            "relationshipType": "many-to-one",
-            "otherEntityName": "user",
-            "otherEntityRelationshipName": "bloodPressure",
-            "relationshipName": "user",
-            "otherEntityField": "login"
-        }
-    ],
-    "changelogDate": "20200406215600",
-    "entityTableName": "blood_pressure",
-    "dto": "no",
-    "pagination": "infinite-scroll",
-    "service": "no",
-    "jpaMetamodelFiltering": false,
-    "fluentMethods": true,
-    "readOnly": false,
-    "embedded": false,
-    "clientRootFolder": "",
-    "applications": [
-        "HealthPoints"
-    ]
+  "name": "BloodPressure",
+  "fields": [
+    {
+      "fieldName": "timestamp",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "systolic",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "diastolic",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "bloodPressure",
+      "relationshipName": "user",
+      "otherEntityField": "login"
+    }
+  ],
+  "entityTableName": "blood_pressure",
+  "dto": "no",
+  "pagination": "infinite-scroll",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["HealthPoints"],
+  "changelogDate": "20210316023930"
 }

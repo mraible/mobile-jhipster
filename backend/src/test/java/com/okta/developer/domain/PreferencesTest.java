@@ -1,13 +1,14 @@
 package com.okta.developer.domain;
 
-import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
-import com.okta.developer.web.rest.TestUtil;
 
-public class PreferencesTest {
+import com.okta.developer.web.rest.TestUtil;
+import org.junit.jupiter.api.Test;
+
+class PreferencesTest {
 
     @Test
-    public void equalsVerifier() throws Exception {
+    void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Preferences.class);
         Preferences preferences1 = new Preferences();
         preferences1.setId(1L);

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col, Label } from 'reactstrap';
 import { AvFeedback, AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
-import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction } from 'react-jhipster';
+import { Translate, translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
@@ -17,8 +17,7 @@ import { mapIdList } from 'app/shared/util/entity-utils';
 export interface IBloodPressureUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export const BloodPressureUpdate = (props: IBloodPressureUpdateProps) => {
-  const [userId, setUserId] = useState('0');
-  const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.id);
+  const [isNew] = useState(!props.match.params || !props.match.params.id);
 
   const { bloodPressureEntity, users, loading, updating } = props;
 
@@ -46,9 +45,9 @@ export const BloodPressureUpdate = (props: IBloodPressureUpdateProps) => {
     if (errors.length === 0) {
       const entity = {
         ...bloodPressureEntity,
-        ...values
+        ...values,
+        user: users.find(it => it.id.toString() === values.userId.toString()),
       };
-      entity.user = users[values.user];
 
       if (isNew) {
         props.createEntity(entity);
@@ -62,7 +61,7 @@ export const BloodPressureUpdate = (props: IBloodPressureUpdateProps) => {
     <div>
       <Row className="justify-content-center">
         <Col md="8">
-          <h2 id="healthPointsApp.bloodPressure.home.createOrEditLabel">
+          <h2 id="healthPointsApp.bloodPressure.home.createOrEditLabel" data-cy="BloodPressureCreateUpdateHeading">
             <Translate contentKey="healthPointsApp.bloodPressure.home.createOrEditLabel">Create or edit a BloodPressure</Translate>
           </h2>
         </Col>
@@ -87,13 +86,14 @@ export const BloodPressureUpdate = (props: IBloodPressureUpdateProps) => {
                 </Label>
                 <AvInput
                   id="blood-pressure-timestamp"
+                  data-cy="timestamp"
                   type="datetime-local"
                   className="form-control"
                   name="timestamp"
                   placeholder={'YYYY-MM-DD HH:mm'}
                   value={isNew ? displayDefaultDateTime() : convertDateTimeFromServer(props.bloodPressureEntity.timestamp)}
                   validate={{
-                    required: { value: true, errorMessage: translate('entity.validation.required') }
+                    required: { value: true, errorMessage: translate('entity.validation.required') },
                   }}
                 />
               </AvGroup>
@@ -103,12 +103,13 @@ export const BloodPressureUpdate = (props: IBloodPressureUpdateProps) => {
                 </Label>
                 <AvField
                   id="blood-pressure-systolic"
+                  data-cy="systolic"
                   type="string"
                   className="form-control"
                   name="systolic"
                   validate={{
                     required: { value: true, errorMessage: translate('entity.validation.required') },
-                    number: { value: true, errorMessage: translate('entity.validation.number') }
+                    number: { value: true, errorMessage: translate('entity.validation.number') },
                   }}
                 />
               </AvGroup>
@@ -118,12 +119,13 @@ export const BloodPressureUpdate = (props: IBloodPressureUpdateProps) => {
                 </Label>
                 <AvField
                   id="blood-pressure-diastolic"
+                  data-cy="diastolic"
                   type="string"
                   className="form-control"
                   name="diastolic"
                   validate={{
                     required: { value: true, errorMessage: translate('entity.validation.required') },
-                    number: { value: true, errorMessage: translate('entity.validation.number') }
+                    number: { value: true, errorMessage: translate('entity.validation.number') },
                   }}
                 />
               </AvGroup>
@@ -131,11 +133,11 @@ export const BloodPressureUpdate = (props: IBloodPressureUpdateProps) => {
                 <Label for="blood-pressure-user">
                   <Translate contentKey="healthPointsApp.bloodPressure.user">User</Translate>
                 </Label>
-                <AvInput id="blood-pressure-user" type="select" className="form-control" name="user">
+                <AvInput id="blood-pressure-user" data-cy="user" type="select" className="form-control" name="userId">
                   <option value="" key="0" />
                   {users
-                    ? users.map((otherEntity, index) => (
-                        <option value={index} key={otherEntity.id}>
+                    ? users.map(otherEntity => (
+                        <option value={otherEntity.id} key={otherEntity.id}>
                           {otherEntity.login}
                         </option>
                       ))
@@ -150,7 +152,7 @@ export const BloodPressureUpdate = (props: IBloodPressureUpdateProps) => {
                 </span>
               </Button>
               &nbsp;
-              <Button color="primary" id="save-entity" type="submit" disabled={updating}>
+              <Button color="primary" id="save-entity" data-cy="entityCreateSaveButton" type="submit" disabled={updating}>
                 <FontAwesomeIcon icon="save" />
                 &nbsp;
                 <Translate contentKey="entity.action.save">Save</Translate>
@@ -168,7 +170,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   bloodPressureEntity: storeState.bloodPressure.entity,
   loading: storeState.bloodPressure.loading,
   updating: storeState.bloodPressure.updating,
-  updateSuccess: storeState.bloodPressure.updateSuccess
+  updateSuccess: storeState.bloodPressure.updateSuccess,
 });
 
 const mapDispatchToProps = {
@@ -176,7 +178,7 @@ const mapDispatchToProps = {
   getEntity,
   updateEntity,
   createEntity,
-  reset
+  reset,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

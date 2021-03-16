@@ -38,7 +38,9 @@ export const HealthPage = (props: IHealthPageProps) => {
 
   return (
     <div>
-      <h2 id="health-page-heading">Health Checks</h2>
+      <h2 id="health-page-heading" data-cy="healthPageHeading">
+        Health Checks
+      </h2>
       <p>
         <Button onClick={getSystemHealth} color={isFetching ? 'btn btn-danger' : 'btn btn-primary'} disabled={isFetching}>
           <FontAwesomeIcon icon="sync" />
@@ -87,7 +89,7 @@ export const HealthPage = (props: IHealthPageProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   health: storeState.administration.health,
-  isFetching: storeState.administration.loading
+  isFetching: storeState.administration.loading,
 });
 
 const mapDispatchToProps = { systemHealth };

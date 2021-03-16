@@ -2,12 +2,11 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
-import { Translate, ICrudGetAction, TextFormat } from 'react-jhipster';
+import { Translate, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
 import { getEntity } from './blood-pressure.reducer';
-import { IBloodPressure } from 'app/shared/model/blood-pressure.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 
 export interface IBloodPressureDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
@@ -21,17 +20,25 @@ export const BloodPressureDetail = (props: IBloodPressureDetailProps) => {
   return (
     <Row>
       <Col md="8">
-        <h2>
-          <Translate contentKey="healthPointsApp.bloodPressure.detail.title">BloodPressure</Translate> [<b>{bloodPressureEntity.id}</b>]
+        <h2 data-cy="bloodPressureDetailsHeading">
+          <Translate contentKey="healthPointsApp.bloodPressure.detail.title">BloodPressure</Translate>
         </h2>
         <dl className="jh-entity-details">
+          <dt>
+            <span id="id">
+              <Translate contentKey="global.field.id">ID</Translate>
+            </span>
+          </dt>
+          <dd>{bloodPressureEntity.id}</dd>
           <dt>
             <span id="timestamp">
               <Translate contentKey="healthPointsApp.bloodPressure.timestamp">Timestamp</Translate>
             </span>
           </dt>
           <dd>
-            <TextFormat value={bloodPressureEntity.timestamp} type="date" format={APP_DATE_FORMAT} />
+            {bloodPressureEntity.timestamp ? (
+              <TextFormat value={bloodPressureEntity.timestamp} type="date" format={APP_DATE_FORMAT} />
+            ) : null}
           </dd>
           <dt>
             <span id="systolic">
@@ -50,7 +57,7 @@ export const BloodPressureDetail = (props: IBloodPressureDetailProps) => {
           </dt>
           <dd>{bloodPressureEntity.user ? bloodPressureEntity.user.login : ''}</dd>
         </dl>
-        <Button tag={Link} to="/blood-pressure" replace color="info">
+        <Button tag={Link} to="/blood-pressure" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.back">Back</Translate>
@@ -69,7 +76,7 @@ export const BloodPressureDetail = (props: IBloodPressureDetailProps) => {
 };
 
 const mapStateToProps = ({ bloodPressure }: IRootState) => ({
-  bloodPressureEntity: bloodPressure.entity
+  bloodPressureEntity: bloodPressure.entity,
 });
 
 const mapDispatchToProps = { getEntity };

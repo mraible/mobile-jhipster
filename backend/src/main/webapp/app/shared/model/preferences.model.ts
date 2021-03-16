@@ -5,7 +5,7 @@ export interface IPreferences {
   id?: number;
   weeklyGoal?: number;
   weightUnits?: Units;
-  user?: IUser;
+  user?: IUser | null;
 }
 
 export const defaultValue: Readonly<IPreferences> = {};

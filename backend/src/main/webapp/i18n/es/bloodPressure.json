@@ -3,9 +3,9 @@
     "bloodPressure": {
       "home": {
         "title": "Blood Pressures",
+        "refreshListLabel": "Refrescar lista",
         "createLabel": "Crear nuevo Blood Pressure",
         "createOrEditLabel": "Crear o editar Blood Pressure",
-        "search": "Buscar Blood Pressure",
         "notFound": "Ningún Blood Pressures encontrado"
       },
       "created": "Un nuevo Blood Pressure ha sido creado con el identificador {{ param }}",
@@ -17,6 +17,7 @@
       "detail": {
         "title": "Blood Pressure"
       },
+      "id": "ID",
       "timestamp": "Timestamp",
       "systolic": "Systolic",
       "diastolic": "Diastolic",
