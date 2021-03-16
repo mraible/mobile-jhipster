@@ -4,7 +4,6 @@ import io.r2dbc.spi.Row;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.convert.R2dbcCustomConversions;
-import org.springframework.data.r2dbc.core.ReactiveDataAccessStrategy;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ClassUtils;
@@ -30,6 +29,7 @@ public class ColumnConverter {
      * @param <T> the parameter for the intended type.
      * @return the value which can be constructed from the input.
      */
+    @SuppressWarnings("unchecked")
     public <T> T convert(@Nullable Object value, @Nullable Class<T> target) {
         if (value == null || target == null || ClassUtils.isAssignableValue(target, value)) {
             return (T) value;
