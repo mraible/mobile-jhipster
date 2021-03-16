@@ -2,7 +2,7 @@
 // Define unicode for Apple Command key.
 :commandkey: &#8984;
 
-== Mobile Development with Ionic, React Native, and JHipster
+== Mobile Development with Ionic, React Native, Flutter, and JHipster
 
 The brackets at the end of each step indicate the alias's or IntelliJ Live Templates to use. You can find the template definitions at https://github.com/mraible/idea-live-templates[mraible/idea-live-templates].
 
@@ -15,18 +15,20 @@ The brackets at the end of each step indicate the alias's or IntelliJ Live Templ
 
 NOTE: I've purposely left the version numbers off this tutorial's `npm install` commands so the latest versions will be used. If you find issues with these steps, please file an issue for this repo.
 
-=== Spring Boot API
+toc::[]
 
-. Install JHipster: `npm install -g generator-jhipster`
+=== Reactive Spring Boot API
+
+. Install JHipster: `npm install -g generator-jhipster@beta`
 
 . Create a new directory to hold all the projects: `mkdir mobile-jhipster`
 
-. Download https://github.com/jhipster/jdl-samples/blob/master/21-points.jh[21-Points Health JDL] into the root directory.
+// . Download https://github.com/jhipster/jdl-samples/blob/master/21-points.jh[21-Points Health JDL] into the root directory.
 
 . Create a `backend` directory and run import-jdl from it:
 
   take backend
-  jhipster import-jdl ../app.jh
+  jhipster import-jdl ../app.jdl
 
 . Start Keycloak:
 
@@ -61,7 +63,7 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 
 . Generate entities
 
-  ionic4j import-jdl ../app.jh
+  ionic4j import-jdl ../app.jdl
 
 . Restart app and show generated entity screens
 
@@ -99,122 +101,85 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
   adb reverse tcp:8080 tcp:8080
   adb reverse tcp:9080 tcp:9080
 ////
+
 === React Native App
 
-. Install Ignite CLI and Ignite JHipster
+. Install React Native JHipster and Expo CLI
 
-  npm i -g ignite-cli ignite-jhipster
+  npm install -g generator-jhipster-react-native expo-cli
 
 . Create a React Native client:
 
-  ignite new HealthPoints -b ignite-jhipster
+  take react-native
+  jhipster --blueprints react-native jdl ../app.jdl
 
-. Rename `HealthPoints` to `react-native`
+. Change `application-dev.yml` in backend to allow `http://localhost:19006` for CORS
 
-. In the `react-native` directory, run `npm run ios`
+. In the `react-native` directory, run `npm start`
 
-. To run on Android, use `npm run android`
+. To run on emulators, you'll need an https://expo.io/[Expo] account
 
-. Add `healthpoints://authorize` as a Login redirect URI in Keycloak
+. To run on Android, use `npm start -- --android`
+
+. Add `https://auth.expo.io/@mraible/HealthPoints` as a Login redirect URI in Keycloak
 
 . For AVD to communicate with your API and Keycloak, add some port mappings
 
   adb reverse tcp:8080 tcp:8080
   adb reverse tcp:9080 tcp:9080
 
-. Generate UI screens in React Native app
-
-  ignite generate import-jdl ../app.jh
-
-. Open `points-entity-edit-screen.js` and change the `formModel` to use `t.Boolean` for exercise, meals, and alcohol
-
-  formModel: t.struct({
-    id: t.maybe(t.Number),
-    date: t.Date,
-    exercise: t.maybe(t.Boolean),
-    meals: t.maybe(t.Boolean),
-    alcohol: t.maybe(t.Boolean),
-    notes: t.maybe(t.String),
-    userId: this.getUsers()
-  }),
-
-. Change `entityToFormValue()` to set the toggle to on if the value is 1 [`rn-entityToForm`]
-
-  entityToFormValue = (value) => {
-    if (!value) {
-      return {}
-    }
-    return {
-      id: value.id || null,
-      date: value.date || null,
-      exercise: (value.exercise === 1),
-      meals: (value.meals === 1),
-      alcohol: (value.alcohol === 1),
-      notes: value.notes || null,
-      userId: (value.user && value.user.id) ? value.user.id : null
-    }
-  }
-
-. Change `formValueToEntity()` to save 1 or 0, depending on the user's selection [`rn-formToEntity`]
-
-  formValueToEntity = (value) => {
-    const entity = {
-      id: value.id || null,
-      date: value.date || null,
-      exercise: (value.exercise) ? 1 : 0,
-      meals: (value.meals) ? 1 : 0,
-      alcohol: (value.alcohol) ? 1 : 0,
-      notes: value.notes || null
-    }
-    if (value.userId) {
-      entity.user = { id: value.userId }
-    }
-    return entity
-  }
-
-. Add default form values in the `constructor()` [`rn-defaultValues`]
-
-  if (props.data && props.data.entityId) {
-    this.state.isNewEntity = false
-    this.props.getPoint(props.data.entityId)
-  } else {
-    this.setState({
-      formValue: {
-        id: null,
-        date: new Date(),
-        exercise: true,
-        meals: true,
-        alcohol: true
-      }
-    })
-  }
+// todo: document steps to make checkboxes in React Native
 
 . Refresh your app in Simulator using kbd:[{commandkey} + R] or by hitting kbd:[R] twice in Android
 
-TIP: To debug React Native, I recommend https://github.com/infinitered/reactotron[Reactotron] and using `console.tron.log()` instead of `console.log()`.
+=== Flutter App
+
+. Install Flutter for JHipster
+
+  npm install -g generator-jhipster-flutter-merlin
++
+NOTE: This module currently only supports JWT auth. There's open issues for https://github.com/merlinofcha0s/generator-jhipster-flutter/issues/23[Keycloak] and https://github.com/merlinofcha0s/generator-jhipster-flutter/issues/31[Okta] support.
+
+. Install Flutter SDK and upgrade
+
+  brew install --cask flutter
+  flutter upgrade
+  # accept Android licenses
+  flutter doctor --android-licenses
+  # Needs Java 8 because NoClassDefFoundError: javax/xml/bind/annotation/XmlSchema
+  sdk use java 8.0.242.hs-adpt
+
+. Create a Flutter app
+
+  yo jhipster-flutter-merlin # creates flutter-app directory
+
+. Run your app
+
+  cd flutter-app
+  flutter run
 
 === Use Okta for Identity
 
-. Create a **Web** application on Okta, add `http://localhost:8080/login/oauth2/code/oidc` as a login redirect URI, and use `http://localhost:8080` as a logout redirect URI
+. Install the https://cli.okta.com[Okta CLI] and run `okta register` to sign up for a new account. If you already have an account, run `okta login`.
 
-. Add `groups` as a claim to the ID token.
+. In the `backend` directory, run `okta apps create jhipster`. Select the default app name, or change it as you see fit. Accept the default Redirect URI values provided for you.
 
-. Create `~/.okta.env` and specify the settings for your app; run `source ~/.okta.env` and show Okta login
+. The Okta CLI streamlines configuring a JHipster app and does several things for you:
 
-  export SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER_URI=https://{yourOktaDomain}/oauth2/default
-  export SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_ID=$clientId
-  export SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_SECRET=$clientSecret
+1. Creates an OIDC app with the correct redirect URIs:
+  - login: `http://localhost:8080/login/oauth2/code/oidc` and `http://localhost:8761/login/oauth2/code/oidc`
+  - logout: `http://localhost:8080` and `http://localhost:8761`
+2. Creates `ROLE_ADMIN` and `ROLE_USER` groups that JHipster expects
+3. Adds your current user to the `ROLE_ADMIN` and `ROLE_USER` groups
+4. Creates a `groups` claim in your default authorization server and adds the user's groups to it
 
-. Create a **Native** app with PKCE, add the following URLs as login redirect URIs:
+**NOTE:** The `http://localhost:8761*` redirect URIs are for the JHipster Registry, which is often used when creating microservices with JHipster. The Okta CLI adds these by default.
 
-  * `healthpoints://authorize`
-  * `http://localhost:8100/implicit/callback`
-  * `dev.localhost.ionic:/callback`
+. Create a **Native** app using `okta apps create` and use `http://localhost:19006/,https://auth.expo.io/@your-expo-username/reactNativeAppName` as redirect URIs.
 
-. Add logout URIs too:
+  * `http://localhost:19006/,https://auth.expo.io/@mraible/HealthPoints`
 
-  * `http://localhost:8100/implicit/logout`
-  * `dev.localhost.ionic:/logout`
+. Copy the client ID to `app/config/app-config.js`
 
 . Add `groups`, `given_name`, and `family_name` as claims to the access token.
 

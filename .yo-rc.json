@@ -1,0 +1,14 @@
+{
+  "generator-jhipster-flutter-merlin": {
+    "promptValues": {
+      "baseName": "HealthPoints",
+      "packageName": "com.myapp",
+      "android": "kotlin",
+      "ios": "swift",
+      "stateManageType": "bloc",
+      "enableTranslation": true,
+      "nativeLanguage": "en",
+      "languages": []
+    }
+  }
+}

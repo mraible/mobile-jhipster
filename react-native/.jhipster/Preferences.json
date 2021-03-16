@@ -1,0 +1,39 @@
+{
+  "name": "Preferences",
+  "fields": [
+    {
+      "fieldName": "weeklyGoal",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required", "min", "max"],
+      "fieldValidateRulesMin": "10",
+      "fieldValidateRulesMax": "21"
+    },
+    {
+      "fieldName": "weightUnits",
+      "fieldType": "Units",
+      "fieldValues": "KG,LB",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "preferences",
+      "relationshipName": "user",
+      "otherEntityField": "login",
+      "ownerSide": true
+    }
+  ],
+  "entityTableName": "preferences",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["HealthPoints"],
+  "angularJSSuffix": "",
+  "changelogDate": "20210316033622"
+}

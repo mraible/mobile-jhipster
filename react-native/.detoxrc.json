@@ -1,0 +1,25 @@
+{
+  "configurations": {
+    "ios.sim.release": {
+      "binaryPath": "e2e/Exponent.app",
+      "type": "ios.simulator",
+      "device": {
+        "type": "iPhone 11"
+      }
+    }
+  },
+  "artifacts": {
+    "rootDir": ".artifacts",
+    "plugins": {
+      "instruments": { "enabled": false },
+      "log": { "enabled": true },
+      "uiHierarchy": "enabled",
+      "screenshot": {
+        "shouldTakeAutomaticSnapshots": true,
+        "keepOnlyFailedTestsArtifacts": true
+      }
+    }
+  },
+  "test-runner": "jest",
+  "runner-config": "./e2e/config.json"
+}
