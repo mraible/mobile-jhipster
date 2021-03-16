@@ -128,9 +128,9 @@ toc::[]
   adb reverse tcp:8080 tcp:8080
   adb reverse tcp:9080 tcp:9080
 
-// todo: document steps to make checkboxes in React Native
-
 . Refresh your app in Simulator using kbd:[{commandkey} + R] or by hitting kbd:[R] twice in Android
+
+// todo: document steps to make checkboxes in React Native
 
 === Flutter App
 
@@ -172,24 +172,26 @@ NOTE: This module currently only supports JWT auth. There's open issues for http
 2. Creates `ROLE_ADMIN` and `ROLE_USER` groups that JHipster expects
 3. Adds your current user to the `ROLE_ADMIN` and `ROLE_USER` groups
 4. Creates a `groups` claim in your default authorization server and adds the user's groups to it
-
-**NOTE:** The `http://localhost:8761*` redirect URIs are for the JHipster Registry, which is often used when creating microservices with JHipster. The Okta CLI adds these by default.
++
+NOTE: The `http://localhost:8761*` redirect URIs are for the JHipster Registry, which is often used when creating microservices with JHipster. The Okta CLI adds these by default.
 
 . Create a **Native** app using `okta apps create` and use `http://localhost:19006/,https://auth.expo.io/@your-expo-username/reactNativeAppName` as redirect URIs.
 
   * `http://localhost:19006/,https://auth.expo.io/@mraible/HealthPoints`
 
-. Copy the client ID to `app/config/app-config.js`
-
-. Add `groups`, `given_name`, and `family_name` as claims to the access token.
-
-  * For `given_name`, use expression `user.firstName`
-  * For `family_name`, use expression `user.lastName`
-
-. Modify `react-native/app/modules/login/login.sagas.js` to use the generated client ID
+. Copy the client ID to `react-native/app/config/app-config.js`
 
 . Update `ionic/src/app/auth/auth.service.ts` to use client ID from Native Okta app
 
 . Restart mobile apps and log in with Okta
 
-Source: https://developer.okta.com/blog/2019/06/24/ionic-4-angular-spring-boot-jhipster[Build Mobile Apps with Angular, Ionic 4, and Spring Boot] and https://developer.okta.com/blog/2018/10/10/react-native-spring-boot-mobile-app[Build a Mobile App with React Native and Spring Boot].
+==== Add Claims to Access Token
+
+NOTE: These steps are only necessary if you are using JHipster v6, or JHipster v7 with a Reactive JHipster backend.
+
+. Add `groups`, `given_name`, and `family_name` as claims to the access token.
+
+* For `given_name`, use expression `user.firstName`
+* For `family_name`, use expression `user.lastName`
+
+Source: https://developer.okta.com/blog/2019/06/24/ionic-4-angular-spring-boot-jhipster[Build Mobile Apps with Angular, Ionic 4, and Spring Boot] and https://jruddell.com/blog/jhipster-react-native[JHipster React Native Demo].
