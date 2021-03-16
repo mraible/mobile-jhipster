@@ -1,25 +1,23 @@
-
 /*
- * This is the application and entity model for the 21-Points (https://github.com/mraible/21-points) application from Matt Raible 
+ * 21-Points (https://github.com/mraible/21-points) as a WebFlux + React app
  */
 
 application {
   config {
-    applicationType monolith,
+    applicationType monolith
+    reactive true
     baseName HealthPoints
-    packageName com.okta.developer,
-    authenticationType oauth2,
-    prodDatabaseType postgresql,
-    buildTool gradle,
-    searchEngine elasticsearch,
-    testFrameworks [protractor],
-    clientFramework react,
-    useSass true,
-    enableTranslation true,
-    nativeLanguage en,
+    packageName com.okta.developer
+    authenticationType oauth2
+    prodDatabaseType postgresql
+    buildTool gradle
+    testFrameworks [cypress]
+    clientFramework react
+    enableTranslation true
+    nativeLanguage en
     languages [en, es]
   }
-  entities Points, BloodPressure, Weight, Preferences 
+  entities Points, BloodPressure, Weight, Preferences
 }
 
 // JDL definition for application 'TwentyOnePoints' generated with command 'jhipster export-jdl'
@@ -47,7 +45,7 @@ entity Preferences {
 
 enum Units {
   KG,
-  LB  
+  LB
 }
 
 relationship OneToOne {
