@@ -95,23 +95,23 @@ export const PointsUpdate = (props: IPointsUpdateProps) => {
                   }}
                 />
               </AvGroup>
-              <AvGroup>
-                <Label id="exerciseLabel" for="points-exercise">
+              <AvGroup check>
+                <AvInput id="points-exercise" type="checkbox" name="exercise" trueValue={1} falseValue={0} />
+                <Label check id="exerciseLabel" for="points-exercise">
                   <Translate contentKey="healthPointsApp.points.exercise">Exercise</Translate>
                 </Label>
-                <AvField id="points-exercise" data-cy="exercise" type="string" className="form-control" name="exercise" />
               </AvGroup>
-              <AvGroup>
-                <Label id="mealsLabel" for="points-meals">
+              <AvGroup check>
+                <AvInput id="points-meals" type="checkbox" name="meals" trueValue={1} falseValue={0} />
+                <Label check id="mealsLabel" for="points-meals">
                   <Translate contentKey="healthPointsApp.points.meals">Meals</Translate>
                 </Label>
-                <AvField id="points-meals" data-cy="meals" type="string" className="form-control" name="meals" />
               </AvGroup>
-              <AvGroup>
-                <Label id="alcoholLabel" for="points-alcohol">
+              <AvGroup check>
+                <AvInput id="points-alcohol" type="checkbox" name="alcohol" trueValue={1} falseValue={0} />
+                <Label check id="alcoholLabel" for="points-alcohol">
                   <Translate contentKey="healthPointsApp.points.alcohol">Alcohol</Translate>
                 </Label>
-                <AvField id="points-alcohol" data-cy="alcohol" type="string" className="form-control" name="alcohol" />
               </AvGroup>
               <AvGroup>
                 <Label id="notesLabel" for="points-notes">
