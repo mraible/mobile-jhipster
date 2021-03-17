@@ -200,9 +200,12 @@ NOTE: The `http://localhost:8761*` redirect URIs are for the JHipster Registry, 
   * login: `http://localhost:8100/callback,dev.localhost.ionic:/callback`
   * logout: `http://localhost:8100/logout,dev.localhost.ionic:/logout`
 
-. Update `ionic/src/app/auth/auth.service.ts` to use client ID from Native Okta app
+. Update `ionic/src/app/auth/auth-config.service.ts` to use the generated client ID
 
-. Restart mobile apps and log in with Okta
+  environment.oidcConfig.server_host = '0oabzvz5mGpjjAT5o5d6';
+  environment.oidcConfig.client_id = this.authConfig.clientId;
+
+. Restart mobile apps and log in with Okta!
 
 ==== Add Claims to Access Token
 

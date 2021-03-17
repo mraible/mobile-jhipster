@@ -1,10 +1,10 @@
 # Mobile Development with Ionic, React Native, and JHipster
 
-This set of apps was developed using [this demo script](https://github.com/mraible/mobile-jhipster/blob/master/demo.adoc). You can follow the steps to create your own versions, or just run the applications here.
+This set of apps was developed using [this demo script](demo.adoc). You can follow the steps to create your own versions, or just run the applications here.
 
-See [Mobile Development with Ionic, React Native, and JHipster](https://developer.okta.com/blog/2020/04/27/mobile-development-ionic-react-native-jhipster) to see a demo of these apps being created.
+See [Mobile Development with Ionic, React Native, and JHipster](https://developer.okta.com/blog/2020/04/27/mobile-development-ionic-react-native-jhipster) to see a video of these apps being created in 2020.
 
-**Prerequisites:** [Java 8+](http://adoptopenjdk.com) and [Node.js](https://maven.apache.org). For React Native, you'll also need to install [CocoaPods](https://cocoapods.org/).
+**Prerequisites:** [Java 11+](http://adoptopenjdk.com) and [Node.js](https://nodejs.org). 
 
 * [Getting Started](#getting-started)
 * [Links](#links)
@@ -137,9 +137,37 @@ If that doesn't work, just use Okta (and its HTTPS-by-default feature 😉).
 
 ### Use Okta for Identity
 
-> [Okta](https://developer.okta.com/) has Authentication and User Management APIs that reduce development time with instant-on, scalable user infrastructure. Okta's intuitive API and expert support make it easy for developers to authenticate, manage, and secure users and roles in any application.
+Install the [Okta CLI](https://cli.okta.com) and run the following commands:
 
-See the [demo instructions for Okta](demo.adoc#use-okta-for-identity) for how to configure this.
+```shell
+# register if you don't have an account
+okta register # or use: okta login
+cd backend
+okta apps register jhipster
+# source .okta.env && ./gradlew to start
+
+cd ../react-native
+okta apps create
+```
+
+Select **Native**, then use the following for Redirect URIs:
+
+```
+http://localhost:19006/,https://auth.expo.io/@<your-username>/HealthPoints
+```
+
+Copy the client ID to `react-native/app/config/app-config.js`.
+
+Create another **Native** app for Ionic with the following redirect URIs:
+
+* login: `http://localhost:8100/callback,dev.localhost.ionic:/callback`
+* logout: `http://localhost:8100/logout,dev.localhost.ionic:/logout`
+
+Update `ionic/src/app/auth/auth-config.service.ts` to use the generated client ID.
+
+Restart your mobile apps and sign in with Okta!
+
+See the [demo instructions for Okta](demo.adoc#use-okta-for-identity) for what these commands do.
 
 ## Links
 
