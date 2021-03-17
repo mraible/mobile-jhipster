@@ -2,147 +2,123 @@ export default {
   // Functions return fixtures
 
   // entity fixtures
-  updatePoint: point => {
+  updatePoints: (points) => {
     return {
       ok: true,
-      data: require('../../shared/fixtures/update-point.json'),
-    }
+      data: require('../../shared/fixtures/update-points.json'),
+    };
   },
-  getPoints: () => {
+  getAllPoints: () => {
+    return {
+      ok: true,
+      data: require('../../shared/fixtures/get-all-points.json'),
+    };
+  },
+  getPoints: (pointsId) => {
     return {
       ok: true,
       data: require('../../shared/fixtures/get-points.json'),
-    }
+    };
   },
-  getPoint: pointId => {
+  deletePoints: (pointsId) => {
     return {
       ok: true,
-      data: require('../../shared/fixtures/get-point.json'),
-    }
+    };
   },
-  deletePoint: pointId => {
+  updateBloodPressure: (bloodPressure) => {
     return {
       ok: true,
-    }
+      data: require('../../shared/fixtures/update-blood-pressure.json'),
+    };
   },
-  searchPoints: query => {
+  getAllBloodPressures: () => {
     return {
       ok: true,
-      data: require('../../shared/fixtures/search-points.json'),
-    }
+      data: require('../../shared/fixtures/get-all-blood-pressures.json'),
+    };
   },
-  updateBloodPressure: bloodPressure => {
+  getBloodPressure: (bloodPressureId) => {
     return {
       ok: true,
-      data: require('../../shared/fixtures/update-bloodpressure.json'),
-    }
+      data: require('../../shared/fixtures/get-blood-pressure.json'),
+    };
   },
-  getBloodPressures: () => {
+  deleteBloodPressure: (bloodPressureId) => {
     return {
       ok: true,
-      data: require('../../shared/fixtures/get-bloodpressures.json'),
-    }
+    };
   },
-  getBloodPressure: bloodPressureId => {
-    return {
-      ok: true,
-      data: require('../../shared/fixtures/get-bloodpressure.json'),
-    }
-  },
-  deleteBloodPressure: bloodPressureId => {
-    return {
-      ok: true,
-    }
-  },
-  searchBloodPressures: query => {
-    return {
-      ok: true,
-      data: require('../../shared/fixtures/search-bloodpressures.json'),
-    }
-  },
-  updateWeight: weight => {
+  updateWeight: (weight) => {
     return {
       ok: true,
       data: require('../../shared/fixtures/update-weight.json'),
-    }
+    };
   },
-  getWeights: () => {
+  getAllWeights: () => {
     return {
       ok: true,
-      data: require('../../shared/fixtures/get-weights.json'),
-    }
+      data: require('../../shared/fixtures/get-all-weights.json'),
+    };
   },
-  getWeight: weightId => {
+  getWeight: (weightId) => {
     return {
       ok: true,
       data: require('../../shared/fixtures/get-weight.json'),
-    }
+    };
   },
-  deleteWeight: weightId => {
+  deleteWeight: (weightId) => {
     return {
       ok: true,
-    }
+    };
   },
-  searchWeights: query => {
+  updatePreferences: (preferences) => {
     return {
       ok: true,
-      data: require('../../shared/fixtures/search-weights.json'),
-    }
+      data: require('../../shared/fixtures/update-preferences.json'),
+    };
   },
-  updatePreference: preference => {
+  getAllPreferences: () => {
     return {
       ok: true,
-      data: require('../../shared/fixtures/update-preference.json'),
-    }
+      data: require('../../shared/fixtures/get-all-preferences.json'),
+    };
   },
-  getPreferences: () => {
+  getPreferences: (preferencesId) => {
     return {
       ok: true,
       data: require('../../shared/fixtures/get-preferences.json'),
-    }
+    };
   },
-  getPreference: preferenceId => {
+  deletePreferences: (preferencesId) => {
     return {
       ok: true,
-      data: require('../../shared/fixtures/get-preference.json'),
-    }
+    };
   },
-  deletePreference: preferenceId => {
-    return {
-      ok: true,
-    }
-  },
-  searchPreferences: query => {
-    return {
-      ok: true,
-      data: require('../../shared/fixtures/search-preferences.json'),
-    }
-  },
-  // ignite-jhipster-api-fixture-needle
+  // jhipster-react-native-api-fixture-needle
 
   // user fixtures
-  updateUser: user => {
+  updateUser: (user) => {
     return {
       ok: true,
       data: require('../fixtures/update-user.json'),
-    }
+    };
   },
-  getUsers: () => {
+  getAllUsers: () => {
     return {
       ok: true,
       data: require('../fixtures/get-users.json'),
-    }
+    };
   },
-  getUser: userId => {
+  getUser: (userId) => {
     return {
       ok: true,
       data: require('../fixtures/get-user.json'),
-    }
+    };
   },
-  deleteUser: userId => {
+  deleteUser: (userId) => {
     return {
       ok: true,
-    }
+    };
   },
   // auth fixtures
   setAuthToken: () => {},
@@ -151,32 +127,32 @@ export default {
     return {
       ok: true,
       data: require('../fixtures/get-oauth-info.json'),
-    }
+    };
   },
   register: ({ user }) => {
     if (user === 'user') {
       return {
         ok: true,
-      }
+      };
     } else {
       return {
         ok: false,
         data: {
           title: 'Invalid email',
         },
-      }
+      };
     }
   },
   forgotPassword: ({ email }) => {
     if (email === 'valid@gmail.com') {
       return {
         ok: true,
-      }
+      };
     } else {
       return {
         ok: false,
         data: 'Invalid email',
-      }
+      };
     }
   },
   getAccount: () => {
@@ -187,23 +163,23 @@ export default {
         'content-type': 'application/json;charset=UTF-8',
       },
       data: require('../fixtures/get-account.json'),
-    }
+    };
   },
   updateAccount: () => {
     return {
       ok: true,
-    }
+    };
   },
   changePassword: ({ currentPassword }) => {
     if (currentPassword === 'valid-password') {
       return {
         ok: true,
-      }
+      };
     } else {
       return {
         ok: false,
         data: 'Password error',
-      }
+      };
     }
   },
-}
+};

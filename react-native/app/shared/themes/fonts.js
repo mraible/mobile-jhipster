@@ -1,8 +1,11 @@
+import { Platform } from 'react-native';
+
+const platformFont = Platform.select({ android: 'Roboto', default: 'Avenir-Book' });
+
 const type = {
-  base: 'Avenir-Book',
-  bold: 'Avenir-Black',
-  emphasis: 'HelveticaNeue-Italic',
-}
+  base: platformFont,
+  bold: platformFont,
+};
 
 const size = {
   h1: 38,
@@ -16,7 +19,7 @@ const size = {
   medium: 14,
   small: 12,
   tiny: 8.5,
-}
+};
 
 const style = {
   h1: {
@@ -28,7 +31,6 @@ const style = {
     fontSize: size.h2,
   },
   h3: {
-    fontFamily: type.emphasis,
     fontSize: size.h3,
   },
   h4: {
@@ -40,7 +42,6 @@ const style = {
     fontSize: size.h5,
   },
   h6: {
-    fontFamily: type.emphasis,
     fontSize: size.h6,
   },
   normal: {
@@ -51,10 +52,10 @@ const style = {
     fontFamily: type.base,
     fontSize: size.medium,
   },
-}
+};
 
 export default {
   type,
   size,
   style,
-}
+};

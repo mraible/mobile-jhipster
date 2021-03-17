@@ -10,10 +10,9 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AuthExpiredInterceptor } from './interceptors/auth-expired.interceptor';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { AuthModule } from './auth/auth.module';
-import { IonicStorageModule } from '@ionic/storage';
+import { IonicStorageModule } from '@ionic/storage-angular';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -45,11 +44,6 @@ export function createTranslateLoader(http: HttpClient) {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
-      multi: true,
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthExpiredInterceptor,
       multi: true,
     },
   ],

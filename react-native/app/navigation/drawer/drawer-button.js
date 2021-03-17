@@ -1,22 +1,42 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { Text, TouchableOpacity } from 'react-native'
-import styles from './drawer-button.styles'
+import { Image, Platform, View, StyleSheet } from 'react-native';
+import TouchableItem from './touchable-item';
+import { Images } from '../../shared/themes';
+import * as React from 'react';
+import { toggleDrawer } from '../nav-ref';
 
-class DrawerButton extends React.Component {
-  static propTypes = {
-    text: PropTypes.string,
-    onPress: PropTypes.func,
-    testID: PropTypes.string,
-  }
+const styles = StyleSheet.create({
+  wrapper: {
+    flexDirection: 'row',
+  },
+  touchableItem: {
+    marginHorizontal: 11,
+  },
+  image: {
+    height: 24,
+    width: 24,
+    margin: 3,
+    resizeMode: 'contain',
+  },
+});
 
-  render() {
-    return (
-      <TouchableOpacity testID={this.props.testID} onPress={this.props.onPress}>
-        <Text style={styles.text}>{this.props.text}</Text>
-      </TouchableOpacity>
-    )
-  }
-}
-
-export default DrawerButton
+export const DrawerButton = (props) => {
+  // const dimensions = useWindowDimensions();
+  // hide the menu button since it's permanent on large screens
+  const largeScreen = false; //dimensions.width >= 768;
+  return largeScreen ? null : (
+    <View style={styles.wrapper} testID={'drawerButtonWrapper'}>
+      <TouchableItem
+        testID={'drawerButton'}
+        onPress={toggleDrawer}
+        accessibilityLabel={'Drawer Button'}
+        style={styles.touchableItem}
+        hitSlop={Platform.select({
+          ios: undefined,
+          default: { top: 16, right: 16, bottom: 16, left: 16 },
+        })}>
+        {/* Button Image */}
+        <Image source={Images.toggleDrawerIcon} style={styles.image} />
+      </TouchableItem>
+    </View>
+  );
+};

@@ -1,45 +1,60 @@
 {
   "generator-jhipster": {
+    "authenticationType": "oauth2",
+    "cacheProvider": "no",
+    "clientFramework": "react",
+    "serverPort": "8080",
+    "serviceDiscoveryType": false,
+    "skipUserManagement": true,
+    "withAdminUi": true,
+    "baseName": "HealthPoints",
+    "buildTool": "gradle",
     "databaseType": "sql",
     "devDatabaseType": "h2Disk",
     "enableHibernateCache": true,
     "enableSwaggerCodegen": false,
     "enableTranslation": true,
     "jhiPrefix": "jhi",
-    "languages": [
-      "en",
-      "es"
-    ],
+    "languages": ["en", "es"],
     "messageBroker": false,
-    "nativeLanguage": "en",
-    "packageName": "com.okta.developer",
-    "packageFolder": "com/okta/developer",
     "prodDatabaseType": "postgresql",
-    "searchEngine": "elasticsearch",
-    "serviceDiscoveryType": false,
+    "searchEngine": false,
     "skipClient": false,
-    "skipServer": false,
-    "testFrameworks": [
-      "protractor"
-    ],
+    "testFrameworks": ["cypress"],
     "websocket": false,
     "applicationType": "monolith",
-    "baseName": "HealthPoints",
-    "authenticationType": "oauth2",
-    "buildTool": "gradle",
-    "clientFramework": "react",
-    "useSass": true,
-    "skipUserManagement": true,
+    "reactive": true,
+    "packageName": "com.okta.developer",
+    "packageFolder": "com/okta/developer",
+    "nativeLanguage": "en",
+    "jhipsterVersion": "7.0.0-beta.1",
+    "skipServer": false,
     "clientPackageManager": "npm",
-    "cacheProvider": "ehcache",
+    "dtoSuffix": "DTO",
+    "entitySuffix": "",
     "clientTheme": "none",
     "clientThemeVariant": "",
-    "serverPort": "8080"
-  },
-  "entities": [
-    "Points",
-    "BloodPressure",
-    "Weight",
-    "Preferences"
-  ]
+    "entities": ["Points", "BloodPressure", "Weight", "Preferences"],
+    "skipCheckLengthOfIdentifier": false,
+    "skipFakeData": false,
+    "blueprints": [
+      {
+        "name": "generator-jhipster-react-native",
+        "version": "4.0.1"
+      }
+    ],
+    "otherModules": [
+      {
+        "name": "generator-jhipster-react-native",
+        "version": "4.0.1"
+      }
+    ],
+    "pages": [],
+    "creationTimestamp": 1615865542158,
+    "reactNative": {
+      "reactNativeAppName": "HealthPoints",
+      "detox": true
+    },
+    "lastLiquibaseTimestamp": 1615865782000
+  }
 }

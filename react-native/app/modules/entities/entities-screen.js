@@ -1,49 +1,19 @@
-import React from 'react'
-import { ScrollView, Text } from 'react-native'
-import { connect } from 'react-redux'
+import React from 'react';
+import { ScrollView, Text } from 'react-native';
 // Styles
-/* eslint-disable no-unused-vars */
-import RoundedButton from '../../shared/components/rounded-button/rounded-button'
-import {
-  loginScreen,
-  pointEntityScreen,
-  bloodPressureEntityScreen,
-  weightEntityScreen,
-  preferenceEntityScreen,
-  // ignite-jhipster-entity-screen-import-needle
-} from '../../navigation/layouts'
-/* eslint-enable */
+import RoundedButton from '../../shared/components/rounded-button/rounded-button';
 
-import styles from './entities-screen.styles'
+import styles from './entities-screen.styles';
 
-class EntitiesScreen extends React.Component {
-  render() {
-    return (
-      <ScrollView style={styles.container}>
-        <Text style={styles.centerText}>JHipster Entities will appear below</Text>
-        <RoundedButton text="Point" onPress={pointEntityScreen} testID="pointEntityScreenButton" />
-        <RoundedButton text="BloodPressure" onPress={bloodPressureEntityScreen} testID="bloodPressureEntityScreenButton" />
-        <RoundedButton text="Weight" onPress={weightEntityScreen} testID="weightEntityScreenButton" />
-        <RoundedButton text="Preference" onPress={preferenceEntityScreen} testID="preferenceEntityScreenButton" />
-        {/* ignite-jhipster-entity-screen-needle */}
-      </ScrollView>
-    )
-  }
+export default function EntitiesScreen({ navigation }) {
+  return (
+    <ScrollView style={styles.container} contentContainerStyle={styles.paddedScrollView} testID="entityScreenScrollList">
+      <Text style={styles.centerText}>JHipster Entities will appear below</Text>
+      <RoundedButton text="Points" onPress={() => navigation.navigate('Points')} testID="pointsEntityScreenButton" />
+      <RoundedButton text="BloodPressure" onPress={() => navigation.navigate('BloodPressure')} testID="bloodPressureEntityScreenButton" />
+      <RoundedButton text="Weight" onPress={() => navigation.navigate('Weight')} testID="weightEntityScreenButton" />
+      <RoundedButton text="Preferences" onPress={() => navigation.navigate('Preferences')} testID="preferencesEntityScreenButton" />
+      {/* jhipster-react-native-entity-screen-needle */}
+    </ScrollView>
+  );
 }
-
-const mapStateToProps = state => {
-  return {
-    // for developer convenience
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    // for developer convenience
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(EntitiesScreen)

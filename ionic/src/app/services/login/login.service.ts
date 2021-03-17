@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { AccountService } from '../auth/account.service';
-import { AuthService } from '../../auth/auth.service';
+import { AuthService } from 'ionic-appauth';
 
 @Injectable({
   providedIn: 'root',

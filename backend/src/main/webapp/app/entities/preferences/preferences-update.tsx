@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col, Label } from 'reactstrap';
 import { AvFeedback, AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
-import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction } from 'react-jhipster';
+import { Translate, translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
@@ -17,8 +17,7 @@ import { mapIdList } from 'app/shared/util/entity-utils';
 export interface IPreferencesUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export const PreferencesUpdate = (props: IPreferencesUpdateProps) => {
-  const [userId, setUserId] = useState('0');
-  const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.id);
+  const [isNew] = useState(!props.match.params || !props.match.params.id);
 
   const { preferencesEntity, users, loading, updating } = props;
 
@@ -46,9 +45,9 @@ export const PreferencesUpdate = (props: IPreferencesUpdateProps) => {
     if (errors.length === 0) {
       const entity = {
         ...preferencesEntity,
-        ...values
+        ...values,
+        user: users.find(it => it.id.toString() === values.userId.toString()),
       };
-      entity.user = users[values.user];
 
       if (isNew) {
         props.createEntity(entity);
@@ -62,7 +61,7 @@ export const PreferencesUpdate = (props: IPreferencesUpdateProps) => {
     <div>
       <Row className="justify-content-center">
         <Col md="8">
-          <h2 id="healthPointsApp.preferences.home.createOrEditLabel">
+          <h2 id="healthPointsApp.preferences.home.createOrEditLabel" data-cy="PreferencesCreateUpdateHeading">
             <Translate contentKey="healthPointsApp.preferences.home.createOrEditLabel">Create or edit a Preferences</Translate>
           </h2>
         </Col>
@@ -87,6 +86,7 @@ export const PreferencesUpdate = (props: IPreferencesUpdateProps) => {
                 </Label>
                 <AvField
                   id="preferences-weeklyGoal"
+                  data-cy="weeklyGoal"
                   type="string"
                   className="form-control"
                   name="weeklyGoal"
@@ -94,7 +94,7 @@ export const PreferencesUpdate = (props: IPreferencesUpdateProps) => {
                     required: { value: true, errorMessage: translate('entity.validation.required') },
                     min: { value: 10, errorMessage: translate('entity.validation.min', { min: 10 }) },
                     max: { value: 21, errorMessage: translate('entity.validation.max', { max: 21 }) },
-                    number: { value: true, errorMessage: translate('entity.validation.number') }
+                    number: { value: true, errorMessage: translate('entity.validation.number') },
                   }}
                 />
               </AvGroup>
@@ -104,6 +104,7 @@ export const PreferencesUpdate = (props: IPreferencesUpdateProps) => {
                 </Label>
                 <AvInput
                   id="preferences-weightUnits"
+                  data-cy="weightUnits"
                   type="select"
                   className="form-control"
                   name="weightUnits"
@@ -117,11 +118,11 @@ export const PreferencesUpdate = (props: IPreferencesUpdateProps) => {
                 <Label for="preferences-user">
                   <Translate contentKey="healthPointsApp.preferences.user">User</Translate>
                 </Label>
-                <AvInput id="preferences-user" type="select" className="form-control" name="user">
+                <AvInput id="preferences-user" data-cy="user" type="select" className="form-control" name="userId">
                   <option value="" key="0" />
                   {users
-                    ? users.map((otherEntity, index) => (
-                        <option value={index} key={otherEntity.id}>
+                    ? users.map(otherEntity => (
+                        <option value={otherEntity.id} key={otherEntity.id}>
                           {otherEntity.login}
                         </option>
                       ))
@@ -136,7 +137,7 @@ export const PreferencesUpdate = (props: IPreferencesUpdateProps) => {
                 </span>
               </Button>
               &nbsp;
-              <Button color="primary" id="save-entity" type="submit" disabled={updating}>
+              <Button color="primary" id="save-entity" data-cy="entityCreateSaveButton" type="submit" disabled={updating}>
                 <FontAwesomeIcon icon="save" />
                 &nbsp;
                 <Translate contentKey="entity.action.save">Save</Translate>
@@ -154,7 +155,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   preferencesEntity: storeState.preferences.entity,
   loading: storeState.preferences.loading,
   updating: storeState.preferences.updating,
-  updateSuccess: storeState.preferences.updateSuccess
+  updateSuccess: storeState.preferences.updateSuccess,
 });
 
 const mapDispatchToProps = {
@@ -162,7 +163,7 @@ const mapDispatchToProps = {
   getEntity,
   updateEntity,
   createEntity,
-  reset
+  reset,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

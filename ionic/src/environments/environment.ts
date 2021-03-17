@@ -5,6 +5,15 @@
 export const environment = {
   production: false,
   apiUrl: 'http://localhost:8080/api',
+  oidcConfig: {
+    client_id: 'web_app',
+    server_host: 'http://localhost:9080/auth/realms/jhipster',
+    redirect_url: window.location.origin + '/callback',
+    end_session_redirect_url: window.location.origin + '/logout',
+    scopes: 'openid profile',
+    pkce: true,
+  },
+  scheme: 'dev.localhost.ionic:/',
 };
 
 /*

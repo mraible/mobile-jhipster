@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Button, Col, Progress, Row, Table } from 'reactstrap';
+import { Button, Col, Row } from 'reactstrap';
 import {
   CacheMetrics,
   DatasourceMetrics,
@@ -10,7 +10,7 @@ import {
   JvmThreads,
   EndpointsRequestsMetrics,
   SystemMetrics,
-  Translate
+  Translate,
 } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -21,8 +21,6 @@ import { IRootState } from 'app/shared/reducers';
 export interface IMetricsPageProps extends StateProps, DispatchProps {}
 
 export const MetricsPage = (props: IMetricsPageProps) => {
-  const [showModal, setShowModal] = useState(false);
-
   useEffect(() => {
     props.systemMetrics();
     props.systemThreadDump();
@@ -39,7 +37,9 @@ export const MetricsPage = (props: IMetricsPageProps) => {
 
   return (
     <div>
-      <h2 id="metrics-page-heading">Application Metrics</h2>
+      <h2 id="metrics-page-heading" data-cy="metricsPageHeading">
+        Application Metrics
+      </h2>
       <p>
         <Button onClick={getMetrics} color={isFetching ? 'btn btn-danger' : 'btn btn-primary'} disabled={isFetching}>
           <FontAwesomeIcon icon="sync" />
@@ -120,7 +120,7 @@ export const MetricsPage = (props: IMetricsPageProps) => {
 const mapStateToProps = (storeState: IRootState) => ({
   metrics: storeState.administration.metrics,
   isFetching: storeState.administration.loading,
-  threadDump: storeState.administration.threadDump
+  threadDump: storeState.administration.threadDump,
 });
 
 const mapDispatchToProps = { systemMetrics, systemThreadDump };

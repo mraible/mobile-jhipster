@@ -1,13 +1,14 @@
 package com.okta.developer.domain;
 
-import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
-import com.okta.developer.web.rest.TestUtil;
 
-public class BloodPressureTest {
+import com.okta.developer.web.rest.TestUtil;
+import org.junit.jupiter.api.Test;
+
+class BloodPressureTest {
 
     @Test
-    public void equalsVerifier() throws Exception {
+    void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(BloodPressure.class);
         BloodPressure bloodPressure1 = new BloodPressure();
         bloodPressure1.setId(1L);

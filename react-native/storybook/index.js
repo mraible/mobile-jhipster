@@ -1,13 +1,13 @@
-import { getStorybookUI, configure } from '@storybook/react-native'
-import { View } from 'react-native'
+import { getStorybookUI, configure } from '@storybook/react-native';
+import { View } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import './rn-addons'
+import AppConfig from '../app/config/app-config';
 
 // import stories
 configure(() => {
-  require('./stories')
-}, module)
+  require('./stories');
+}, module);
 
-const StorybookUIRoot = __DEV__ ? getStorybookUI({asyncStorage: AsyncStorage}) : View
+const StorybookUIRoot = AppConfig.debugMode ? getStorybookUI({ asyncStorage: AsyncStorage }) : View;
 
-export default StorybookUIRoot
+export default StorybookUIRoot;

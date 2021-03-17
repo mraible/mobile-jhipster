@@ -3,9 +3,9 @@
     "weight": {
       "home": {
         "title": "Weights",
+        "refreshListLabel": "Refrescar lista",
         "createLabel": "Crear nuevo Weight",
         "createOrEditLabel": "Crear o editar Weight",
-        "search": "Buscar Weight",
         "notFound": "Ningún Weights encontrado"
       },
       "created": "Un nuevo Weight ha sido creado con el identificador {{ param }}",
@@ -17,6 +17,7 @@
       "detail": {
         "title": "Weight"
       },
+      "id": "ID",
       "timestamp": "Timestamp",
       "weight": "Weight",
       "user": "User"

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col, Label } from 'reactstrap';
 import { AvFeedback, AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
-import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction } from 'react-jhipster';
+import { Translate, translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
@@ -17,8 +17,7 @@ import { mapIdList } from 'app/shared/util/entity-utils';
 export interface IPointsUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export const PointsUpdate = (props: IPointsUpdateProps) => {
-  const [userId, setUserId] = useState('0');
-  const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.id);
+  const [isNew] = useState(!props.match.params || !props.match.params.id);
 
   const { pointsEntity, users, loading, updating } = props;
 
@@ -46,9 +45,9 @@ export const PointsUpdate = (props: IPointsUpdateProps) => {
     if (errors.length === 0) {
       const entity = {
         ...pointsEntity,
-        ...values
+        ...values,
+        user: users.find(it => it.id.toString() === values.userId.toString()),
       };
-      entity.user = users[values.user];
 
       if (isNew) {
         props.createEntity(entity);
@@ -62,7 +61,7 @@ export const PointsUpdate = (props: IPointsUpdateProps) => {
     <div>
       <Row className="justify-content-center">
         <Col md="8">
-          <h2 id="healthPointsApp.points.home.createOrEditLabel">
+          <h2 id="healthPointsApp.points.home.createOrEditLabel" data-cy="PointsCreateUpdateHeading">
             <Translate contentKey="healthPointsApp.points.home.createOrEditLabel">Create or edit a Points</Translate>
           </h2>
         </Col>
@@ -87,31 +86,29 @@ export const PointsUpdate = (props: IPointsUpdateProps) => {
                 </Label>
                 <AvField
                   id="points-date"
+                  data-cy="date"
                   type="date"
                   className="form-control"
                   name="date"
                   validate={{
-                    required: { value: true, errorMessage: translate('entity.validation.required') }
+                    required: { value: true, errorMessage: translate('entity.validation.required') },
                   }}
                 />
               </AvGroup>
               <AvGroup check>
-                <AvInput id="points-exercise" type="checkbox"
-                         name="exercise" trueValue={1} falseValue={0}/>
+                <AvInput id="points-exercise" type="checkbox" name="exercise" data-cy="exercise" trueValue={1} falseValue={0} />
                 <Label check id="exerciseLabel" for="points-exercise">
                   <Translate contentKey="healthPointsApp.points.exercise">Exercise</Translate>
                 </Label>
               </AvGroup>
               <AvGroup check>
-                <AvInput id="points-meals" type="checkbox"
-                         name="meals" trueValue={1} falseValue={0}/>
+                <AvInput id="points-meals" type="checkbox" name="meals" data-cy="meals" trueValue={1} falseValue={0} />
                 <Label check id="mealsLabel" for="points-meals">
                   <Translate contentKey="healthPointsApp.points.meals">Meals</Translate>
                 </Label>
               </AvGroup>
               <AvGroup check>
-                <AvInput id="points-alcohol" type="checkbox"
-                         name="alcohol" trueValue={1} falseValue={0}/>
+                <AvInput id="points-alcohol" type="checkbox" name="alcohol" data-cy="alcohol" trueValue={1} falseValue={0} />
                 <Label check id="alcoholLabel" for="points-alcohol">
                   <Translate contentKey="healthPointsApp.points.alcohol">Alcohol</Translate>
                 </Label>
@@ -122,10 +119,11 @@ export const PointsUpdate = (props: IPointsUpdateProps) => {
                 </Label>
                 <AvField
                   id="points-notes"
+                  data-cy="notes"
                   type="text"
                   name="notes"
                   validate={{
-                    maxLength: { value: 140, errorMessage: translate('entity.validation.maxlength', { max: 140 }) }
+                    maxLength: { value: 140, errorMessage: translate('entity.validation.maxlength', { max: 140 }) },
                   }}
                 />
               </AvGroup>
@@ -133,11 +131,11 @@ export const PointsUpdate = (props: IPointsUpdateProps) => {
                 <Label for="points-user">
                   <Translate contentKey="healthPointsApp.points.user">User</Translate>
                 </Label>
-                <AvInput id="points-user" type="select" className="form-control" name="user">
+                <AvInput id="points-user" data-cy="user" type="select" className="form-control" name="userId">
                   <option value="" key="0" />
                   {users
-                    ? users.map((otherEntity, index) => (
-                        <option value={index} key={otherEntity.id}>
+                    ? users.map(otherEntity => (
+                        <option value={otherEntity.id} key={otherEntity.id}>
                           {otherEntity.login}
                         </option>
                       ))
@@ -152,7 +150,7 @@ export const PointsUpdate = (props: IPointsUpdateProps) => {
                 </span>
               </Button>
               &nbsp;
-              <Button color="primary" id="save-entity" type="submit" disabled={updating}>
+              <Button color="primary" id="save-entity" data-cy="entityCreateSaveButton" type="submit" disabled={updating}>
                 <FontAwesomeIcon icon="save" />
                 &nbsp;
                 <Translate contentKey="entity.action.save">Save</Translate>
@@ -170,7 +168,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   pointsEntity: storeState.points.entity,
   loading: storeState.points.loading,
   updating: storeState.points.updating,
-  updateSuccess: storeState.points.updateSuccess
+  updateSuccess: storeState.points.updateSuccess,
 });
 
 const mapDispatchToProps = {
@@ -178,7 +176,7 @@ const mapDispatchToProps = {
   getEntity,
   updateEntity,
   createEntity,
-  reset
+  reset,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

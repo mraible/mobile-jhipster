@@ -1,8 +1,8 @@
-import React from 'react'
-import { storiesOf } from '@storybook/react-native'
+import React from 'react';
+import { storiesOf } from '@storybook/react-native';
 
-import RoundedButton from './rounded-button'
+import RoundedButton from './rounded-button';
 
 storiesOf('RoundedButton', module)
   .add('Default', () => <RoundedButton text="A simple rounded button" />)
-  .add('Text as children', () => <RoundedButton>Hello from the children!</RoundedButton>)
+  .add('Text as children', () => <RoundedButton>Hello from the children!</RoundedButton>);

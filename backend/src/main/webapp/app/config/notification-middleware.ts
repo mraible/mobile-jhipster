@@ -22,9 +22,9 @@ export default () => next => action => {
         toast.success(action.meta.successMessage);
       } else if (response && response.action && response.action.payload && response.action.payload.headers) {
         const headers = response.action.payload.headers;
-        let alert: string = null;
-        let alertParams: string = null;
-        Object.entries(headers).forEach(([k, v]: [string, string]) => {
+        let alert: string | null = null;
+        let alertParams: string | null = null;
+        Object.entries<string>(headers).forEach(([k, v]) => {
           if (k.toLowerCase().endsWith('app-alert')) {
             alert = v;
           } else if (k.toLowerCase().endsWith('app-params')) {
@@ -53,10 +53,10 @@ export default () => next => action => {
               break;
 
             case 400: {
-              const headers = Object.entries(response.headers);
-              let errorHeader = null;
-              let entityKey = null;
-              headers.forEach(([k, v]: [string, string]) => {
+              const headers = Object.entries<string>(response.headers);
+              let errorHeader: string | null = null;
+              let entityKey: string | null = null;
+              headers.forEach(([k, v]) => {
                 if (k.toLowerCase().endsWith('app-error')) {
                   errorHeader = v;
                 } else if (k.toLowerCase().endsWith('app-params')) {

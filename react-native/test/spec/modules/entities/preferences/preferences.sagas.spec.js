@@ -1,102 +1,80 @@
-import { put } from 'redux-saga/effects'
+import { put } from 'redux-saga/effects';
 
-import FixtureAPI from '../../../../../app/shared/services/fixture-api'
-import {
-  getPreference,
-  getPreferences,
-  updatePreference,
-  deletePreference,
-  searchPreferences,
-} from '../../../../../app/modules/entities/preferences/preferences.sagas'
-import PreferenceActions from '../../../../../app/modules/entities/preferences/preferences.reducer'
+import FixtureAPI from '../../../../../app/shared/services/fixture-api';
+import PreferencesSagas from '../../../../../app/modules/entities/preferences/preferences.sagas';
+import PreferencesActions from '../../../../../app/modules/entities/preferences/preferences.reducer';
 
-const stepper = fn => mock => fn.next(mock).value
+const { getPreferences, getAllPreferences, updatePreferences, deletePreferences } = PreferencesSagas;
+const stepper = (fn) => (mock) => fn.next(mock).value;
 
 test('get success path', () => {
-  const response = FixtureAPI.getPreference(1)
-  const step = stepper(getPreference(FixtureAPI, { preferenceId: { id: 1 } }))
+  const response = FixtureAPI.getPreferences(1);
+  const step = stepper(getPreferences(FixtureAPI, { preferencesId: { id: 1 } }));
   // Step 1: Hit the api
-  step()
+  step();
   // Step 2: Successful return and data!
-  expect(step(response)).toEqual(put(PreferenceActions.preferenceSuccess({ id: 1 })))
-})
+  expect(step(response)).toEqual(put(PreferencesActions.preferencesSuccess(response.data)));
+});
 
 test('get failure path', () => {
-  const response = { ok: false }
-  const step = stepper(getPreference(FixtureAPI, { preferenceId: { id: 1 } }))
+  const response = { ok: false };
+  const step = stepper(getPreferences(FixtureAPI, { preferencesId: { id: 1 } }));
   // Step 1: Hit the api
-  step()
+  step();
   // Step 2: Failed response.
-  expect(step(response)).toEqual(put(PreferenceActions.preferenceFailure()))
-})
+  expect(step(response)).toEqual(put(PreferencesActions.preferencesFailure()));
+});
 
 test('getAll success path', () => {
-  const response = FixtureAPI.getPreferences()
-  const step = stepper(getPreferences(FixtureAPI, { options: { page: 0, sort: 'id,asc', size: 20 } }))
+  const response = FixtureAPI.getAllPreferences();
+  const step = stepper(getAllPreferences(FixtureAPI, { options: { page: 0, sort: 'id,asc', size: 20 } }));
   // Step 1: Hit the api
-  step()
+  step();
   // Step 2: Successful return and data!
-  expect(step(response)).toEqual(put(PreferenceActions.preferenceAllSuccess([{ id: 1 }, { id: 2 }])))
-})
+  expect(step(response)).toEqual(put(PreferencesActions.preferencesAllSuccess([{ id: 1 }, { id: 2 }])));
+});
 
 test('getAll failure path', () => {
-  const response = { ok: false }
-  const step = stepper(getPreferences(FixtureAPI, { options: { page: 0, sort: 'id,asc', size: 20 } }))
+  const response = { ok: false };
+  const step = stepper(getAllPreferences(FixtureAPI, { options: { page: 0, sort: 'id,asc', size: 20 } }));
   // Step 1: Hit the api
-  step()
+  step();
   // Step 2: Failed response.
-  expect(step(response)).toEqual(put(PreferenceActions.preferenceAllFailure()))
-})
+  expect(step(response)).toEqual(put(PreferencesActions.preferencesAllFailure()));
+});
 
 test('update success path', () => {
-  const response = FixtureAPI.updatePreference({ id: 1 })
-  const step = stepper(updatePreference(FixtureAPI, { preference: { id: 1 } }))
+  const response = FixtureAPI.updatePreferences({ id: 1 });
+  const step = stepper(updatePreferences(FixtureAPI, { preferences: { id: 1 } }));
   // Step 1: Hit the api
-  step()
+  step();
   // Step 2: Successful return and data!
-  expect(step(response)).toEqual(put(PreferenceActions.preferenceUpdateSuccess({ id: 1 })))
-})
+  expect(step(response)).toEqual(put(PreferencesActions.preferencesUpdateSuccess(response.data)));
+});
 
 test('update failure path', () => {
-  const response = { ok: false }
-  const step = stepper(updatePreference(FixtureAPI, { preference: { id: 1 } }))
+  const response = { ok: false };
+  const step = stepper(updatePreferences(FixtureAPI, { preferences: { id: 1 } }));
   // Step 1: Hit the api
-  step()
+  step();
   // Step 2: Failed response.
-  expect(step(response)).toEqual(put(PreferenceActions.preferenceUpdateFailure()))
-})
+  expect(step(response)).toEqual(put(PreferencesActions.preferencesUpdateFailure()));
+});
 
-test('search success path', () => {
-  const response = FixtureAPI.searchPreferences()
-  const step = stepper(searchPreferences(FixtureAPI, '*'))
-  // Step 1: Hit the api
-  step()
-  // Step 2: Successful return and data!
-  expect(step(response)).toEqual(put(PreferenceActions.preferenceSearchSuccess([{ id: 1 }, { id: 2 }])))
-})
-
-test('search failure path', () => {
-  const response = { ok: false }
-  const step = stepper(searchPreferences(FixtureAPI, '*'))
-  // Step 1: Hit the api
-  step()
-  // Step 2: Failed response.
-  expect(step(response)).toEqual(put(PreferenceActions.preferenceSearchFailure()))
-})
 test('delete success path', () => {
-  const response = FixtureAPI.deletePreference({ id: 1 })
-  const step = stepper(deletePreference(FixtureAPI, { preferenceId: { id: 1 } }))
+  const response = FixtureAPI.deletePreferences({ id: 1 });
+  const step = stepper(deletePreferences(FixtureAPI, { preferencesId: { id: 1 } }));
   // Step 1: Hit the api
-  step()
+  step();
   // Step 2: Successful return and data!
-  expect(step(response)).toEqual(put(PreferenceActions.preferenceDeleteSuccess({ id: 1 })))
-})
+  expect(step(response)).toEqual(put(PreferencesActions.preferencesDeleteSuccess(response.data)));
+});
 
 test('delete failure path', () => {
-  const response = { ok: false }
-  const step = stepper(deletePreference(FixtureAPI, { preferenceId: { id: 1 } }))
+  const response = { ok: false };
+  const step = stepper(deletePreferences(FixtureAPI, { preferencesId: { id: 1 } }));
   // Step 1: Hit the api
-  step()
+  step();
   // Step 2: Failed response.
-  expect(step(response)).toEqual(put(PreferenceActions.preferenceDeleteFailure()))
-})
+  expect(step(response)).toEqual(put(PreferencesActions.preferencesDeleteFailure()));
+});

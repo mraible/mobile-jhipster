@@ -1,2 +1,2 @@
 *.pbxproj -text
-*.bat text eol=crlf
+*.bat text eol=crlf'

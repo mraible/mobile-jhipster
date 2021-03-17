@@ -3,9 +3,9 @@
     "points": {
       "home": {
         "title": "Points",
+        "refreshListLabel": "Refrescar lista",
         "createLabel": "Crear nuevo Points",
         "createOrEditLabel": "Crear o editar Points",
-        "search": "Buscar Points",
         "notFound": "Ningún Points encontrado"
       },
       "created": "Un nuevo Points ha sido creado con el identificador {{ param }}",
@@ -17,6 +17,7 @@
       "detail": {
         "title": "Points"
       },
+      "id": "ID",
       "date": "Date",
       "exercise": "Exercise",
       "meals": "Meals",

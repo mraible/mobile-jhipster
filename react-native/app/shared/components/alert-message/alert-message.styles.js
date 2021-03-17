@@ -1,6 +1,6 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native';
 
-import { Colors, Metrics, Fonts } from '../../themes'
+import { Colors, Metrics, Fonts } from '../../themes';
 
 export default StyleSheet.create({
   container: {
@@ -18,9 +18,9 @@ export default StyleSheet.create({
     fontFamily: Fonts.type.base,
     fontSize: Fonts.size.regular,
     fontWeight: 'bold',
-    color: Colors.steel,
+    color: Colors.black,
   },
   icon: {
-    color: Colors.steel,
+    color: Colors.black,
   },
-})
+});

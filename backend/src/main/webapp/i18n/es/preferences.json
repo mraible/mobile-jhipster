@@ -3,9 +3,9 @@
     "preferences": {
       "home": {
         "title": "Preferences",
+        "refreshListLabel": "Refrescar lista",
         "createLabel": "Crear nuevo Preferences",
         "createOrEditLabel": "Crear o editar Preferences",
-        "search": "Buscar Preferences",
         "notFound": "Ningún Preferences encontrado"
       },
       "created": "Un nuevo Preferences ha sido creado con el identificador {{ param }}",
@@ -17,6 +17,7 @@
       "detail": {
         "title": "Preferences"
       },
+      "id": "ID",
       "weeklyGoal": "Weekly Goal",
       "weightUnits": "Weight Units",
       "user": "User"

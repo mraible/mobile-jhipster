@@ -1,47 +1,38 @@
 {
-    "name": "Preferences",
-    "fields": [
-        {
-            "fieldName": "weeklyGoal",
-            "fieldType": "Integer",
-            "fieldValidateRules": [
-                "required",
-                "min",
-                "max"
-            ],
-            "fieldValidateRulesMin": "10",
-            "fieldValidateRulesMax": "21"
-        },
-        {
-            "fieldName": "weightUnits",
-            "fieldType": "Units",
-            "fieldValues": "KG,LB",
-            "fieldValidateRules": [
-                "required"
-            ]
-        }
-    ],
-    "relationships": [
-        {
-            "relationshipType": "one-to-one",
-            "otherEntityName": "user",
-            "otherEntityRelationshipName": "preferences",
-            "relationshipName": "user",
-            "otherEntityField": "login",
-            "ownerSide": true
-        }
-    ],
-    "changelogDate": "20200406215900",
-    "entityTableName": "preferences",
-    "dto": "no",
-    "pagination": "no",
-    "service": "no",
-    "jpaMetamodelFiltering": false,
-    "fluentMethods": true,
-    "readOnly": false,
-    "embedded": false,
-    "clientRootFolder": "",
-    "applications": [
-        "HealthPoints"
-    ]
+  "name": "Preferences",
+  "fields": [
+    {
+      "fieldName": "weeklyGoal",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required", "min", "max"],
+      "fieldValidateRulesMin": "10",
+      "fieldValidateRulesMax": "21"
+    },
+    {
+      "fieldName": "weightUnits",
+      "fieldType": "Units",
+      "fieldValues": "KG,LB",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "preferences",
+      "relationshipName": "user",
+      "otherEntityField": "login",
+      "ownerSide": true
+    }
+  ],
+  "entityTableName": "preferences",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["HealthPoints"],
+  "changelogDate": "20210317142332"
 }

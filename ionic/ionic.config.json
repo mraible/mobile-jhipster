@@ -1,7 +1,5 @@
 {
-  "name": "ionic-mobile",
-  "integrations": {
-    "cordova": {}
-  },
+  "name": "HealthPoints",
+  "integrations": {},
   "type": "angular"
 }

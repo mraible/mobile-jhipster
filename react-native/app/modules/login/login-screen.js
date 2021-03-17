@@ -1,149 +1,61 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { Alert, Image, View, ScrollView, Text, TextInput, TouchableOpacity } from 'react-native'
-import { Navigation } from 'react-native-navigation'
-import { connect } from 'react-redux'
+import React from 'react';
+import { Button, Text, ActivityIndicator, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { connect } from 'react-redux';
 
-import styles from './login-screen.styles'
-import { Images, Metrics } from '../../shared/themes'
-import LoginActions from './login.reducer'
+import LoginActions from './login.reducer';
+import { useDidUpdateEffect } from '../../shared/util/use-did-update-effect';
+import styles from './login-screen.styles';
 
-class LoginScreen extends React.Component {
-  static propTypes = {
-    dispatch: PropTypes.func,
-    fetching: PropTypes.bool,
-    attemptLogin: PropTypes.func,
-  }
+function LoginScreen(props) {
+  const { navigation, account, fetching, error, attemptLogin, fetchingAccount, fetchingAuthInfo, authInfoError } = props;
+  // setup error state for displaying error messages
+  const [loginError, setLoginError] = React.useState('');
 
-  constructor(props) {
-    super(props)
-    Navigation.events().bindComponent(this)
-    this.state = {
-      username: '',
-      password: '',
-      visibleHeight: Metrics.screenHeight,
-      topLogo: { width: Metrics.screenWidth },
+  // if the user is already logged in, send them home
+  React.useEffect(() => {
+    if (account !== null) {
+      navigation.navigate('Home');
     }
-  }
+  }, [account, navigation]);
 
-  componentDidUpdate(prevProps) {
-    if (!this.props.fetching) {
-      if (prevProps.fetching && this.props.error) {
-        Alert.alert('Error', this.props.error, [{ text: 'OK' }])
-      }
-      if (!prevProps.account && this.props.account) {
-        Navigation.dismissModal(this.props.componentId)
-      }
+  // skip the first render but check for API responses and show error if not fetching
+  useDidUpdateEffect(() => {
+    if (!fetching && error) {
+      setLoginError(error);
     }
-  }
+  }, [fetching]);
 
-  handlePressLogin = () => {
-    const { username, password } = this.state
-    // attempt a login - a saga is listening to pick it up from here.
-    this.props.attemptLogin(username, password)
-  }
-  handlePressCancel = () => {
-    this.props.logout()
-    Navigation.dismissModal(this.props.componentId)
-  }
-
-  handleChangeUsername = text => {
-    this.setState({ username: text })
-  }
-
-  handleChangePassword = text => {
-    this.setState({ password: text })
-  }
-
-  render() {
-    const { username, password } = this.state
-    const { fetching } = this.props
-    const editable = !fetching
-    const textInputStyle = editable ? styles.textInput : styles.textInputReadonly
-    return (
-      <ScrollView
-        contentContainerStyle={styles.contentContainer}
-        style={[styles.container, { height: this.state.visibleHeight }]}
-        keyboardShouldPersistTaps="always">
-        <Image source={Images.logoLogin} style={[styles.topLogo, this.state.topLogo]} />
-        <View style={styles.form}>
-          <View style={styles.row}>
-            <Text style={styles.rowLabel}>Username</Text>
-            <TextInput
-              ref={c => {
-                this.usernameInput = c
-              }}
-              testID="loginScreenUsername"
-              style={textInputStyle}
-              value={username}
-              editable={editable}
-              keyboardType="default"
-              returnKeyType="next"
-              autoCapitalize="none"
-              autoCorrect={false}
-              onChangeText={this.handleChangeUsername}
-              underlineColorAndroid="transparent"
-              onSubmitEditing={() => this.passwordInput.focus()}
-              placeholder="Username"
-            />
-          </View>
-
-          <View style={styles.row}>
-            <Text style={styles.rowLabel}>Password</Text>
-            <TextInput
-              ref={c => {
-                this.passwordInput = c
-              }}
-              testID="loginScreenPassword"
-              style={textInputStyle}
-              value={password}
-              editable={editable}
-              keyboardType="default"
-              returnKeyType="go"
-              autoCapitalize="none"
-              autoCorrect={false}
-              secureTextEntry
-              onChangeText={this.handleChangePassword}
-              underlineColorAndroid="transparent"
-              onSubmitEditing={this.handlePressLogin}
-              placeholder="Password"
-            />
-          </View>
-
-          <View style={[styles.loginRow]}>
-            <TouchableOpacity testID="loginScreenLoginButton" style={styles.loginButtonWrapper} onPress={this.handlePressLogin}>
-              <View style={styles.loginButton}>
-                <Text style={styles.loginText}>Sign In</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity testID="loginScreenCancelButton" style={styles.loginButtonWrapper} onPress={this.handlePressCancel}>
-              <View style={styles.loginButton}>
-                <Text style={styles.loginText}>Cancel</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
+  return (
+    <KeyboardAwareScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
+      <Button title={'Login'} onPress={attemptLogin} disabled={fetchingAuthInfo || fetchingAccount} />
+      {authInfoError ? <Text style={styles.errorText}>Error fetching auth info from backend.</Text> : null}
+      {loginError ? <Text style={styles.errorText}>{loginError}</Text> : null}
+      {(fetchingAuthInfo || fetchingAccount) && (
+        <View style={styles.loading}>
+          <Text>Loading...</Text>
+          <ActivityIndicator size="large" />
         </View>
-      </ScrollView>
-    )
-  }
+      )}
+    </KeyboardAwareScrollView>
+  );
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     account: state.account.account,
+    fetchingAuthInfo: state.authInfo.fetching,
+    authInfoError: state.authInfo.error,
+    fetchingAccount: state.account.fetching,
     fetching: state.login.fetching,
     error: state.login.error,
-  }
-}
+  };
+};
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    attemptLogin: (username, password) => dispatch(LoginActions.loginRequest(username, password)),
-    logout: () => dispatch(LoginActions.logoutRequest()),
-  }
-}
+    attemptLogin: () => dispatch(LoginActions.loginRequest()),
+  };
+};
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(LoginScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);

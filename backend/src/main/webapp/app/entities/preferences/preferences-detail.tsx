@@ -2,12 +2,11 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
-import { Translate, ICrudGetAction } from 'react-jhipster';
+import { Translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
 import { getEntity } from './preferences.reducer';
-import { IPreferences } from 'app/shared/model/preferences.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 
 export interface IPreferencesDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
@@ -21,10 +20,16 @@ export const PreferencesDetail = (props: IPreferencesDetailProps) => {
   return (
     <Row>
       <Col md="8">
-        <h2>
-          <Translate contentKey="healthPointsApp.preferences.detail.title">Preferences</Translate> [<b>{preferencesEntity.id}</b>]
+        <h2 data-cy="preferencesDetailsHeading">
+          <Translate contentKey="healthPointsApp.preferences.detail.title">Preferences</Translate>
         </h2>
         <dl className="jh-entity-details">
+          <dt>
+            <span id="id">
+              <Translate contentKey="global.field.id">ID</Translate>
+            </span>
+          </dt>
+          <dd>{preferencesEntity.id}</dd>
           <dt>
             <span id="weeklyGoal">
               <Translate contentKey="healthPointsApp.preferences.weeklyGoal">Weekly Goal</Translate>
@@ -42,7 +47,7 @@ export const PreferencesDetail = (props: IPreferencesDetailProps) => {
           </dt>
           <dd>{preferencesEntity.user ? preferencesEntity.user.login : ''}</dd>
         </dl>
-        <Button tag={Link} to="/preferences" replace color="info">
+        <Button tag={Link} to="/preferences" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.back">Back</Translate>
@@ -61,7 +66,7 @@ export const PreferencesDetail = (props: IPreferencesDetailProps) => {
 };
 
 const mapStateToProps = ({ preferences }: IRootState) => ({
-  preferencesEntity: preferences.entity
+  preferencesEntity: preferences.entity,
 });
 
 const mapDispatchToProps = { getEntity };

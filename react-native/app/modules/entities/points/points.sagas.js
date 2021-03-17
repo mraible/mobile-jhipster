@@ -1,82 +1,74 @@
-import { call, put } from 'redux-saga/effects'
-import { callApi } from '../../../shared/sagas/call-api.saga'
-import PointActions from './points.reducer'
-import { localDateToJsDate } from '../../../shared/util/date-transforms'
+import { call, put } from 'redux-saga/effects';
+import { callApi } from '../../../shared/sagas/call-api.saga';
+import PointsActions from './points.reducer';
+import { convertLocalDateFromServer } from '../../../shared/util/date-transforms';
 
-export function* getPoint(api, action) {
-  const { pointId } = action
+function* getPoints(api, action) {
+  const { pointsId } = action;
   // make the call to the api
-  const apiCall = call(api.getPoint, pointId)
-  const response = yield call(callApi, apiCall)
+  const apiCall = call(api.getPoints, pointsId);
+  const response = yield call(callApi, apiCall);
 
   // success?
   if (response.ok) {
-    response.data = mapDateFields(response.data)
-    yield put(PointActions.pointSuccess(response.data))
+    response.data = mapDateFields(response.data);
+    yield put(PointsActions.pointsSuccess(response.data));
   } else {
-    yield put(PointActions.pointFailure(response.data))
+    yield put(PointsActions.pointsFailure(response.data));
   }
 }
 
-export function* getPoints(api, action) {
-  const { options } = action
+function* getAllPoints(api, action) {
+  const { options } = action;
   // make the call to the api
-  const apiCall = call(api.getPoints, options)
-  const response = yield call(callApi, apiCall)
+  const apiCall = call(api.getAllPoints, options);
+  const response = yield call(callApi, apiCall);
 
   // success?
   if (response.ok) {
-    yield put(PointActions.pointAllSuccess(response.data))
+    yield put(PointsActions.pointsAllSuccess(response.data, response.headers));
   } else {
-    yield put(PointActions.pointAllFailure(response.data))
+    yield put(PointsActions.pointsAllFailure(response.data));
   }
 }
 
-export function* updatePoint(api, action) {
-  const { point } = action
+function* updatePoints(api, action) {
+  const { points } = action;
   // make the call to the api
-  const idIsNotNull = !!point.id
-  const apiCall = call(idIsNotNull ? api.updatePoint : api.createPoint, point)
-  const response = yield call(callApi, apiCall)
+  const idIsNotNull = !(points.id === null || points.id === undefined);
+  const apiCall = call(idIsNotNull ? api.updatePoints : api.createPoints, points);
+  const response = yield call(callApi, apiCall);
 
   // success?
   if (response.ok) {
-    response.data = mapDateFields(response.data)
-    yield put(PointActions.pointUpdateSuccess(response.data))
+    response.data = mapDateFields(response.data);
+    yield put(PointsActions.pointsUpdateSuccess(response.data));
   } else {
-    yield put(PointActions.pointUpdateFailure(response.data))
+    yield put(PointsActions.pointsUpdateFailure(response.data));
   }
 }
 
-export function* searchPoints(api, action) {
-  const { query } = action
+function* deletePoints(api, action) {
+  const { pointsId } = action;
   // make the call to the api
-  const apiCall = call(api.searchPoints, query)
-  const response = yield call(callApi, apiCall)
+  const apiCall = call(api.deletePoints, pointsId);
+  const response = yield call(callApi, apiCall);
 
   // success?
   if (response.ok) {
-    yield put(PointActions.pointSearchSuccess(response.data))
+    yield put(PointsActions.pointsDeleteSuccess());
   } else {
-    yield put(PointActions.pointSearchFailure(response.data))
-  }
-}
-export function* deletePoint(api, action) {
-  const { pointId } = action
-  // make the call to the api
-  const apiCall = call(api.deletePoint, pointId)
-  const response = yield call(callApi, apiCall)
-
-  // success?
-  if (response.ok) {
-    yield put(PointActions.pointDeleteSuccess())
-  } else {
-    yield put(PointActions.pointDeleteFailure(response.data))
+    yield put(PointsActions.pointsDeleteFailure(response.data));
   }
 }
 function mapDateFields(data) {
-  if (data.date) {
-    data.date = localDateToJsDate(data.date)
-  }
-  return data
+  data.date = convertLocalDateFromServer(data.date);
+  return data;
 }
+
+export default {
+  getAllPoints,
+  getPoints,
+  deletePoints,
+  updatePoints,
+};

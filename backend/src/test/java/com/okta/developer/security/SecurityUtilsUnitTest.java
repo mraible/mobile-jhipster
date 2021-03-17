@@ -1,87 +1,70 @@
 package com.okta.developer.security;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.oauth2.core.oidc.endpoint.OidcParameterNames.ID_TOKEN;
+
+import java.time.Instant;
+import java.util.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.oidc.OidcIdToken;
-import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-
-import java.time.Instant;
-import java.util.*;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.security.oauth2.core.oidc.endpoint.OidcParameterNames.ID_TOKEN;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import reactor.util.context.Context;
 
 /**
  * Test class for the {@link SecurityUtils} utility class.
  */
-public class SecurityUtilsUnitTest {
+class SecurityUtilsUnitTest {
 
     @Test
-    public void testGetCurrentUserLogin() {
-        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-        securityContext.setAuthentication(new UsernamePasswordAuthenticationToken("admin", "admin"));
-        SecurityContextHolder.setContext(securityContext);
-        Optional<String> login = SecurityUtils.getCurrentUserLogin();
-        assertThat(login).contains("admin");
+    void testgetCurrentUserLogin() {
+        String login = SecurityUtils
+            .getCurrentUserLogin()
+            .subscriberContext(ReactiveSecurityContextHolder.withAuthentication(new UsernamePasswordAuthenticationToken("admin", "admin")))
+            .block();
+        assertThat(login).isEqualTo("admin");
     }
 
     @Test
-    public void testGetCurrentUserLoginForOAuth2() {
-        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("groups", "ROLE_USER");
-        claims.put("sub", 123);
-        claims.put("preferred_username", "admin");
-        OidcIdToken idToken = new OidcIdToken(ID_TOKEN, Instant.now(),
-            Instant.now().plusSeconds(60), claims);
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(AuthoritiesConstants.USER));
-        OidcUser user = new DefaultOidcUser(authorities, idToken);
-        OAuth2AuthenticationToken bla = new OAuth2AuthenticationToken(user, authorities, "oidc");
-        securityContext.setAuthentication(bla);
-        SecurityContextHolder.setContext(securityContext);
-
-        Optional<String> login = SecurityUtils.getCurrentUserLogin();
-
-        assertThat(login).contains("admin");
-    }
-
-    @Test
-    public void testIsAuthenticated() {
-        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-        securityContext.setAuthentication(new UsernamePasswordAuthenticationToken("admin", "admin"));
-        SecurityContextHolder.setContext(securityContext);
-        boolean isAuthenticated = SecurityUtils.isAuthenticated();
+    void testIsAuthenticated() {
+        Boolean isAuthenticated = SecurityUtils
+            .isAuthenticated()
+            .subscriberContext(ReactiveSecurityContextHolder.withAuthentication(new UsernamePasswordAuthenticationToken("admin", "admin")))
+            .block();
         assertThat(isAuthenticated).isTrue();
     }
 
     @Test
-    public void testAnonymousIsNotAuthenticated() {
-        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+    void testAnonymousIsNotAuthenticated() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(AuthoritiesConstants.ANONYMOUS));
-        securityContext.setAuthentication(new UsernamePasswordAuthenticationToken("anonymous", "anonymous", authorities));
-        SecurityContextHolder.setContext(securityContext);
-        boolean isAuthenticated = SecurityUtils.isAuthenticated();
+        Boolean isAuthenticated = SecurityUtils
+            .isAuthenticated()
+            .subscriberContext(
+                ReactiveSecurityContextHolder.withAuthentication(new UsernamePasswordAuthenticationToken("admin", "admin", authorities))
+            )
+            .block();
         assertThat(isAuthenticated).isFalse();
     }
 
     @Test
-    public void testIsCurrentUserInRole() {
-        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+    void testHasCurrentUserThisAuthority() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(AuthoritiesConstants.USER));
-        securityContext.setAuthentication(new UsernamePasswordAuthenticationToken("user", "user", authorities));
-        SecurityContextHolder.setContext(securityContext);
+        Context context = ReactiveSecurityContextHolder.withAuthentication(
+            new UsernamePasswordAuthenticationToken("admin", "admin", authorities)
+        );
+        Boolean hasCurrentUserThisAuthority = SecurityUtils
+            .hasCurrentUserThisAuthority(AuthoritiesConstants.USER)
+            .subscriberContext(context)
+            .block();
+        assertThat(hasCurrentUserThisAuthority).isTrue();
 
-        assertThat(SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.USER)).isTrue();
-        assertThat(SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN)).isFalse();
+        hasCurrentUserThisAuthority =
+            SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.ADMIN).subscriberContext(context).block();
+        assertThat(hasCurrentUserThisAuthority).isFalse();
     }
-
 }

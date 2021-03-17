@@ -1,47 +1,39 @@
 package com.okta.developer.web.rest;
 
-import com.okta.developer.HealthPointsApp;
-import com.okta.developer.config.TestSecurityConfiguration;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.csrf;
+
+import com.okta.developer.IntegrationTest;
 import com.okta.developer.domain.Points;
 import com.okta.developer.repository.PointsRepository;
-import com.okta.developer.repository.search.PointsSearchRepository;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
+import com.okta.developer.service.EntityManager;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Collections;
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.reactive.server.WebTestClient;
 
 /**
  * Integration tests for the {@link PointsResource} REST controller.
  */
-@SpringBootTest(classes = { HealthPointsApp.class, TestSecurityConfiguration.class })
-@ExtendWith(MockitoExtension.class)
-@AutoConfigureMockMvc
+@IntegrationTest
+@AutoConfigureWebTestClient
 @WithMockUser
-public class PointsResourceIT {
+class PointsResourceIT {
 
     private static final LocalDate DEFAULT_DATE = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_DATE = LocalDate.now(ZoneId.systemDefault());
@@ -58,22 +50,20 @@ public class PointsResourceIT {
     private static final String DEFAULT_NOTES = "AAAAAAAAAA";
     private static final String UPDATED_NOTES = "BBBBBBBBBB";
 
+    private static final String ENTITY_API_URL = "/api/points";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+
     @Autowired
     private PointsRepository pointsRepository;
-
-    /**
-     * This repository is mocked in the com.okta.developer.repository.search test package.
-     *
-     * @see com.okta.developer.repository.search.PointsSearchRepositoryMockConfiguration
-     */
-    @Autowired
-    private PointsSearchRepository mockPointsSearchRepository;
 
     @Autowired
     private EntityManager em;
 
     @Autowired
-    private MockMvc restPointsMockMvc;
+    private WebTestClient webTestClient;
 
     private Points points;
 
@@ -92,6 +82,7 @@ public class PointsResourceIT {
             .notes(DEFAULT_NOTES);
         return points;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -108,24 +99,45 @@ public class PointsResourceIT {
         return points;
     }
 
+    public static void deleteEntities(EntityManager em) {
+        try {
+            em.deleteAll(Points.class).block();
+        } catch (Exception e) {
+            // It can fail, if other entities are still referring this - it will be removed later.
+        }
+    }
+
+    @AfterEach
+    public void cleanup() {
+        deleteEntities(em);
+    }
+
+    @BeforeEach
+    public void setupCsrf() {
+        webTestClient = webTestClient.mutateWith(csrf());
+    }
+
     @BeforeEach
     public void initTest() {
+        deleteEntities(em);
         points = createEntity(em);
     }
 
     @Test
-    @Transactional
-    public void createPoints() throws Exception {
-        int databaseSizeBeforeCreate = pointsRepository.findAll().size();
-
+    void createPoints() throws Exception {
+        int databaseSizeBeforeCreate = pointsRepository.findAll().collectList().block().size();
         // Create the Points
-        restPointsMockMvc.perform(post("/api/points").with(csrf())
+        webTestClient
+            .post()
+            .uri(ENTITY_API_URL)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(points)))
-            .andExpect(status().isCreated());
+            .bodyValue(TestUtil.convertObjectToJsonBytes(points))
+            .exchange()
+            .expectStatus()
+            .isCreated();
 
         // Validate the Points in the database
-        List<Points> pointsList = pointsRepository.findAll();
+        List<Points> pointsList = pointsRepository.findAll().collectList().block();
         assertThat(pointsList).hasSize(databaseSizeBeforeCreate + 1);
         Points testPoints = pointsList.get(pointsList.size() - 1);
         assertThat(testPoints.getDate()).isEqualTo(DEFAULT_DATE);
@@ -133,122 +145,145 @@ public class PointsResourceIT {
         assertThat(testPoints.getMeals()).isEqualTo(DEFAULT_MEALS);
         assertThat(testPoints.getAlcohol()).isEqualTo(DEFAULT_ALCOHOL);
         assertThat(testPoints.getNotes()).isEqualTo(DEFAULT_NOTES);
-
-        // Validate the Points in Elasticsearch
-        verify(mockPointsSearchRepository, times(1)).save(testPoints);
     }
 
     @Test
-    @Transactional
-    public void createPointsWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = pointsRepository.findAll().size();
-
+    void createPointsWithExistingId() throws Exception {
         // Create the Points with an existing ID
         points.setId(1L);
 
+        int databaseSizeBeforeCreate = pointsRepository.findAll().collectList().block().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restPointsMockMvc.perform(post("/api/points").with(csrf())
+        webTestClient
+            .post()
+            .uri(ENTITY_API_URL)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(points)))
-            .andExpect(status().isBadRequest());
+            .bodyValue(TestUtil.convertObjectToJsonBytes(points))
+            .exchange()
+            .expectStatus()
+            .isBadRequest();
 
         // Validate the Points in the database
-        List<Points> pointsList = pointsRepository.findAll();
+        List<Points> pointsList = pointsRepository.findAll().collectList().block();
         assertThat(pointsList).hasSize(databaseSizeBeforeCreate);
-
-        // Validate the Points in Elasticsearch
-        verify(mockPointsSearchRepository, times(0)).save(points);
     }
 
-
     @Test
-    @Transactional
-    public void checkDateIsRequired() throws Exception {
-        int databaseSizeBeforeTest = pointsRepository.findAll().size();
+    void checkDateIsRequired() throws Exception {
+        int databaseSizeBeforeTest = pointsRepository.findAll().collectList().block().size();
         // set the field null
         points.setDate(null);
 
         // Create the Points, which fails.
 
-        restPointsMockMvc.perform(post("/api/points").with(csrf())
+        webTestClient
+            .post()
+            .uri(ENTITY_API_URL)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(points)))
-            .andExpect(status().isBadRequest());
+            .bodyValue(TestUtil.convertObjectToJsonBytes(points))
+            .exchange()
+            .expectStatus()
+            .isBadRequest();
 
-        List<Points> pointsList = pointsRepository.findAll();
+        List<Points> pointsList = pointsRepository.findAll().collectList().block();
         assertThat(pointsList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
-    @Transactional
-    public void getAllPoints() throws Exception {
+    void getAllPoints() {
         // Initialize the database
-        pointsRepository.saveAndFlush(points);
+        pointsRepository.save(points).block();
 
         // Get all the pointsList
-        restPointsMockMvc.perform(get("/api/points?sort=id,desc"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(points.getId().intValue())))
-            .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
-            .andExpect(jsonPath("$.[*].exercise").value(hasItem(DEFAULT_EXERCISE)))
-            .andExpect(jsonPath("$.[*].meals").value(hasItem(DEFAULT_MEALS)))
-            .andExpect(jsonPath("$.[*].alcohol").value(hasItem(DEFAULT_ALCOHOL)))
-            .andExpect(jsonPath("$.[*].notes").value(hasItem(DEFAULT_NOTES)));
+        webTestClient
+            .get()
+            .uri(ENTITY_API_URL + "?sort=id,desc")
+            .accept(MediaType.APPLICATION_JSON)
+            .exchange()
+            .expectStatus()
+            .isOk()
+            .expectHeader()
+            .contentType(MediaType.APPLICATION_JSON)
+            .expectBody()
+            .jsonPath("$.[*].id")
+            .value(hasItem(points.getId().intValue()))
+            .jsonPath("$.[*].date")
+            .value(hasItem(DEFAULT_DATE.toString()))
+            .jsonPath("$.[*].exercise")
+            .value(hasItem(DEFAULT_EXERCISE))
+            .jsonPath("$.[*].meals")
+            .value(hasItem(DEFAULT_MEALS))
+            .jsonPath("$.[*].alcohol")
+            .value(hasItem(DEFAULT_ALCOHOL))
+            .jsonPath("$.[*].notes")
+            .value(hasItem(DEFAULT_NOTES));
     }
-    
+
     @Test
-    @Transactional
-    public void getPoints() throws Exception {
+    void getPoints() {
         // Initialize the database
-        pointsRepository.saveAndFlush(points);
+        pointsRepository.save(points).block();
 
         // Get the points
-        restPointsMockMvc.perform(get("/api/points/{id}", points.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.id").value(points.getId().intValue()))
-            .andExpect(jsonPath("$.date").value(DEFAULT_DATE.toString()))
-            .andExpect(jsonPath("$.exercise").value(DEFAULT_EXERCISE))
-            .andExpect(jsonPath("$.meals").value(DEFAULT_MEALS))
-            .andExpect(jsonPath("$.alcohol").value(DEFAULT_ALCOHOL))
-            .andExpect(jsonPath("$.notes").value(DEFAULT_NOTES));
+        webTestClient
+            .get()
+            .uri(ENTITY_API_URL_ID, points.getId())
+            .accept(MediaType.APPLICATION_JSON)
+            .exchange()
+            .expectStatus()
+            .isOk()
+            .expectHeader()
+            .contentType(MediaType.APPLICATION_JSON)
+            .expectBody()
+            .jsonPath("$.id")
+            .value(is(points.getId().intValue()))
+            .jsonPath("$.date")
+            .value(is(DEFAULT_DATE.toString()))
+            .jsonPath("$.exercise")
+            .value(is(DEFAULT_EXERCISE))
+            .jsonPath("$.meals")
+            .value(is(DEFAULT_MEALS))
+            .jsonPath("$.alcohol")
+            .value(is(DEFAULT_ALCOHOL))
+            .jsonPath("$.notes")
+            .value(is(DEFAULT_NOTES));
     }
 
     @Test
-    @Transactional
-    public void getNonExistingPoints() throws Exception {
+    void getNonExistingPoints() {
         // Get the points
-        restPointsMockMvc.perform(get("/api/points/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        webTestClient
+            .get()
+            .uri(ENTITY_API_URL_ID, Long.MAX_VALUE)
+            .accept(MediaType.APPLICATION_JSON)
+            .exchange()
+            .expectStatus()
+            .isNotFound();
     }
 
     @Test
-    @Transactional
-    public void updatePoints() throws Exception {
+    void putNewPoints() throws Exception {
         // Initialize the database
-        pointsRepository.saveAndFlush(points);
+        pointsRepository.save(points).block();
 
-        int databaseSizeBeforeUpdate = pointsRepository.findAll().size();
+        int databaseSizeBeforeUpdate = pointsRepository.findAll().collectList().block().size();
 
         // Update the points
-        Points updatedPoints = pointsRepository.findById(points.getId()).get();
-        // Disconnect from session so that the updates on updatedPoints are not directly saved in db
-        em.detach(updatedPoints);
-        updatedPoints
-            .date(UPDATED_DATE)
-            .exercise(UPDATED_EXERCISE)
-            .meals(UPDATED_MEALS)
-            .alcohol(UPDATED_ALCOHOL)
-            .notes(UPDATED_NOTES);
+        Points updatedPoints = pointsRepository.findById(points.getId()).block();
+        updatedPoints.date(UPDATED_DATE).exercise(UPDATED_EXERCISE).meals(UPDATED_MEALS).alcohol(UPDATED_ALCOHOL).notes(UPDATED_NOTES);
 
-        restPointsMockMvc.perform(put("/api/points").with(csrf())
+        webTestClient
+            .put()
+            .uri(ENTITY_API_URL_ID, updatedPoints.getId())
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedPoints)))
-            .andExpect(status().isOk());
+            .bodyValue(TestUtil.convertObjectToJsonBytes(updatedPoints))
+            .exchange()
+            .expectStatus()
+            .isOk();
 
         // Validate the Points in the database
-        List<Points> pointsList = pointsRepository.findAll();
+        List<Points> pointsList = pointsRepository.findAll().collectList().block();
         assertThat(pointsList).hasSize(databaseSizeBeforeUpdate);
         Points testPoints = pointsList.get(pointsList.size() - 1);
         assertThat(testPoints.getDate()).isEqualTo(UPDATED_DATE);
@@ -256,69 +291,217 @@ public class PointsResourceIT {
         assertThat(testPoints.getMeals()).isEqualTo(UPDATED_MEALS);
         assertThat(testPoints.getAlcohol()).isEqualTo(UPDATED_ALCOHOL);
         assertThat(testPoints.getNotes()).isEqualTo(UPDATED_NOTES);
-
-        // Validate the Points in Elasticsearch
-        verify(mockPointsSearchRepository, times(1)).save(testPoints);
     }
 
     @Test
-    @Transactional
-    public void updateNonExistingPoints() throws Exception {
-        int databaseSizeBeforeUpdate = pointsRepository.findAll().size();
-
-        // Create the Points
+    void putNonExistingPoints() throws Exception {
+        int databaseSizeBeforeUpdate = pointsRepository.findAll().collectList().block().size();
+        points.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restPointsMockMvc.perform(put("/api/points").with(csrf())
+        webTestClient
+            .put()
+            .uri(ENTITY_API_URL_ID, points.getId())
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(points)))
-            .andExpect(status().isBadRequest());
+            .bodyValue(TestUtil.convertObjectToJsonBytes(points))
+            .exchange()
+            .expectStatus()
+            .isBadRequest();
 
         // Validate the Points in the database
-        List<Points> pointsList = pointsRepository.findAll();
+        List<Points> pointsList = pointsRepository.findAll().collectList().block();
         assertThat(pointsList).hasSize(databaseSizeBeforeUpdate);
-
-        // Validate the Points in Elasticsearch
-        verify(mockPointsSearchRepository, times(0)).save(points);
     }
 
     @Test
-    @Transactional
-    public void deletePoints() throws Exception {
-        // Initialize the database
-        pointsRepository.saveAndFlush(points);
+    void putWithIdMismatchPoints() throws Exception {
+        int databaseSizeBeforeUpdate = pointsRepository.findAll().collectList().block().size();
+        points.setId(count.incrementAndGet());
 
-        int databaseSizeBeforeDelete = pointsRepository.findAll().size();
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        webTestClient
+            .put()
+            .uri(ENTITY_API_URL_ID, count.incrementAndGet())
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(TestUtil.convertObjectToJsonBytes(points))
+            .exchange()
+            .expectStatus()
+            .isBadRequest();
+
+        // Validate the Points in the database
+        List<Points> pointsList = pointsRepository.findAll().collectList().block();
+        assertThat(pointsList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    void putWithMissingIdPathParamPoints() throws Exception {
+        int databaseSizeBeforeUpdate = pointsRepository.findAll().collectList().block().size();
+        points.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        webTestClient
+            .put()
+            .uri(ENTITY_API_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(TestUtil.convertObjectToJsonBytes(points))
+            .exchange()
+            .expectStatus()
+            .isEqualTo(405);
+
+        // Validate the Points in the database
+        List<Points> pointsList = pointsRepository.findAll().collectList().block();
+        assertThat(pointsList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    void partialUpdatePointsWithPatch() throws Exception {
+        // Initialize the database
+        pointsRepository.save(points).block();
+
+        int databaseSizeBeforeUpdate = pointsRepository.findAll().collectList().block().size();
+
+        // Update the points using partial update
+        Points partialUpdatedPoints = new Points();
+        partialUpdatedPoints.setId(points.getId());
+
+        partialUpdatedPoints.alcohol(UPDATED_ALCOHOL).notes(UPDATED_NOTES);
+
+        webTestClient
+            .patch()
+            .uri(ENTITY_API_URL_ID, partialUpdatedPoints.getId())
+            .contentType(MediaType.valueOf("application/merge-patch+json"))
+            .bodyValue(TestUtil.convertObjectToJsonBytes(partialUpdatedPoints))
+            .exchange()
+            .expectStatus()
+            .isOk();
+
+        // Validate the Points in the database
+        List<Points> pointsList = pointsRepository.findAll().collectList().block();
+        assertThat(pointsList).hasSize(databaseSizeBeforeUpdate);
+        Points testPoints = pointsList.get(pointsList.size() - 1);
+        assertThat(testPoints.getDate()).isEqualTo(DEFAULT_DATE);
+        assertThat(testPoints.getExercise()).isEqualTo(DEFAULT_EXERCISE);
+        assertThat(testPoints.getMeals()).isEqualTo(DEFAULT_MEALS);
+        assertThat(testPoints.getAlcohol()).isEqualTo(UPDATED_ALCOHOL);
+        assertThat(testPoints.getNotes()).isEqualTo(UPDATED_NOTES);
+    }
+
+    @Test
+    void fullUpdatePointsWithPatch() throws Exception {
+        // Initialize the database
+        pointsRepository.save(points).block();
+
+        int databaseSizeBeforeUpdate = pointsRepository.findAll().collectList().block().size();
+
+        // Update the points using partial update
+        Points partialUpdatedPoints = new Points();
+        partialUpdatedPoints.setId(points.getId());
+
+        partialUpdatedPoints
+            .date(UPDATED_DATE)
+            .exercise(UPDATED_EXERCISE)
+            .meals(UPDATED_MEALS)
+            .alcohol(UPDATED_ALCOHOL)
+            .notes(UPDATED_NOTES);
+
+        webTestClient
+            .patch()
+            .uri(ENTITY_API_URL_ID, partialUpdatedPoints.getId())
+            .contentType(MediaType.valueOf("application/merge-patch+json"))
+            .bodyValue(TestUtil.convertObjectToJsonBytes(partialUpdatedPoints))
+            .exchange()
+            .expectStatus()
+            .isOk();
+
+        // Validate the Points in the database
+        List<Points> pointsList = pointsRepository.findAll().collectList().block();
+        assertThat(pointsList).hasSize(databaseSizeBeforeUpdate);
+        Points testPoints = pointsList.get(pointsList.size() - 1);
+        assertThat(testPoints.getDate()).isEqualTo(UPDATED_DATE);
+        assertThat(testPoints.getExercise()).isEqualTo(UPDATED_EXERCISE);
+        assertThat(testPoints.getMeals()).isEqualTo(UPDATED_MEALS);
+        assertThat(testPoints.getAlcohol()).isEqualTo(UPDATED_ALCOHOL);
+        assertThat(testPoints.getNotes()).isEqualTo(UPDATED_NOTES);
+    }
+
+    @Test
+    void patchNonExistingPoints() throws Exception {
+        int databaseSizeBeforeUpdate = pointsRepository.findAll().collectList().block().size();
+        points.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        webTestClient
+            .patch()
+            .uri(ENTITY_API_URL_ID, points.getId())
+            .contentType(MediaType.valueOf("application/merge-patch+json"))
+            .bodyValue(TestUtil.convertObjectToJsonBytes(points))
+            .exchange()
+            .expectStatus()
+            .isBadRequest();
+
+        // Validate the Points in the database
+        List<Points> pointsList = pointsRepository.findAll().collectList().block();
+        assertThat(pointsList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    void patchWithIdMismatchPoints() throws Exception {
+        int databaseSizeBeforeUpdate = pointsRepository.findAll().collectList().block().size();
+        points.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        webTestClient
+            .patch()
+            .uri(ENTITY_API_URL_ID, count.incrementAndGet())
+            .contentType(MediaType.valueOf("application/merge-patch+json"))
+            .bodyValue(TestUtil.convertObjectToJsonBytes(points))
+            .exchange()
+            .expectStatus()
+            .isBadRequest();
+
+        // Validate the Points in the database
+        List<Points> pointsList = pointsRepository.findAll().collectList().block();
+        assertThat(pointsList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    void patchWithMissingIdPathParamPoints() throws Exception {
+        int databaseSizeBeforeUpdate = pointsRepository.findAll().collectList().block().size();
+        points.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        webTestClient
+            .patch()
+            .uri(ENTITY_API_URL)
+            .contentType(MediaType.valueOf("application/merge-patch+json"))
+            .bodyValue(TestUtil.convertObjectToJsonBytes(points))
+            .exchange()
+            .expectStatus()
+            .isEqualTo(405);
+
+        // Validate the Points in the database
+        List<Points> pointsList = pointsRepository.findAll().collectList().block();
+        assertThat(pointsList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    void deletePoints() {
+        // Initialize the database
+        pointsRepository.save(points).block();
+
+        int databaseSizeBeforeDelete = pointsRepository.findAll().collectList().block().size();
 
         // Delete the points
-        restPointsMockMvc.perform(delete("/api/points/{id}", points.getId()).with(csrf())
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNoContent());
+        webTestClient
+            .delete()
+            .uri(ENTITY_API_URL_ID, points.getId())
+            .accept(MediaType.APPLICATION_JSON)
+            .exchange()
+            .expectStatus()
+            .isNoContent();
 
         // Validate the database contains one less item
-        List<Points> pointsList = pointsRepository.findAll();
+        List<Points> pointsList = pointsRepository.findAll().collectList().block();
         assertThat(pointsList).hasSize(databaseSizeBeforeDelete - 1);
-
-        // Validate the Points in Elasticsearch
-        verify(mockPointsSearchRepository, times(1)).deleteById(points.getId());
-    }
-
-    @Test
-    @Transactional
-    public void searchPoints() throws Exception {
-        // Initialize the database
-        pointsRepository.saveAndFlush(points);
-        when(mockPointsSearchRepository.search(queryStringQuery("id:" + points.getId()), PageRequest.of(0, 20)))
-            .thenReturn(new PageImpl<>(Collections.singletonList(points), PageRequest.of(0, 1), 1));
-        // Search the points
-        restPointsMockMvc.perform(get("/api/_search/points?query=id:" + points.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(points.getId().intValue())))
-            .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
-            .andExpect(jsonPath("$.[*].exercise").value(hasItem(DEFAULT_EXERCISE)))
-            .andExpect(jsonPath("$.[*].meals").value(hasItem(DEFAULT_MEALS)))
-            .andExpect(jsonPath("$.[*].alcohol").value(hasItem(DEFAULT_ALCOHOL)))
-            .andExpect(jsonPath("$.[*].notes").value(hasItem(DEFAULT_NOTES)));
     }
 }

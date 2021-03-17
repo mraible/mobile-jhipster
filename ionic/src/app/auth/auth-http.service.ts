@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Requestor, TokenResponse } from '@openid/appauth';
-import { AuthService } from './auth.service';
+import { AuthService } from 'ionic-appauth';
 
 @Injectable({
   providedIn: 'root',
@@ -11,8 +11,8 @@ export class AuthHttpService {
   public async request<T>(method: 'GET' | 'POST' | 'PUT' | 'DELETE', url: string, body?: any) {
     const token: TokenResponse = await this.auth.getValidToken();
     return this.requestor.xhr<T>({
-      url: url,
-      method: method,
+      url,
+      method,
       data: JSON.stringify(body),
       headers: this.addHeaders(token),
     });

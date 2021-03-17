@@ -3,9 +3,10 @@
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
     "allowJs": true,
+    "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "types": ["jasmine", "node", "jest"]
   },
-  "files": ["src/test.ts", "src/zone-flags.ts", "src/polyfills.ts"],
+  "files": ["src/test.ts", "src/polyfills.ts"],
   "include": ["src/**/*.spec.ts", "src/**/*.d.ts"]
 }

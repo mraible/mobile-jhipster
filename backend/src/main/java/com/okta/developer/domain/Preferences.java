@@ -1,49 +1,40 @@
 package com.okta.developer.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
-import org.springframework.data.elasticsearch.annotations.FieldType;
-import java.io.Serializable;
-import java.util.Objects;
-
 import com.okta.developer.domain.enumeration.Units;
+import java.io.Serializable;
+import javax.validation.constraints.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 /**
  * A Preferences.
  */
-@Entity
-@Table(name = "preferences")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@org.springframework.data.elasticsearch.annotations.Document(indexName = "preferences")
+@Table("preferences")
 public class Preferences implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @NotNull
+    @NotNull(message = "must not be null")
     @Min(value = 10)
     @Max(value = 21)
-    @Column(name = "weekly_goal", nullable = false)
+    @Column("weekly_goal")
     private Integer weeklyGoal;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "weight_units", nullable = false)
+    @NotNull(message = "must not be null")
+    @Column("weight_units")
     private Units weightUnits;
 
-    @OneToOne
-    @JoinColumn(unique = true)
+    private String userId;
+
+    @Transient
     private User user;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -52,8 +43,13 @@ public class Preferences implements Serializable {
         this.id = id;
     }
 
+    public Preferences id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public Integer getWeeklyGoal() {
-        return weeklyGoal;
+        return this.weeklyGoal;
     }
 
     public Preferences weeklyGoal(Integer weeklyGoal) {
@@ -66,7 +62,7 @@ public class Preferences implements Serializable {
     }
 
     public Units getWeightUnits() {
-        return weightUnits;
+        return this.weightUnits;
     }
 
     public Preferences weightUnits(Units weightUnits) {
@@ -79,18 +75,29 @@ public class Preferences implements Serializable {
     }
 
     public User getUser() {
-        return user;
+        return this.user;
     }
 
     public Preferences user(User user) {
-        this.user = user;
+        this.setUser(user);
+        this.userId = user != null ? user.getId() : null;
         return this;
     }
 
     public void setUser(User user) {
         this.user = user;
+        this.userId = user != null ? user.getId() : null;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    public String getUserId() {
+        return this.userId;
+    }
+
+    public void setUserId(String user) {
+        this.userId = user;
+    }
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -105,9 +112,11 @@ public class Preferences implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "Preferences{" +

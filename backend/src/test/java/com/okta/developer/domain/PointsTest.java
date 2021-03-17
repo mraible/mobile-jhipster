@@ -1,13 +1,14 @@
 package com.okta.developer.domain;
 
-import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
-import com.okta.developer.web.rest.TestUtil;
 
-public class PointsTest {
+import com.okta.developer.web.rest.TestUtil;
+import org.junit.jupiter.api.Test;
+
+class PointsTest {
 
     @Test
-    public void equalsVerifier() throws Exception {
+    void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Points.class);
         Points points1 = new Points();
         points1.setId(1L);

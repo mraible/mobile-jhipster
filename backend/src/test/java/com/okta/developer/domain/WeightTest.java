@@ -1,13 +1,14 @@
 package com.okta.developer.domain;
 
-import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
-import com.okta.developer.web.rest.TestUtil;
 
-public class WeightTest {
+import com.okta.developer.web.rest.TestUtil;
+import org.junit.jupiter.api.Test;
+
+class WeightTest {
 
     @Test
-    public void equalsVerifier() throws Exception {
+    void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Weight.class);
         Weight weight1 = new Weight();
         weight1.setId(1L);

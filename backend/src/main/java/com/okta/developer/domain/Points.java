@@ -1,55 +1,48 @@
 package com.okta.developer.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
-import org.springframework.data.elasticsearch.annotations.FieldType;
 import java.io.Serializable;
-import java.util.Objects;
 import java.time.LocalDate;
+import javax.validation.constraints.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 /**
  * A Points.
  */
-@Entity
-@Table(name = "points")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@org.springframework.data.elasticsearch.annotations.Document(indexName = "points")
+@Table("points")
 public class Points implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @NotNull
-    @Column(name = "date", nullable = false)
+    @NotNull(message = "must not be null")
+    @Column("date")
     private LocalDate date;
 
-    @Column(name = "exercise")
+    @Column("exercise")
     private Integer exercise;
 
-    @Column(name = "meals")
+    @Column("meals")
     private Integer meals;
 
-    @Column(name = "alcohol")
+    @Column("alcohol")
     private Integer alcohol;
 
     @Size(max = 140)
-    @Column(name = "notes", length = 140)
+    @Column("notes")
     private String notes;
 
-    @ManyToOne
-    @JsonIgnoreProperties("points")
+    @Transient
     private User user;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    @Column("user_id")
+    private String userId;
+
+    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -58,8 +51,13 @@ public class Points implements Serializable {
         this.id = id;
     }
 
+    public Points id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public LocalDate getDate() {
-        return date;
+        return this.date;
     }
 
     public Points date(LocalDate date) {
@@ -72,7 +70,7 @@ public class Points implements Serializable {
     }
 
     public Integer getExercise() {
-        return exercise;
+        return this.exercise;
     }
 
     public Points exercise(Integer exercise) {
@@ -85,7 +83,7 @@ public class Points implements Serializable {
     }
 
     public Integer getMeals() {
-        return meals;
+        return this.meals;
     }
 
     public Points meals(Integer meals) {
@@ -98,7 +96,7 @@ public class Points implements Serializable {
     }
 
     public Integer getAlcohol() {
-        return alcohol;
+        return this.alcohol;
     }
 
     public Points alcohol(Integer alcohol) {
@@ -111,7 +109,7 @@ public class Points implements Serializable {
     }
 
     public String getNotes() {
-        return notes;
+        return this.notes;
     }
 
     public Points notes(String notes) {
@@ -124,18 +122,29 @@ public class Points implements Serializable {
     }
 
     public User getUser() {
-        return user;
+        return this.user;
     }
 
     public Points user(User user) {
-        this.user = user;
+        this.setUser(user);
+        this.userId = user != null ? user.getId() : null;
         return this;
     }
 
     public void setUser(User user) {
         this.user = user;
+        this.userId = user != null ? user.getId() : null;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    public String getUserId() {
+        return this.userId;
+    }
+
+    public void setUserId(String user) {
+        this.userId = user;
+    }
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -150,9 +159,11 @@ public class Points implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "Points{" +

@@ -1,13 +1,9 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native';
 
-import { ApplicationStyles, Colors } from '../../shared/themes/'
+import { ApplicationStyles, Colors } from '../../shared/themes';
 
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
-  container: {
-    flex: 1,
-    padding: 20,
-  },
   centerText: {
     textAlign: 'center',
   },
@@ -26,4 +22,4 @@ export default StyleSheet.create({
     alignSelf: 'stretch',
     justifyContent: 'center',
   },
-})
+});

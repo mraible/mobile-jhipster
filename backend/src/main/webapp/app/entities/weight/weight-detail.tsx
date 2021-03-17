@@ -2,12 +2,11 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
-import { Translate, ICrudGetAction, TextFormat } from 'react-jhipster';
+import { Translate, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
 import { getEntity } from './weight.reducer';
-import { IWeight } from 'app/shared/model/weight.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 
 export interface IWeightDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
@@ -21,18 +20,22 @@ export const WeightDetail = (props: IWeightDetailProps) => {
   return (
     <Row>
       <Col md="8">
-        <h2>
-          <Translate contentKey="healthPointsApp.weight.detail.title">Weight</Translate> [<b>{weightEntity.id}</b>]
+        <h2 data-cy="weightDetailsHeading">
+          <Translate contentKey="healthPointsApp.weight.detail.title">Weight</Translate>
         </h2>
         <dl className="jh-entity-details">
+          <dt>
+            <span id="id">
+              <Translate contentKey="global.field.id">ID</Translate>
+            </span>
+          </dt>
+          <dd>{weightEntity.id}</dd>
           <dt>
             <span id="timestamp">
               <Translate contentKey="healthPointsApp.weight.timestamp">Timestamp</Translate>
             </span>
           </dt>
-          <dd>
-            <TextFormat value={weightEntity.timestamp} type="date" format={APP_DATE_FORMAT} />
-          </dd>
+          <dd>{weightEntity.timestamp ? <TextFormat value={weightEntity.timestamp} type="date" format={APP_DATE_FORMAT} /> : null}</dd>
           <dt>
             <span id="weight">
               <Translate contentKey="healthPointsApp.weight.weight">Weight</Translate>
@@ -44,7 +47,7 @@ export const WeightDetail = (props: IWeightDetailProps) => {
           </dt>
           <dd>{weightEntity.user ? weightEntity.user.login : ''}</dd>
         </dl>
-        <Button tag={Link} to="/weight" replace color="info">
+        <Button tag={Link} to="/weight" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.back">Back</Translate>
@@ -63,7 +66,7 @@ export const WeightDetail = (props: IWeightDetailProps) => {
 };
 
 const mapStateToProps = ({ weight }: IRootState) => ({
-  weightEntity: weight.entity
+  weightEntity: weight.entity,
 });
 
 const mapDispatchToProps = { getEntity };

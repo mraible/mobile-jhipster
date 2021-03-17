@@ -1,8 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>
-      {{ 'TAB2_TITLE' | translate }}
-    </ion-title>
+    <ion-title> {{ 'TAB2_TITLE' | translate }} </ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -13,7 +11,5 @@
     </ion-item>
   </ion-list>
 
-  <div *ngIf="entities.length === 0">
-    {{ 'EMPTY_ENTITIES_MESSAGE' | translate }}
-  </div>
+  <div *ngIf="entities.length === 0">{{ 'EMPTY_ENTITIES_MESSAGE' | translate }}</div>
 </ion-content>

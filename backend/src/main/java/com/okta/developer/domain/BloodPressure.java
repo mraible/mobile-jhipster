@@ -1,50 +1,43 @@
 package com.okta.developer.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
-import org.springframework.data.elasticsearch.annotations.FieldType;
 import java.io.Serializable;
-import java.util.Objects;
 import java.time.ZonedDateTime;
+import javax.validation.constraints.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 /**
  * A BloodPressure.
  */
-@Entity
-@Table(name = "blood_pressure")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@org.springframework.data.elasticsearch.annotations.Document(indexName = "bloodpressure")
+@Table("blood_pressure")
 public class BloodPressure implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @NotNull
-    @Column(name = "timestamp", nullable = false)
+    @NotNull(message = "must not be null")
+    @Column("timestamp")
     private ZonedDateTime timestamp;
 
-    @NotNull
-    @Column(name = "systolic", nullable = false)
+    @NotNull(message = "must not be null")
+    @Column("systolic")
     private Integer systolic;
 
-    @NotNull
-    @Column(name = "diastolic", nullable = false)
+    @NotNull(message = "must not be null")
+    @Column("diastolic")
     private Integer diastolic;
 
-    @ManyToOne
-    @JsonIgnoreProperties("bloodPressures")
+    @Transient
     private User user;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    @Column("user_id")
+    private String userId;
+
+    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -53,8 +46,13 @@ public class BloodPressure implements Serializable {
         this.id = id;
     }
 
+    public BloodPressure id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public ZonedDateTime getTimestamp() {
-        return timestamp;
+        return this.timestamp;
     }
 
     public BloodPressure timestamp(ZonedDateTime timestamp) {
@@ -67,7 +65,7 @@ public class BloodPressure implements Serializable {
     }
 
     public Integer getSystolic() {
-        return systolic;
+        return this.systolic;
     }
 
     public BloodPressure systolic(Integer systolic) {
@@ -80,7 +78,7 @@ public class BloodPressure implements Serializable {
     }
 
     public Integer getDiastolic() {
-        return diastolic;
+        return this.diastolic;
     }
 
     public BloodPressure diastolic(Integer diastolic) {
@@ -93,18 +91,29 @@ public class BloodPressure implements Serializable {
     }
 
     public User getUser() {
-        return user;
+        return this.user;
     }
 
     public BloodPressure user(User user) {
-        this.user = user;
+        this.setUser(user);
+        this.userId = user != null ? user.getId() : null;
         return this;
     }
 
     public void setUser(User user) {
         this.user = user;
+        this.userId = user != null ? user.getId() : null;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    public String getUserId() {
+        return this.userId;
+    }
+
+    public void setUserId(String user) {
+        this.userId = user;
+    }
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -119,9 +128,11 @@ public class BloodPressure implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "BloodPressure{" +

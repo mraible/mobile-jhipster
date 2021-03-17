@@ -1,107 +1,98 @@
-import Actions, { reducer, INITIAL_STATE } from '../../../../../app/modules/entities/points/points.reducer'
+import Actions, { reducer, INITIAL_STATE } from '../../../../../app/modules/entities/points/points.reducer';
 
-test('attempt retrieving a single point', () => {
-  const state = reducer(INITIAL_STATE, Actions.pointRequest({ id: 1 }))
+test('attempt retrieving a single points', () => {
+  const state = reducer(INITIAL_STATE, Actions.pointsRequest({ id: 1 }));
 
-  expect(state.fetchingOne).toBe(true)
-  expect(state.point).toBe(null)
-})
+  expect(state.fetchingOne).toBe(true);
+  expect(state.points).toEqual({ id: undefined });
+});
 
-test('attempt retrieving a list of point', () => {
-  const state = reducer(INITIAL_STATE, Actions.pointAllRequest({ id: 1 }))
+test('attempt retrieving a list of points', () => {
+  const state = reducer(INITIAL_STATE, Actions.pointsAllRequest({ id: 1 }));
 
-  expect(state.fetchingAll).toBe(true)
-  expect(state.points).toEqual([])
-})
+  expect(state.fetchingAll).toBe(true);
+  expect(state.pointsList).toEqual([]);
+});
 
-test('attempt updating a point', () => {
-  const state = reducer(INITIAL_STATE, Actions.pointUpdateRequest({ id: 1 }))
+test('attempt updating a points', () => {
+  const state = reducer(INITIAL_STATE, Actions.pointsUpdateRequest({ id: 1 }));
 
-  expect(state.updating).toBe(true)
-})
-test('attempt searching a point', () => {
-  const state = reducer(INITIAL_STATE, Actions.pointSearchRequest(1))
+  expect(state.updating).toBe(true);
+});
+test('attempt to deleting a points', () => {
+  const state = reducer(INITIAL_STATE, Actions.pointsDeleteRequest({ id: 1 }));
 
-  expect(state.searching).toBe(true)
-})
-test('attempt to deleting a point', () => {
-  const state = reducer(INITIAL_STATE, Actions.pointDeleteRequest({ id: 1 }))
+  expect(state.deleting).toBe(true);
+});
 
-  expect(state.deleting).toBe(true)
-})
+test('success retrieving a points', () => {
+  const state = reducer(INITIAL_STATE, Actions.pointsSuccess({ id: 1 }));
 
-test('success retrieving a point', () => {
-  const state = reducer(INITIAL_STATE, Actions.pointSuccess({ id: 1 }))
+  expect(state.fetchingOne).toBe(false);
+  expect(state.errorOne).toBe(null);
+  expect(state.points).toEqual({ id: 1 });
+});
 
-  expect(state.fetchingOne).toBe(false)
-  expect(state.errorOne).toBe(null)
-  expect(state.point).toEqual({ id: 1 })
-})
+test('success retrieving a list of points', () => {
+  const state = reducer(
+    INITIAL_STATE,
+    Actions.pointsAllSuccess([{ id: 1 }, { id: 2 }], { link: '</?page=1>; rel="last",</?page=0>; rel="first"', 'x-total-count': 5 }),
+  );
 
-test('success retrieving a list of point', () => {
-  const state = reducer(INITIAL_STATE, Actions.pointAllSuccess([{ id: 1 }, { id: 2 }]))
+  expect(state.fetchingAll).toBe(false);
+  expect(state.errorAll).toBe(null);
+  expect(state.pointsList).toEqual([{ id: 1 }, { id: 2 }]);
+  expect(state.links).toEqual({ first: 0, last: 1 });
+  expect(state.totalItems).toEqual(5);
+});
 
-  expect(state.fetchingAll).toBe(false)
-  expect(state.errorAll).toBe(null)
-  expect(state.points).toEqual([{ id: 1 }, { id: 2 }])
-})
+test('success updating a points', () => {
+  const state = reducer(INITIAL_STATE, Actions.pointsUpdateSuccess({ id: 1 }));
 
-test('success updating a point', () => {
-  const state = reducer(INITIAL_STATE, Actions.pointUpdateSuccess({ id: 1 }))
+  expect(state.updating).toBe(false);
+  expect(state.errorUpdating).toBe(null);
+  expect(state.points).toEqual({ id: 1 });
+});
+test('success deleting a points', () => {
+  const state = reducer(INITIAL_STATE, Actions.pointsDeleteSuccess());
 
-  expect(state.updating).toBe(false)
-  expect(state.errorUpdating).toBe(null)
-  expect(state.point).toEqual({ id: 1 })
-})
-test('success searching a point', () => {
-  const state = reducer(INITIAL_STATE, Actions.pointSearchSuccess({ id: 1 }))
+  expect(state.deleting).toBe(false);
+  expect(state.errorDeleting).toBe(null);
+  expect(state.points).toEqual({ id: undefined });
+});
 
-  expect(state.searching).toBe(false)
-  expect(state.errorSearching).toBe(null)
-  expect(state.points).toEqual({ id: 1 })
-})
-test('success deleting a point', () => {
-  const state = reducer(INITIAL_STATE, Actions.pointDeleteSuccess())
+test('failure retrieving a points', () => {
+  const state = reducer(INITIAL_STATE, Actions.pointsFailure({ error: 'Not found' }));
 
-  expect(state.deleting).toBe(false)
-  expect(state.errorDeleting).toBe(null)
-  expect(state.point).toEqual(null)
-})
+  expect(state.fetchingOne).toBe(false);
+  expect(state.errorOne).toEqual({ error: 'Not found' });
+  expect(state.points).toEqual({ id: undefined });
+});
 
-test('failure retrieving a point', () => {
-  const state = reducer(INITIAL_STATE, Actions.pointFailure({ error: 'Not found' }))
+test('failure retrieving a list of points', () => {
+  const state = reducer(INITIAL_STATE, Actions.pointsAllFailure({ error: 'Not found' }));
 
-  expect(state.fetchingOne).toBe(false)
-  expect(state.errorOne).toEqual({ error: 'Not found' })
-  expect(state.point).toEqual(null)
-})
+  expect(state.fetchingAll).toBe(false);
+  expect(state.errorAll).toEqual({ error: 'Not found' });
+  expect(state.pointsList).toEqual([]);
+});
 
-test('failure retrieving a list of point', () => {
-  const state = reducer(INITIAL_STATE, Actions.pointAllFailure({ error: 'Not found' }))
+test('failure updating a points', () => {
+  const state = reducer(INITIAL_STATE, Actions.pointsUpdateFailure({ error: 'Not found' }));
 
-  expect(state.fetchingAll).toBe(false)
-  expect(state.errorAll).toEqual({ error: 'Not found' })
-  expect(state.points).toEqual([])
-})
+  expect(state.updating).toBe(false);
+  expect(state.errorUpdating).toEqual({ error: 'Not found' });
+  expect(state.points).toEqual(INITIAL_STATE.points);
+});
+test('failure deleting a points', () => {
+  const state = reducer(INITIAL_STATE, Actions.pointsDeleteFailure({ error: 'Not found' }));
 
-test('failure updating a point', () => {
-  const state = reducer(INITIAL_STATE, Actions.pointUpdateFailure({ error: 'Not found' }))
+  expect(state.deleting).toBe(false);
+  expect(state.errorDeleting).toEqual({ error: 'Not found' });
+  expect(state.points).toEqual(INITIAL_STATE.points);
+});
 
-  expect(state.updating).toBe(false)
-  expect(state.errorUpdating).toEqual({ error: 'Not found' })
-  expect(state.point).toEqual(INITIAL_STATE.point)
-})
-test('failure searching a point', () => {
-  const state = reducer(INITIAL_STATE, Actions.pointSearchFailure({ error: 'Not found' }))
-
-  expect(state.searching).toBe(false)
-  expect(state.errorSearching).toEqual({ error: 'Not found' })
-  expect(state.points).toEqual([])
-})
-test('failure deleting a point', () => {
-  const state = reducer(INITIAL_STATE, Actions.pointDeleteFailure({ error: 'Not found' }))
-
-  expect(state.deleting).toBe(false)
-  expect(state.errorDeleting).toEqual({ error: 'Not found' })
-  expect(state.point).toEqual(INITIAL_STATE.point)
-})
+test('resetting state for points', () => {
+  const state = reducer({ ...INITIAL_STATE, deleting: true }, Actions.pointsReset());
+  expect(state).toEqual(INITIAL_STATE);
+});

@@ -1,12 +1,12 @@
-import React from 'react'
-import { StyleSheet, View } from 'react-native'
-import { storiesOf } from '@storybook/react-native'
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { storiesOf } from '@storybook/react-native';
 
-import SearchBar from './search-bar'
+import SearchBar from './search-bar';
 
 const styles = StyleSheet.create({
   container: { backgroundColor: 'black', height: 50 },
-})
+});
 
 storiesOf('SearchBar', module)
   .add('Default', () => (
@@ -18,4 +18,4 @@ storiesOf('SearchBar', module)
     <View style={styles.container}>
       <SearchBar onSearch={() => {}} onCancel={() => {}} searchTerm="HELLO!!" />
     </View>
-  ))
+  ));

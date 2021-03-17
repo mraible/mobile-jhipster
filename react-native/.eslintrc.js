@@ -1,8 +1,8 @@
 module.exports = {
   root: true,
-  extends: '@react-native-community',
+  extends: ['@react-native-community', 'prettier'],
   rules: {
-    semi: [2, 'never'],
+    semi: [2, 'always'],
     quotes: [2, 'single', { avoidEscape: true }],
   },
   globals: {
@@ -12,17 +12,18 @@ module.exports = {
     expect: 'readonly',
     fetch: 'readonly',
     navigator: 'readonly',
-    __DEV__: 'readonly',
+    waitFor: 'readonly',
     XMLHttpRequest: 'readonly',
+    __DEV__: 'readonly',
     FormData: 'readonly',
     React$Element: 'readonly',
-    before: 'readonly',
+    beforeAll: 'readonly',
     beforeEach: 'readonly',
     by: 'readonly',
     element: 'readonly',
     it: 'readonly',
     device: 'readonly',
-    after: 'readonly',
+    afterAll: 'readonly',
     afterEach: 'readonly',
   },
-}
+};

@@ -1,52 +1,48 @@
 {
-    "name": "Points",
-    "fields": [
-        {
-            "fieldName": "date",
-            "fieldType": "LocalDate",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "exercise",
-            "fieldType": "Integer"
-        },
-        {
-            "fieldName": "meals",
-            "fieldType": "Integer"
-        },
-        {
-            "fieldName": "alcohol",
-            "fieldType": "Integer"
-        },
-        {
-            "fieldName": "notes",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "maxlength"
-            ],
-            "fieldValidateRulesMaxlength": 140
-        }
-    ],
-    "relationships": [
-        {
-            "relationshipType": "many-to-one",
-            "otherEntityName": "user",
-            "otherEntityRelationshipName": "points",
-            "relationshipName": "user",
-            "otherEntityField": "login"
-        }
-    ],
-    "changelogDate": "20200406225607",
-    "entityTableName": "points",
-    "dto": "no",
-    "pagination": "pagination",
-    "service": "no",
-    "jpaMetamodelFiltering": false,
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "applications": [
-        "HealthPoints"
-    ]
+  "name": "Points",
+  "fields": [
+    {
+      "fieldName": "date",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "exercise",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "meals",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "alcohol",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "notes",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "140"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "points",
+      "relationshipName": "user",
+      "otherEntityField": "login"
+    }
+  ],
+  "entityTableName": "points",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["HealthPoints"],
+  "angularJSSuffix": "",
+  "changelogDate": "20210316033322"
 }
