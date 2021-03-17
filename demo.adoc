@@ -23,7 +23,7 @@ toc::[]
 
 . Download https://github.com/mraible/mobile-jhipster/blob/main/app.jdl[this JDL file] as `app.jdl` in the root directory.
 
-. Create a `backend` directory and import `app.jdl` from the root directory:
+. Create a `backend` directory and import `app.jdl`:
 
   take backend
   jhipster import-jdl ../app.jdl
