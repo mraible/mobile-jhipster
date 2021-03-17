@@ -31,8 +31,8 @@ toc::[]
 . Start Keycloak:
 
   docker-compose -f src/main/docker/keycloak.yml up -d
-
-//  docker-compose -f src/main/docker/sonar.yml up -d
++
+// docker-compose -f src/main/docker/sonar.yml up -d
 
 . Start app using `./gradlew`, show project in IDE, and browse `http://localhost:8080`
 
