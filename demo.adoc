@@ -21,7 +21,7 @@ toc::[]
 
 . Create a new directory to hold all the projects: `mkdir mobile-jhipster`
 
-. Download https://github.com/mraible/mobile-jhipster/blob/main/app.jdl[this JDL file] into the root directory.
+. Download https://github.com/mraible/mobile-jhipster/blob/main/app.jdl[this JDL file] as `app.jdl` in the root directory.
 
 . Create a `backend` directory and import `app.jdl` from the root directory:
 
