@@ -21,9 +21,9 @@ toc::[]
 
 . Create a new directory to hold all the projects: `mkdir mobile-jhipster`
 
-// . Download https://github.com/jhipster/jdl-samples/blob/master/21-points.jh[21-Points Health JDL] into the root directory.
+. Download https://github.com/mraible/mobile-jhipster/blob/main/app.jdl[this JDL file] into the root directory.
 
-. Create a `backend` directory and run import-jdl from it:
+. Create a `backend` directory and import `app.jdl` from the root directory:
 
   take backend
   jhipster import-jdl ../app.jdl
