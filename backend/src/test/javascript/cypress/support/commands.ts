@@ -41,9 +41,29 @@ export const configurationPageHeadingSelector = '[data-cy="configurationPageHead
 // End Specific Selector Attributes for Cypress
 // ***********************************************
 
-export const classInvalid = 'av-invalid';
+export const classInvalid = 'is-invalid';
 
-export const classValid = 'av-valid';
+export const classValid = 'is-valid';
 
+Cypress.Commands.add('authenticatedRequest', (data: any) => {
+  return cy.getCookie('XSRF-TOKEN').then(csrfCookie => {
+    return cy.request({
+      ...data,
+      headers: {
+        'X-XSRF-TOKEN': csrfCookie?.value,
+      },
+    });
+  });
+});
+
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      authenticatedRequest(data: any): Cypress.Chainable;
+    }
+  }
+}
+
+import 'cypress-audit/commands';
 // Convert this to a module instead of script (allows import/export)
 export {};

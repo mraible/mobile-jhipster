@@ -15,35 +15,20 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 
 toc::[]
 
-=== Reactive Spring Boot API
+=== Photo Gallery Spring Boot API
 
-. Install JHipster: `npm install -g generator-jhipster@beta`
+. Create a new directory to hold all the projects: `take mobile-jhipster`
 
-. Create a new directory to hold all the projects: `mkdir mobile-jhipster`
+. Clone an existing JHipster app into a `backend` directory:
 
-. Download https://github.com/mraible/mobile-jhipster/blob/main/app.jdl[this JDL file] as `app.jdl` in the root directory.
-
-. Create a `backend` directory and import `app.jdl`:
-
-  take backend
-  jhipster import-jdl ../app.jdl
+  git clone https://github.com/oktadev/auth0-full-stack-java-example.git backend
 
 . Start Keycloak:
 
+  cd backend
   docker-compose -f src/main/docker/keycloak.yml up -d
-+
-// docker-compose -f src/main/docker/sonar.yml up -d
 
-. Start app using `./gradlew`, show project in IDE, and browse `http://localhost:8080`
-
-. Run `npm start`, show Add Points screen, then change `points-update.tsx` to use checkboxes [`react-checkboxes`]
-
-. Turn off faker in `application-dev.yml` and `rm -rf build/h2db`
-////
-. Ensure coverage with Sonar (results at http://localhost:9001):
-
-  ./gradlew -Pprod clean check jacocoTestReport sonarqube -Dsonar.host.url=http://localhost:9001
-////
+. Start app using `./mvnw`, show project in IDE, and browse `http://localhost:8080`
 
 === Ionic App
 
@@ -51,39 +36,19 @@ toc::[]
 
   npm i -g generator-jhipster-ionic @ionic/cli yo
 
-. Create an Ionic app named `HealthPoints`
+. Create an Ionic app named `Flickr2`
 
-  yo jhipster-ionic
+  yo jhipster-ionic 
 
-. Rename `HealthPoints` to `ionic`
+. Rename `Flickr2` to `ionic`
 
 . Launch app and log in after running `ionic serve`
 
 . Generate entities
 
-  yo jhipster-ionic:import-jdl ../app.jdl
-+
-WARNING: I was unable to make this work with JHipster 7, so this code, nor the modifications below, are in this project.
+  yo jhipster-ionic:import-jdl ../backend/flickr2.jdl
 
 . Restart app and show generated entity screens
-
-. Change `points-update.html` to use `<ion-toggle>` (remove `position` from label, add `slot="start"` to element)
-
-. Modify `points-update.ts` to use booleans for points in the `save()` method
-
-  const points = this.createFromForm();
-  // convert booleans to ints
-  points.exercise = points.exercise ? 1 : 0;
-  points.meals = points.meals ? 1 : 0;
-  points.alcohol = points.alcohol ? 1 : 0;
-
-. Update `points-update.ts` to set defaults in `ngOnInit(()`
-
-  if (this.isNew) {
-    this.points.alcohol = 1;
-    this.points.exercise = 1;
-    this.points.meals = 1;
-  }
 
 . Run app in iOS Simulator
 
@@ -123,7 +88,7 @@ WARNING: I was unable to make this work with JHipster 7, so this code, nor the m
 . Create a React Native client:
 
   take react-native
-  jhipster --blueprints react-native jdl ../app.jdl
+  jhipster --blueprints react-native jdl ../backend/flickr2.jdl
 
 . Change `application-dev.yml` in backend to allow `http://localhost:19006` for CORS
 
@@ -133,7 +98,7 @@ WARNING: I was unable to make this work with JHipster 7, so this code, nor the m
 
 . To run on Android, use `npm start -- --android`
 
-. Add `https://auth.expo.io/@mraible/HealthPoints` as a Login redirect URI in Keycloak
+. Add `https://auth.expo.io/@mraible/Flickr2` as a Login redirect URI in Keycloak
 
 . For AVD to communicate with your API and Keycloak, add some port mappings
 
@@ -141,8 +106,6 @@ WARNING: I was unable to make this work with JHipster 7, so this code, nor the m
   adb reverse tcp:9080 tcp:9080
 
 . Refresh your app in Simulator using kbd:[{commandkey} + R] or by hitting kbd:[R] twice in Android
-
-// todo: document steps to make checkboxes in React Native
 
 === Flutter App
 
@@ -161,7 +124,7 @@ NOTE: This module currently only supports JWT auth. There's open issues for http
   # Needs Java 8 because NoClassDefFoundError: javax/xml/bind/annotation/XmlSchema
   sdk use java 8.0.242.hs-adpt
 
-. Create a Flutter app
+. Create a Flutter app in the `backend` directory
 
   yo jhipster-flutter-merlin # creates flutter-app directory
 
@@ -191,7 +154,7 @@ NOTE: The `http://localhost:8761*` redirect URIs are for the JHipster Registry, 
 
 . Create a **Native** app using `okta apps create` and use `http://localhost:19006/,https://auth.expo.io/@your-expo-username/reactNativeAppName` as redirect URIs.
 
-  * `http://localhost:19006/,https://auth.expo.io/@mraible/HealthPoints`
+  * `http://localhost:19006/,https://auth.expo.io/@mraible/Flickr2`
 
 . Copy the client ID to `react-native/app/config/app-config.js`
 

@@ -1,56 +1,30 @@
-import { combineReducers } from 'redux';
 import { loadingBarReducer as loadingBar } from 'react-redux-loading-bar';
 
-import locale, { LocaleState } from './locale';
-import authentication, { AuthenticationState } from './authentication';
-import applicationProfile, { ApplicationProfileState } from './application-profile';
+import locale from './locale';
+import authentication from './authentication';
+import applicationProfile from './application-profile';
 
-import administration, { AdministrationState } from 'app/modules/administration/administration.reducer';
-import userManagement, { UserManagementState } from './user-management';
+import administration from 'app/modules/administration/administration.reducer';
+import userManagement from './user-management';
 // prettier-ignore
-import points, {
-  PointsState
-} from 'app/entities/points/points.reducer';
+import album from 'app/entities/album/album.reducer';
 // prettier-ignore
-import bloodPressure, {
-  BloodPressureState
-} from 'app/entities/blood-pressure/blood-pressure.reducer';
+import photo from 'app/entities/photo/photo.reducer';
 // prettier-ignore
-import weight, {
-  WeightState
-} from 'app/entities/weight/weight.reducer';
-// prettier-ignore
-import preferences, {
-  PreferencesState
-} from 'app/entities/preferences/preferences.reducer';
+import tag from 'app/entities/tag/tag.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
-export interface IRootState {
-  readonly authentication: AuthenticationState;
-  readonly locale: LocaleState;
-  readonly applicationProfile: ApplicationProfileState;
-  readonly administration: AdministrationState;
-  readonly userManagement: UserManagementState;
-  readonly points: PointsState;
-  readonly bloodPressure: BloodPressureState;
-  readonly weight: WeightState;
-  readonly preferences: PreferencesState;
-  /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
-  readonly loadingBar: any;
-}
-
-const rootReducer = combineReducers<IRootState>({
+const rootReducer = {
   authentication,
   locale,
   applicationProfile,
   administration,
   userManagement,
-  points,
-  bloodPressure,
-  weight,
-  preferences,
+  album,
+  photo,
+  tag,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar,
-});
+};
 
 export default rootReducer;

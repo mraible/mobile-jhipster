@@ -1,106 +1,102 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { Storage } from 'react-jhipster';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { serializeAxiosError } from './reducer.utils';
 
-import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
+import { AppThunk } from 'app/config/store';
 import { setLocale } from 'app/shared/reducers/locale';
 
-export const ACTION_TYPES = {
-  GET_SESSION: 'authentication/GET_SESSION',
-  LOGOUT: 'authentication/LOGOUT',
-  CLEAR_AUTH: 'authentication/CLEAR_AUTH',
-  ERROR_MESSAGE: 'authentication/ERROR_MESSAGE',
-};
-
-const initialState = {
+export const initialState = {
   loading: false,
   isAuthenticated: false,
   account: {} as any,
-  errorMessage: (null as unknown) as string, // Errors returned from server side
-  redirectMessage: (null as unknown) as string,
+  errorMessage: null as unknown as string, // Errors returned from server side
+  redirectMessage: null as unknown as string,
   sessionHasBeenFetched: false,
-  idToken: (null as unknown) as string,
-  logoutUrl: (null as unknown) as string,
+  logoutUrl: null as unknown as string,
 };
 
 export type AuthenticationState = Readonly<typeof initialState>;
 
-// Reducer
+// Actions
 
-export default (state: AuthenticationState = initialState, action): AuthenticationState => {
-  switch (action.type) {
-    case REQUEST(ACTION_TYPES.GET_SESSION):
-      return {
-        ...state,
-        loading: true,
-      };
-    case FAILURE(ACTION_TYPES.GET_SESSION):
-      return {
-        ...state,
-        loading: false,
-        isAuthenticated: false,
-        sessionHasBeenFetched: true,
-        errorMessage: action.payload,
-      };
-    case SUCCESS(ACTION_TYPES.LOGOUT):
-      return {
-        ...initialState,
-        idToken: action.payload.data.idToken,
-        logoutUrl: action.payload.data.logoutUrl,
-      };
-    case SUCCESS(ACTION_TYPES.GET_SESSION): {
-      const isAuthenticated = action.payload && action.payload.data && action.payload.data.activated;
-      return {
-        ...state,
-        isAuthenticated,
-        loading: false,
-        sessionHasBeenFetched: true,
-        account: action.payload.data,
-      };
-    }
-    case ACTION_TYPES.ERROR_MESSAGE:
-      return {
-        ...initialState,
-        redirectMessage: action.message,
-      };
-    case ACTION_TYPES.CLEAR_AUTH:
-      return {
-        ...state,
-        loading: false,
-        isAuthenticated: false,
-      };
-    default:
-      return state;
-  }
-};
-
-export const displayAuthError = message => ({ type: ACTION_TYPES.ERROR_MESSAGE, message });
-
-export const getSession: () => void = () => async (dispatch, getState) => {
-  await dispatch({
-    type: ACTION_TYPES.GET_SESSION,
-    payload: axios.get('api/account'),
-  });
+export const getSession = (): AppThunk => async (dispatch, getState) => {
+  await dispatch(getAccount());
 
   const { account } = getState().authentication;
   if (account && account.langKey) {
     const langKey = Storage.session.get('locale', account.langKey);
-    await dispatch(setLocale(langKey));
+    dispatch(setLocale(langKey));
   }
 };
 
-export const logout: () => void = () => async dispatch => {
-  await dispatch({
-    type: ACTION_TYPES.LOGOUT,
-    payload: axios.post('api/logout', {}),
-  });
+export const getAccount = createAsyncThunk('authentication/get_account', async () => axios.get<any>('api/account'), {
+  serializeError: serializeAxiosError,
+});
 
+export const logoutServer = createAsyncThunk('authentication/logout', async () => axios.post<any>('api/logout', {}), {
+  serializeError: serializeAxiosError,
+});
+
+export const logout: () => AppThunk = () => async dispatch => {
+  await dispatch(logoutServer());
   // fetch new csrf token
   dispatch(getSession());
 };
 
-export const clearAuthentication = messageKey => (dispatch, getState) => {
-  dispatch(displayAuthError(messageKey));
-  dispatch({
-    type: ACTION_TYPES.CLEAR_AUTH,
-  });
+export const clearAuthentication = messageKey => dispatch => {
+  dispatch(authError(messageKey));
+  dispatch(clearAuth());
 };
+
+export const AuthenticationSlice = createSlice({
+  name: 'authentication',
+  initialState: initialState as AuthenticationState,
+  reducers: {
+    authError(state, action) {
+      return {
+        ...state,
+        redirectMessage: action.payload,
+      };
+    },
+    clearAuth(state) {
+      return {
+        ...state,
+        loading: false,
+        isAuthenticated: false,
+      };
+    },
+  },
+  extraReducers(builder) {
+    builder
+      .addCase(getAccount.rejected, (state, action) => ({
+        ...state,
+        loading: false,
+        isAuthenticated: false,
+        sessionHasBeenFetched: true,
+        errorMessage: action.error.message,
+      }))
+      .addCase(getAccount.fulfilled, (state, action) => {
+        const isAuthenticated = action.payload && action.payload.data && action.payload.data.activated;
+        return {
+          ...state,
+          isAuthenticated,
+          loading: false,
+          sessionHasBeenFetched: true,
+          account: action.payload.data,
+        };
+      })
+      .addCase(logoutServer.fulfilled, (state, action) => ({
+        ...initialState,
+        logoutUrl: action.payload.data.logoutUrl,
+      }))
+      .addCase(getAccount.pending, state => {
+        state.loading = true;
+      });
+  },
+});
+
+export const { authError, clearAuth } = AuthenticationSlice.actions;
+
+// Reducer
+export default AuthenticationSlice.reducer;

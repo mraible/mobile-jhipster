@@ -1,11 +1,9 @@
 import configureStore from 'redux-mock-store';
-import promiseMiddleware from 'redux-promise-middleware';
 import axios from 'axios';
 import thunk from 'redux-thunk';
 import sinon from 'sinon';
 
-import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
-import userManagement, { ACTION_TYPES, getUsers } from 'app/shared/reducers/user-management';
+import userManagement, { getUsers, reset } from 'app/shared/reducers/user-management';
 
 describe('User management reducer tests', () => {
   const initialState = {
@@ -15,23 +13,26 @@ describe('User management reducer tests', () => {
 
   describe('Common', () => {
     it('should return the initial state', () => {
-      expect(userManagement(undefined, {})).toEqual({ ...initialState });
+      expect(userManagement(undefined, { type: 'unknown' })).toEqual({ ...initialState });
     });
   });
 
   describe('Failures', () => {
     it('should set state to failed and put an error message in errorMessage', () => {
-      expect(userManagement(undefined, { type: FAILURE(ACTION_TYPES.FETCH_USERS), payload: 'something happened' })).toEqual({
-        ...initialState,
-        errorMessage: 'something happened',
-      });
+      expect(
+        userManagement(undefined, {
+          type: getUsers.rejected.type,
+          payload: 'something happened',
+          error: { message: 'error happened' },
+        })
+      ).toEqual({ ...initialState, errorMessage: 'error happened' });
     });
   });
 
   describe('Success', () => {
     it('should update state according to a successful fetch users request', () => {
       const payload = { data: 'some handsome users' };
-      const toTest = userManagement(undefined, { type: SUCCESS(ACTION_TYPES.FETCH_USERS), payload });
+      const toTest = userManagement(undefined, { type: getUsers.fulfilled.type, payload });
       expect(toTest).toMatchObject({
         users: payload.data,
       });
@@ -43,7 +44,7 @@ describe('User management reducer tests', () => {
 
     const resolvedObject = { value: 'whatever' };
     beforeEach(() => {
-      const mockStore = configureStore([thunk, promiseMiddleware]);
+      const mockStore = configureStore([thunk]);
       store = mockStore({});
       axios.get = sinon.stub().returns(Promise.resolve(resolvedObject));
     });
@@ -51,27 +52,31 @@ describe('User management reducer tests', () => {
     it('dispatches FETCH_USERS_PENDING and FETCH_USERS_FULFILLED actions', async () => {
       const expectedActions = [
         {
-          type: REQUEST(ACTION_TYPES.FETCH_USERS),
+          type: getUsers.pending.type,
         },
         {
-          type: SUCCESS(ACTION_TYPES.FETCH_USERS),
+          type: getUsers.fulfilled.type,
           payload: resolvedObject,
         },
       ];
-      await store.dispatch(getUsers()).then(() => expect(store.getActions()).toEqual(expectedActions));
+      await store.dispatch(getUsers({}));
+      expect(store.getActions()[0]).toMatchObject(expectedActions[0]);
+      expect(store.getActions()[1]).toMatchObject(expectedActions[1]);
     });
 
     it('dispatches FETCH_USERS_PENDING and FETCH_USERS_FULFILLED actions with pagination options', async () => {
       const expectedActions = [
         {
-          type: REQUEST(ACTION_TYPES.FETCH_USERS),
+          type: getUsers.pending.type,
         },
         {
-          type: SUCCESS(ACTION_TYPES.FETCH_USERS),
+          type: getUsers.fulfilled.type,
           payload: resolvedObject,
         },
       ];
-      await store.dispatch(getUsers(1, 20, 'id,desc')).then(() => expect(store.getActions()).toEqual(expectedActions));
+      await store.dispatch(getUsers({ page: 1, size: 20, sort: 'id,desc' }));
+      expect(store.getActions()[0]).toMatchObject(expectedActions[0]);
+      expect(store.getActions()[1]).toMatchObject(expectedActions[1]);
     });
   });
 });

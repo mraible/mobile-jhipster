@@ -1,9 +1,9 @@
-*.env
 ######################
 # Project Specific
 ######################
+*.env
 /src/main/webapp/content/css/main.css
-/build/resources/main/static/**
+/target/classes/static/**
 /src/test/javascript/coverage/
 
 ######################
@@ -152,3 +152,9 @@ Desktop.ini
 # ESLint
 ######################
 .eslintcache
+
+######################
+# Code coverage
+######################
+/coverage/
+/.nyc_output/

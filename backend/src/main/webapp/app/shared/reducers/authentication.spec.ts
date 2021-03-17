@@ -1,12 +1,19 @@
-import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import thunk from 'redux-thunk';
 import axios from 'axios';
 import sinon from 'sinon';
 import configureStore from 'redux-mock-store';
-import promiseMiddleware from 'redux-promise-middleware';
 
-import authentication, { ACTION_TYPES, getSession, clearAuthentication, logout } from 'app/shared/reducers/authentication';
-import { ACTION_TYPES as localeActionTypes } from 'app/shared/reducers/locale';
+import authentication, {
+  getSession,
+  getAccount,
+  logoutServer,
+  clearAuthentication,
+  logout,
+  authError,
+  clearAuth,
+  initialState,
+} from 'app/shared/reducers/authentication';
+import { updateLocale } from 'app/shared/reducers/locale';
 
 describe('Authentication reducer tests', () => {
   function isAccountEmpty(state): boolean {
@@ -15,7 +22,7 @@ describe('Authentication reducer tests', () => {
 
   describe('Common tests', () => {
     it('should return the initial state', () => {
-      const toTest = authentication(undefined, {});
+      const toTest = authentication(undefined, { type: '' });
       expect(toTest).toMatchObject({
         loading: false,
         isAuthenticated: false,
@@ -29,7 +36,7 @@ describe('Authentication reducer tests', () => {
   describe('Success', () => {
     it('should detect a success on get session and be authenticated', () => {
       const payload = { data: { activated: true } };
-      const toTest = authentication(undefined, { type: SUCCESS(ACTION_TYPES.GET_SESSION), payload });
+      const toTest = authentication(undefined, { type: getAccount.fulfilled.type, payload });
       expect(toTest).toMatchObject({
         isAuthenticated: true,
         loading: false,
@@ -39,7 +46,7 @@ describe('Authentication reducer tests', () => {
 
     it('should detect a success on get session and not be authenticated', () => {
       const payload = { data: { activated: false } };
-      const toTest = authentication(undefined, { type: SUCCESS(ACTION_TYPES.GET_SESSION), payload });
+      const toTest = authentication(undefined, { type: getAccount.fulfilled.type, payload });
       expect(toTest).toMatchObject({
         isAuthenticated: false,
         loading: false,
@@ -50,13 +57,13 @@ describe('Authentication reducer tests', () => {
 
   describe('Failure', () => {
     it('should detect a failure', () => {
-      const payload = 'Something happened.';
-      const toTest = authentication(undefined, { type: FAILURE(ACTION_TYPES.GET_SESSION), payload });
+      const error = { message: 'Something happened.' };
+      const toTest = authentication(undefined, { type: getAccount.rejected.type, error });
 
       expect(toTest).toMatchObject({
         loading: false,
         isAuthenticated: false,
-        errorMessage: payload,
+        errorMessage: error.message,
       });
       expect(isAccountEmpty(toTest));
     });
@@ -64,8 +71,8 @@ describe('Authentication reducer tests', () => {
 
   describe('Other cases', () => {
     it('should properly reset the current state when a logout is requested', () => {
-      const payload = { data: { idToken: 'xyz', logoutUrl: 'http://localhost:8080/logout' } };
-      const toTest = authentication(undefined, { type: SUCCESS(ACTION_TYPES.LOGOUT), payload });
+      const payload = { data: { logoutUrl: 'http://localhost:8080/logout' } };
+      const toTest = authentication(undefined, { type: logoutServer.fulfilled.type, payload });
       expect(toTest).toMatchObject({
         loading: false,
         isAuthenticated: false,
@@ -77,7 +84,7 @@ describe('Authentication reducer tests', () => {
 
     it('should properly define an error message and change the current state to display the login modal', () => {
       const message = 'redirect me please';
-      const toTest = authentication(undefined, { type: ACTION_TYPES.ERROR_MESSAGE, message });
+      const toTest = authentication(undefined, authError(message));
       expect(toTest).toMatchObject({
         loading: false,
         isAuthenticated: false,
@@ -88,8 +95,7 @@ describe('Authentication reducer tests', () => {
     });
 
     it('should clear authentication', () => {
-      const message = 'redirect me please';
-      const toTest = authentication(undefined, { type: ACTION_TYPES.CLEAR_AUTH, message });
+      const toTest = authentication({ ...initialState, isAuthenticated: true }, clearAuth());
       expect(toTest).toMatchObject({
         loading: false,
         isAuthenticated: false,
@@ -102,7 +108,7 @@ describe('Authentication reducer tests', () => {
 
     const resolvedObject = { value: 'whatever' };
     beforeEach(() => {
-      const mockStore = configureStore([thunk, promiseMiddleware]);
+      const mockStore = configureStore([thunk]);
       store = mockStore({ authentication: { account: { langKey: 'en' } } });
       axios.get = sinon.stub().returns(Promise.resolve(resolvedObject));
     });
@@ -110,53 +116,42 @@ describe('Authentication reducer tests', () => {
     it('dispatches GET_SESSION_PENDING and GET_SESSION_FULFILLED actions', async () => {
       const expectedActions = [
         {
-          type: REQUEST(ACTION_TYPES.GET_SESSION),
+          type: getAccount.pending.type,
         },
         {
-          type: SUCCESS(ACTION_TYPES.GET_SESSION),
+          type: getAccount.fulfilled.type,
           payload: resolvedObject,
         },
-        {
-          type: localeActionTypes.SET_LOCALE,
-          locale: 'en',
-        },
+        updateLocale('en'),
       ];
       await store.dispatch(getSession());
-      expect(store.getActions()).toEqual(expectedActions);
+      expect(store.getActions()[0]).toMatchObject(expectedActions[0]);
+      expect(store.getActions()[1]).toMatchObject(expectedActions[1]);
+      expect(store.getActions()[2]).toMatchObject(expectedActions[2]);
     });
 
     it('dispatches LOGOUT actions', async () => {
       axios.post = sinon.stub().returns(Promise.resolve({}));
       const expectedActions = [
         {
-          type: REQUEST(ACTION_TYPES.LOGOUT),
+          type: logoutServer.pending.type,
         },
         {
+          type: logoutServer.fulfilled.type,
           payload: {},
-          type: SUCCESS(ACTION_TYPES.LOGOUT),
         },
         {
-          type: REQUEST(ACTION_TYPES.GET_SESSION),
-        },
-        {
-          payload: resolvedObject,
-          type: SUCCESS(ACTION_TYPES.GET_SESSION),
+          type: getAccount.pending.type,
         },
       ];
       await store.dispatch(logout());
-      expect(store.getActions()).toEqual(expectedActions);
+      expect(store.getActions()[0]).toMatchObject(expectedActions[0]);
+      expect(store.getActions()[1]).toMatchObject(expectedActions[1]);
+      expect(store.getActions()[2]).toMatchObject(expectedActions[2]);
     });
 
     it('dispatches CLEAR_AUTH actions', async () => {
-      const expectedActions = [
-        {
-          message: 'message',
-          type: ACTION_TYPES.ERROR_MESSAGE,
-        },
-        {
-          type: ACTION_TYPES.CLEAR_AUTH,
-        },
-      ];
+      const expectedActions = [authError('message'), clearAuth()];
       await store.dispatch(clearAuthentication('message'));
       expect(store.getActions()).toEqual(expectedActions);
     });

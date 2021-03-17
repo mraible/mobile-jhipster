@@ -1,26 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Translate } from 'react-jhipster';
 import { Table, Badge, Col, Row, Button } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { IRootState } from 'app/shared/reducers';
-import { systemHealth } from '../administration.reducer';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 import HealthModal from './health-modal';
+import { getSystemHealth } from '../administration.reducer';
 
-export interface IHealthPageProps extends StateProps, DispatchProps {}
-
-export const HealthPage = (props: IHealthPageProps) => {
+export const HealthPage = () => {
   const [healthObject, setHealthObject] = useState({});
   const [showModal, setShowModal] = useState(false);
+  const dispatch = useAppDispatch();
+
+  const health = useAppSelector(state => state.administration.health);
+  const isFetching = useAppSelector(state => state.administration.loading);
 
   useEffect(() => {
-    props.systemHealth();
+    dispatch(getSystemHealth());
   }, []);
 
-  const getSystemHealth = () => {
-    if (!props.isFetching) {
-      props.systemHealth();
+  const fetchSystemHealth = () => {
+    if (!isFetching) {
+      dispatch(getSystemHealth());
     }
   };
 
@@ -29,11 +30,12 @@ export const HealthPage = (props: IHealthPageProps) => {
     setHealthObject({ ...healthObj, name });
   };
 
+  const getBadgeType = (status: string) => (status !== 'UP' ? 'danger' : 'success');
+
   const handleClose = () => setShowModal(false);
 
   const renderModal = () => <HealthModal healthObject={healthObject} handleClose={handleClose} showModal={showModal} />;
 
-  const { health, isFetching } = props;
   const data = (health || {}).components || {};
 
   return (
@@ -42,7 +44,7 @@ export const HealthPage = (props: IHealthPageProps) => {
         Health Checks
       </h2>
       <p>
-        <Button onClick={getSystemHealth} color={isFetching ? 'btn btn-danger' : 'btn btn-primary'} disabled={isFetching}>
+        <Button onClick={fetchSystemHealth} color={isFetching ? 'btn btn-danger' : 'btn btn-primary'} disabled={isFetching}>
           <FontAwesomeIcon icon="sync" />
           &nbsp;
           <Translate component="span" contentKey="health.refresh.button">
@@ -66,7 +68,7 @@ export const HealthPage = (props: IHealthPageProps) => {
                   <tr key={configPropIndex}>
                     <td>{configPropKey}</td>
                     <td>
-                      <Badge color={data[configPropKey].status !== 'UP' ? 'danger' : 'success'}>{data[configPropKey].status}</Badge>
+                      <Badge color={getBadgeType(data[configPropKey].status)}>{data[configPropKey].status}</Badge>
                     </td>
                     <td>
                       {data[configPropKey].details ? (
@@ -87,14 +89,4 @@ export const HealthPage = (props: IHealthPageProps) => {
   );
 };
 
-const mapStateToProps = (storeState: IRootState) => ({
-  health: storeState.administration.health,
-  isFetching: storeState.administration.loading,
-});
-
-const mapDispatchToProps = { systemHealth };
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(HealthPage);
+export default HealthPage;

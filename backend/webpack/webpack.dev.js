@@ -1,7 +1,6 @@
 const webpack = require('webpack');
 const webpackMerge = require('webpack-merge').merge;
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
-const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const SimpleProgressWebpackPlugin = require('simple-progress-webpack-plugin');
 const WebpackNotifierPlugin = require('webpack-notifier');
 const path = require('path');
@@ -12,13 +11,13 @@ const commonConfig = require('./webpack.common.js');
 
 const ENV = 'development';
 
-module.exports = options =>
-  webpackMerge(commonConfig({ env: ENV }), {
+module.exports = async options =>
+  webpackMerge(await commonConfig({ env: ENV }), {
     devtool: 'cheap-module-source-map', // https://reactjs.org/docs/cross-origin-errors.html
     mode: ENV,
     entry: ['./src/main/webapp/app/index'],
     output: {
-      path: utils.root('build/resources/main/static/'),
+      path: utils.root('target/classes/static/'),
       filename: 'app/[name].bundle.js',
       chunkFilename: 'app/[id].chunk.js',
     },
@@ -42,9 +41,11 @@ module.exports = options =>
       ],
     },
     devServer: {
-      stats: options.stats,
       hot: true,
-      contentBase: './build/resources/main/static/',
+      static: {
+        directory: './target/classes/static/',
+      },
+      port: 9060,
       proxy: [
         {
           context: [
@@ -64,9 +65,6 @@ module.exports = options =>
           changeOrigin: options.tls,
         },
       ],
-      watchOptions: {
-        ignore: [/node_modules/, utils.root('src/test')],
-      },
       https: options.tls,
       historyApiFallback: true,
     },
@@ -77,7 +75,6 @@ module.exports = options =>
         : new SimpleProgressWebpackPlugin({
             format: options.stats === 'minimal' ? 'compact' : 'expanded',
           }),
-      new FriendlyErrorsWebpackPlugin(),
       new BrowserSyncPlugin(
         {
           https: options.tls,
@@ -108,7 +105,7 @@ module.exports = options =>
       ),
       new webpack.HotModuleReplacementPlugin(),
       new WebpackNotifierPlugin({
-        title: 'Health Points',
+        title: 'Flickr 2',
         contentImage: path.join(__dirname, 'logo-jhipster.png'),
       }),
     ].filter(Boolean),
