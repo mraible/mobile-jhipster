@@ -1,0 +1,23 @@
+node_modules/
+.expo/
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+
+# macOS
+.DS_Store
+/coverage
+# Misc
+.env
+ios/Index/DataStore
+ios/Carthage
+ios/Pods
+/dist
+.artifacts
+e2e/Exponent.app
+.yo-repository

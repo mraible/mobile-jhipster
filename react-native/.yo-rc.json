@@ -1,0 +1,63 @@
+{
+  "generator-jhipster": {
+    "authenticationType": "oauth2",
+    "cacheProvider": "ehcache",
+    "clientFramework": "react",
+    "serverPort": "8080",
+    "serviceDiscoveryType": false,
+    "skipUserManagement": true,
+    "withAdminUi": true,
+    "baseName": "flickr2",
+    "buildTool": "maven",
+    "databaseType": "sql",
+    "devDatabaseType": "h2Disk",
+    "enableHibernateCache": true,
+    "enableSwaggerCodegen": false,
+    "enableTranslation": true,
+    "jhiPrefix": "jhi",
+    "languages": ["en", "es"],
+    "messageBroker": false,
+    "prodDatabaseType": "postgresql",
+    "searchEngine": false,
+    "skipClient": false,
+    "testFrameworks": ["cypress"],
+    "websocket": false,
+    "enableGradleEnterprise": false,
+    "gradleEnterpriseHost": "",
+    "applicationType": "monolith",
+    "packageName": "com.auth0.flickr2",
+    "packageFolder": "com/auth0/flickr2",
+    "nativeLanguage": "en",
+    "jhipsterVersion": "7.3.1",
+    "skipServer": false,
+    "clientPackageManager": "npm",
+    "dtoSuffix": "DTO",
+    "entitySuffix": "",
+    "reactive": false,
+    "clientTheme": "none",
+    "clientThemeVariant": "",
+    "applicationIndex": 0,
+    "entities": ["Album", "Photo", "Tag"],
+    "skipCheckLengthOfIdentifier": false,
+    "skipFakeData": false,
+    "blueprints": [
+      {
+        "name": "generator-jhipster-react-native",
+        "version": "4.2.0"
+      }
+    ],
+    "otherModules": [
+      {
+        "name": "generator-jhipster-react-native",
+        "version": "4.2.0"
+      }
+    ],
+    "pages": [],
+    "creationTimestamp": 1636143973649,
+    "reactNative": {
+      "reactNativeAppName": "Flickr2",
+      "detox": false
+    },
+    "lastLiquibaseTimestamp": 1636144153000
+  }
+}

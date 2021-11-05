@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "Flickr2",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}

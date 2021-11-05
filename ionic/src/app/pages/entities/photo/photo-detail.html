@@ -1,0 +1,81 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title> Photo </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-list>
+    <ion-item>
+      <ion-label position="fixed">ID</ion-label>
+      <div item-content>
+        <span>{{photo.id}}</span>
+      </div>
+    </ion-item>
+    <ion-item>
+      <ion-label position="fixed">Title</ion-label>
+      <div item-content>
+        <span>{{photo.title}}</span>
+      </div>
+    </ion-item>
+    <ion-item>
+      <ion-label position="fixed">Description</ion-label>
+      <div item-content>
+        <span>{{photo.description}}</span>
+      </div>
+    </ion-item>
+    <ion-item>
+      <ion-label position="fixed">Image</ion-label>
+      <div item-content>
+        <div *ngIf="photo.image">
+          <a (click)="openFile(photo.imageContentType, photo.image)">
+            <img [src]="'data:' + photo.imageContentType + ';base64,' + photo.image" style="max-width: 100%" alt="photo image" />
+          </a>
+          {{photo.imageContentType}}, {{byteSize(photo.image)}}
+        </div>
+      </div>
+    </ion-item>
+    <ion-item>
+      <ion-label position="fixed">Height</ion-label>
+      <div item-content>
+        <span>{{photo.height}}</span>
+      </div>
+    </ion-item>
+    <ion-item>
+      <ion-label position="fixed">Width</ion-label>
+      <div item-content>
+        <span>{{photo.width}}</span>
+      </div>
+    </ion-item>
+    <ion-item>
+      <ion-label position="fixed">Taken</ion-label>
+      <div item-content>
+        <span>{{photo.taken | date:'medium'}}</span>
+      </div>
+    </ion-item>
+    <ion-item>
+      <ion-label position="fixed">Uploaded</ion-label>
+      <div item-content>
+        <span>{{photo.uploaded | date:'medium'}}</span>
+      </div>
+    </ion-item>
+    <ion-item>
+      <ion-label>Album</ion-label>
+      <div item-content *ngIf="photo.album">
+        <a>{{photo.album?.title}}</a>
+      </div>
+    </ion-item>
+    <ion-item>
+      <ion-label>Tag</ion-label>
+      <div item-content>
+        <span *ngFor="let tag of photo.tags; let last = last"> <a>{{tag.name}}</a>{{last ? '' : ', '}} </span>
+      </div>
+    </ion-item>
+  </ion-list>
+
+  <ion-button expand="block" color="primary" (click)="open(photo)">{{ 'EDIT_BUTTON' | translate }}</ion-button>
+  <ion-button expand="block" color="danger" (click)="deleteModal(photo)">{{ 'DELETE_BUTTON' | translate }}</ion-button>
+</ion-content>
