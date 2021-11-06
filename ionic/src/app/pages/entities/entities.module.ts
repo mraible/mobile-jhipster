@@ -16,6 +16,18 @@ const routes: Routes = [
     },
     canActivate: [UserRouteAccessService],
   },
+  {
+    path: 'album',
+    loadChildren: () => import('./album/album.module').then((m) => m.AlbumPageModule),
+  },
+  {
+    path: 'photo',
+    loadChildren: () => import('./photo/photo.module').then((m) => m.PhotoPageModule),
+  },
+  {
+    path: 'tag',
+    loadChildren: () => import('./tag/tag.module').then((m) => m.TagPageModule),
+  },
   /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
 ];
 

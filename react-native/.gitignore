@@ -1,5 +1,5 @@
-node_modules/**/*
-.expo/*
+node_modules/
+.expo/
 npm-debug.*
 *.jks
 *.p8
@@ -21,4 +21,3 @@ ios/Pods
 .artifacts
 e2e/Exponent.app
 .yo-repository
-.idea

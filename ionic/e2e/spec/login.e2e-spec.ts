@@ -17,8 +17,8 @@ describe('Login', () => {
   });
 
   it('should fail to login with bad password', async () => {
+    await browser.wait(ec.visibilityOf(loginPage.signInButton));
     await loginPage.signInButton.click();
-    await browser.wait(ec.presenceOf(loginPage.username), 5000);
     await loginPage.login(username, 'foo');
     // Keycloak
     const alert = element(by.css('#input-error'));
@@ -34,7 +34,6 @@ describe('Login', () => {
   it('should login successfully with admin account', async () => {
     await browser.wait(ec.visibilityOf(loginPage.signInButton));
     await loginPage.signInButton.click();
-    await browser.wait(ec.presenceOf(loginPage.username), 5000);
     await loginPage.login(username, password);
 
     const welcome = /Welcome, Admin/;

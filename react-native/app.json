@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "HealthPoints",
-    "slug": "HealthPoints",
+    "name": "Flickr2",
+    "slug": "Flickr2",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -26,7 +26,7 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "scheme": "healthpoints",
+    "scheme": "flickr2",
     "extra": {}
   }
 }

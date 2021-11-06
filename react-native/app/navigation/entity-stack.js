@@ -7,18 +7,15 @@ import { navigate, goBackOrIfParamsOrDefault } from './nav-ref';
 
 // import screens
 import EntitiesScreen from '../modules/entities/entities-screen';
-import PointsScreen from '../modules/entities/points/points-screen';
-import PointsDetailScreen from '../modules/entities/points/points-detail-screen';
-import PointsEditScreen from '../modules/entities/points/points-edit-screen';
-import BloodPressureScreen from '../modules/entities/blood-pressure/blood-pressure-screen';
-import BloodPressureDetailScreen from '../modules/entities/blood-pressure/blood-pressure-detail-screen';
-import BloodPressureEditScreen from '../modules/entities/blood-pressure/blood-pressure-edit-screen';
-import WeightScreen from '../modules/entities/weight/weight-screen';
-import WeightDetailScreen from '../modules/entities/weight/weight-detail-screen';
-import WeightEditScreen from '../modules/entities/weight/weight-edit-screen';
-import PreferencesScreen from '../modules/entities/preferences/preferences-screen';
-import PreferencesDetailScreen from '../modules/entities/preferences/preferences-detail-screen';
-import PreferencesEditScreen from '../modules/entities/preferences/preferences-edit-screen';
+import AlbumScreen from '../modules/entities/album/album-screen';
+import AlbumDetailScreen from '../modules/entities/album/album-detail-screen';
+import AlbumEditScreen from '../modules/entities/album/album-edit-screen';
+import PhotoScreen from '../modules/entities/photo/photo-screen';
+import PhotoDetailScreen from '../modules/entities/photo/photo-detail-screen';
+import PhotoEditScreen from '../modules/entities/photo/photo-edit-screen';
+import TagScreen from '../modules/entities/tag/tag-screen';
+import TagDetailScreen from '../modules/entities/tag/tag-detail-screen';
+import TagEditScreen from '../modules/entities/tag/tag-edit-screen';
 // jhipster-react-native-navigation-import-needle
 
 export const entityScreens = [
@@ -31,128 +28,94 @@ export const entityScreens = [
     },
   },
   {
-    name: 'Points',
-    route: 'points',
-    component: PointsScreen,
+    name: 'Album',
+    route: 'album',
+    component: AlbumScreen,
     options: {
-      title: 'Points',
+      title: 'Albums',
       headerLeft: () => <HeaderBackButton onPress={() => navigate('Entities')} />,
       headerRight: () => (
         <HeaderBackButton
           label=" New "
-          onPress={() => navigate('PointsEdit', { id: undefined })}
+          onPress={() => navigate('AlbumEdit', { id: undefined })}
           backImage={(props) => <Ionicons name="md-add-circle-outline" size={32} color={props.tintColor} />}
         />
       ),
     },
   },
   {
-    name: 'PointsDetail',
-    route: 'points/detail',
-    component: PointsDetailScreen,
-    options: { title: 'View Points', headerLeft: () => <HeaderBackButton onPress={() => navigate('Points')} /> },
+    name: 'AlbumDetail',
+    route: 'album/detail',
+    component: AlbumDetailScreen,
+    options: { title: 'View Album', headerLeft: () => <HeaderBackButton onPress={() => navigate('Album')} /> },
   },
   {
-    name: 'PointsEdit',
-    route: 'points/edit',
-    component: PointsEditScreen,
+    name: 'AlbumEdit',
+    route: 'album/edit',
+    component: AlbumEditScreen,
     options: {
-      title: 'Edit Points',
-      headerLeft: () => <HeaderBackButton onPress={() => goBackOrIfParamsOrDefault('PointsDetail', 'Points')} />,
+      title: 'Edit Album',
+      headerLeft: () => <HeaderBackButton onPress={() => goBackOrIfParamsOrDefault('AlbumDetail', 'Album')} />,
     },
   },
   {
-    name: 'BloodPressure',
-    route: 'blood-pressure',
-    component: BloodPressureScreen,
+    name: 'Photo',
+    route: 'photo',
+    component: PhotoScreen,
     options: {
-      title: 'BloodPressures',
+      title: 'Photos',
       headerLeft: () => <HeaderBackButton onPress={() => navigate('Entities')} />,
       headerRight: () => (
         <HeaderBackButton
           label=" New "
-          onPress={() => navigate('BloodPressureEdit', { id: undefined })}
+          onPress={() => navigate('PhotoEdit', { id: undefined })}
           backImage={(props) => <Ionicons name="md-add-circle-outline" size={32} color={props.tintColor} />}
         />
       ),
     },
   },
   {
-    name: 'BloodPressureDetail',
-    route: 'blood-pressure/detail',
-    component: BloodPressureDetailScreen,
-    options: { title: 'View BloodPressure', headerLeft: () => <HeaderBackButton onPress={() => navigate('BloodPressure')} /> },
+    name: 'PhotoDetail',
+    route: 'photo/detail',
+    component: PhotoDetailScreen,
+    options: { title: 'View Photo', headerLeft: () => <HeaderBackButton onPress={() => navigate('Photo')} /> },
   },
   {
-    name: 'BloodPressureEdit',
-    route: 'blood-pressure/edit',
-    component: BloodPressureEditScreen,
+    name: 'PhotoEdit',
+    route: 'photo/edit',
+    component: PhotoEditScreen,
     options: {
-      title: 'Edit BloodPressure',
-      headerLeft: () => <HeaderBackButton onPress={() => goBackOrIfParamsOrDefault('BloodPressureDetail', 'BloodPressure')} />,
+      title: 'Edit Photo',
+      headerLeft: () => <HeaderBackButton onPress={() => goBackOrIfParamsOrDefault('PhotoDetail', 'Photo')} />,
     },
   },
   {
-    name: 'Weight',
-    route: 'weight',
-    component: WeightScreen,
+    name: 'Tag',
+    route: 'tag',
+    component: TagScreen,
     options: {
-      title: 'Weights',
+      title: 'Tags',
       headerLeft: () => <HeaderBackButton onPress={() => navigate('Entities')} />,
       headerRight: () => (
         <HeaderBackButton
           label=" New "
-          onPress={() => navigate('WeightEdit', { id: undefined })}
+          onPress={() => navigate('TagEdit', { id: undefined })}
           backImage={(props) => <Ionicons name="md-add-circle-outline" size={32} color={props.tintColor} />}
         />
       ),
     },
   },
   {
-    name: 'WeightDetail',
-    route: 'weight/detail',
-    component: WeightDetailScreen,
-    options: { title: 'View Weight', headerLeft: () => <HeaderBackButton onPress={() => navigate('Weight')} /> },
+    name: 'TagDetail',
+    route: 'tag/detail',
+    component: TagDetailScreen,
+    options: { title: 'View Tag', headerLeft: () => <HeaderBackButton onPress={() => navigate('Tag')} /> },
   },
   {
-    name: 'WeightEdit',
-    route: 'weight/edit',
-    component: WeightEditScreen,
-    options: {
-      title: 'Edit Weight',
-      headerLeft: () => <HeaderBackButton onPress={() => goBackOrIfParamsOrDefault('WeightDetail', 'Weight')} />,
-    },
-  },
-  {
-    name: 'Preferences',
-    route: 'preferences',
-    component: PreferencesScreen,
-    options: {
-      title: 'Preferences',
-      headerLeft: () => <HeaderBackButton onPress={() => navigate('Entities')} />,
-      headerRight: () => (
-        <HeaderBackButton
-          label=" New "
-          onPress={() => navigate('PreferencesEdit', { id: undefined })}
-          backImage={(props) => <Ionicons name="md-add-circle-outline" size={32} color={props.tintColor} />}
-        />
-      ),
-    },
-  },
-  {
-    name: 'PreferencesDetail',
-    route: 'preferences/detail',
-    component: PreferencesDetailScreen,
-    options: { title: 'View Preferences', headerLeft: () => <HeaderBackButton onPress={() => navigate('Preferences')} /> },
-  },
-  {
-    name: 'PreferencesEdit',
-    route: 'preferences/edit',
-    component: PreferencesEditScreen,
-    options: {
-      title: 'Edit Preferences',
-      headerLeft: () => <HeaderBackButton onPress={() => goBackOrIfParamsOrDefault('PreferencesDetail', 'Preferences')} />,
-    },
+    name: 'TagEdit',
+    route: 'tag/edit',
+    component: TagEditScreen,
+    options: { title: 'Edit Tag', headerLeft: () => <HeaderBackButton onPress={() => goBackOrIfParamsOrDefault('TagDetail', 'Tag')} /> },
   },
   // jhipster-react-native-navigation-declaration-needle
 ];

@@ -31,7 +31,7 @@
 version: '3.8'
 services:
   jhipster-control-center:
-    image: 'jhipster/jhipster-control-center:v0.3.0'
+    image: 'jhipster/jhipster-control-center:v0.5.0'
     command:
       - /bin/sh
       - -c
@@ -39,13 +39,13 @@ services:
       - echo "`ip route | grep default | cut -d ' ' -f3` host.docker.internal" | tee -a /etc/hosts > /dev/null && java -jar /jhipster-control-center.jar
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
-      - SPRING_PROFILES_ACTIVE=prod,api-docs,static,oauth2
+      - SPRING_PROFILES_ACTIVE=prod,api-docs,no,oauth2
       - JHIPSTER_SLEEP=30 # gives time for other services to boot before the application
       # For keycloak to work, you need to add '127.0.0.1 keycloak' to your hosts file
       - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER_URI=http://keycloak:9080/auth/realms/jhipster
       - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_ID=jhipster-control-center
       - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_SECRET=jhipster-control-center
-      - SPRING_CLOUD_DISCOVERY_CLIENT_SIMPLE_INSTANCES_HEALTHPOINTS_0_URI=http://host.docker.internal:8080
+      - SPRING_CLOUD_DISCOVERY_CLIENT_SIMPLE_INSTANCES_FLICKR2_0_URI=http://host.docker.internal:8080
       - LOGGING_FILE_NAME=/tmp/jhipster-control-center.log
     # If you want to expose these ports outside your dev PC,
     # remove the "127.0.0.1:" prefix

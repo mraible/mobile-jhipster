@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
-import { AuthActions, AuthObserver, AuthService, IAuthAction } from 'ionic-appauth';
+import { AuthActions, AuthService, IAuthAction } from 'ionic-appauth';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -9,27 +10,27 @@ import { AuthActions, AuthObserver, AuthService, IAuthAction } from 'ionic-appau
 })
 export class LoginPage implements OnInit, OnDestroy {
   action: IAuthAction;
-  observer: AuthObserver;
+  events$ = this.authService.events$;
+  sub: Subscription;
 
   constructor(private authService: AuthService, private navCtrl: NavController) {}
 
-  ngOnInit() {
-    this.authService.loadTokenFromStorage();
-    this.observer = this.authService.addActionListener((action) => this.onSignInSuccess(action));
+  async ngOnInit() {
+    this.sub = this.authService.events$.subscribe((action) => this.onSignInSuccess(action));
   }
 
   ngOnDestroy() {
-    this.authService.removeActionObserver(this.observer);
+    this.sub.unsubscribe();
   }
 
-  public signIn() {
-    this.authService.signIn();
+  public async signIn() {
+    await this.authService.signIn();
   }
 
-  private onSignInSuccess(action: IAuthAction) {
+  private async onSignInSuccess(action: IAuthAction) {
     this.action = action;
     if (action.action === AuthActions.SignInSuccess || action.action === AuthActions.LoadTokenFromStorageSuccess) {
-      this.navCtrl.navigateRoot('tabs');
+      await this.navCtrl.navigateRoot('tabs');
     }
   }
 }

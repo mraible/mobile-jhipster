@@ -4,7 +4,6 @@ import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
 import { getLoginUrl } from 'app/shared/util/url-utils';
-import { NavDropdown } from 'app/shared/layout/menus/menu-components';
 import { AccountMenu } from './account';
 
 describe('AccountMenu', () => {

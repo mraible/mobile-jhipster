@@ -62,29 +62,23 @@ const create = (baseURL = AppConfig.apiUrl) => {
   const updateUser = (user) => api.put('api/users', user);
   const deleteUser = (userId) => api.delete('api/users/' + userId);
 
-  const getPoints = (pointsId) => api.get('api/points/' + pointsId);
-  const getAllPoints = (options) => api.get('api/points', options);
-  const createPoints = (points) => api.post('api/points', points);
-  const updatePoints = (points) => api.put('api/points', points);
-  const deletePoints = (pointsId) => api.delete('api/points/' + pointsId);
+  const getAlbum = (albumId) => api.get('api/albums/' + albumId);
+  const getAllAlbums = (options) => api.get('api/albums', options);
+  const createAlbum = (album) => api.post('api/albums', album);
+  const updateAlbum = (album) => api.put(`api/albums/${album.id}`, album);
+  const deleteAlbum = (albumId) => api.delete('api/albums/' + albumId);
 
-  const getBloodPressure = (bloodPressureId) => api.get('api/blood-pressures/' + bloodPressureId);
-  const getAllBloodPressures = (options) => api.get('api/blood-pressures', options);
-  const createBloodPressure = (bloodPressure) => api.post('api/blood-pressures', bloodPressure);
-  const updateBloodPressure = (bloodPressure) => api.put('api/blood-pressures', bloodPressure);
-  const deleteBloodPressure = (bloodPressureId) => api.delete('api/blood-pressures/' + bloodPressureId);
+  const getPhoto = (photoId) => api.get('api/photos/' + photoId);
+  const getAllPhotos = (options) => api.get('api/photos', options);
+  const createPhoto = (photo) => api.post('api/photos', photo);
+  const updatePhoto = (photo) => api.put(`api/photos/${photo.id}`, photo);
+  const deletePhoto = (photoId) => api.delete('api/photos/' + photoId);
 
-  const getWeight = (weightId) => api.get('api/weights/' + weightId);
-  const getAllWeights = (options) => api.get('api/weights', options);
-  const createWeight = (weight) => api.post('api/weights', weight);
-  const updateWeight = (weight) => api.put('api/weights', weight);
-  const deleteWeight = (weightId) => api.delete('api/weights/' + weightId);
-
-  const getPreferences = (preferencesId) => api.get('api/preferences/' + preferencesId);
-  const getAllPreferences = (options) => api.get('api/preferences', options);
-  const createPreferences = (preferences) => api.post('api/preferences', preferences);
-  const updatePreferences = (preferences) => api.put('api/preferences', preferences);
-  const deletePreferences = (preferencesId) => api.delete('api/preferences/' + preferencesId);
+  const getTag = (tagId) => api.get('api/tags/' + tagId);
+  const getAllTags = (options) => api.get('api/tags', options);
+  const createTag = (tag) => api.post('api/tags', tag);
+  const updateTag = (tag) => api.put(`api/tags/${tag.id}`, tag);
+  const deleteTag = (tagId) => api.delete('api/tags/' + tagId);
   // jhipster-react-native-api-method-needle
 
   // ------
@@ -107,29 +101,23 @@ const create = (baseURL = AppConfig.apiUrl) => {
     getUser,
     deleteUser,
 
-    createPoints,
-    updatePoints,
-    getAllPoints,
-    getPoints,
-    deletePoints,
+    createAlbum,
+    updateAlbum,
+    getAllAlbums,
+    getAlbum,
+    deleteAlbum,
 
-    createBloodPressure,
-    updateBloodPressure,
-    getAllBloodPressures,
-    getBloodPressure,
-    deleteBloodPressure,
+    createPhoto,
+    updatePhoto,
+    getAllPhotos,
+    getPhoto,
+    deletePhoto,
 
-    createWeight,
-    updateWeight,
-    getAllWeights,
-    getWeight,
-    deleteWeight,
-
-    createPreferences,
-    updatePreferences,
-    getAllPreferences,
-    getPreferences,
-    deletePreferences,
+    createTag,
+    updateTag,
+    getAllTags,
+    getTag,
+    deleteTag,
     // jhipster-react-native-api-export-needle
     setAuthToken,
     removeAuthToken,

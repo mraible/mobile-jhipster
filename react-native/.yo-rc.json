@@ -1,14 +1,14 @@
 {
   "generator-jhipster": {
     "authenticationType": "oauth2",
-    "cacheProvider": "no",
+    "cacheProvider": "ehcache",
     "clientFramework": "react",
     "serverPort": "8080",
     "serviceDiscoveryType": false,
     "skipUserManagement": true,
     "withAdminUi": true,
-    "baseName": "HealthPoints",
-    "buildTool": "gradle",
+    "baseName": "flickr2",
+    "buildTool": "maven",
     "databaseType": "sql",
     "devDatabaseType": "h2Disk",
     "enableHibernateCache": true,
@@ -22,39 +22,42 @@
     "skipClient": false,
     "testFrameworks": ["cypress"],
     "websocket": false,
+    "enableGradleEnterprise": false,
+    "gradleEnterpriseHost": "",
     "applicationType": "monolith",
-    "reactive": true,
-    "packageName": "com.okta.developer",
-    "packageFolder": "com/okta/developer",
+    "packageName": "com.auth0.flickr2",
+    "packageFolder": "com/auth0/flickr2",
     "nativeLanguage": "en",
-    "jhipsterVersion": "7.0.0-beta.1",
+    "jhipsterVersion": "7.3.1",
     "skipServer": false,
     "clientPackageManager": "npm",
     "dtoSuffix": "DTO",
     "entitySuffix": "",
+    "reactive": false,
     "clientTheme": "none",
     "clientThemeVariant": "",
-    "entities": ["Points", "BloodPressure", "Weight", "Preferences"],
+    "applicationIndex": 0,
+    "entities": ["Album", "Photo", "Tag"],
     "skipCheckLengthOfIdentifier": false,
     "skipFakeData": false,
     "blueprints": [
       {
         "name": "generator-jhipster-react-native",
-        "version": "4.0.1"
+        "version": "4.2.0"
       }
     ],
     "otherModules": [
       {
         "name": "generator-jhipster-react-native",
-        "version": "4.0.1"
+        "version": "4.2.0"
       }
     ],
     "pages": [],
-    "creationTimestamp": 1615865542158,
+    "creationTimestamp": 1636143973649,
     "reactNative": {
-      "reactNativeAppName": "HealthPoints",
-      "detox": true
+      "reactNativeAppName": "Flickr2",
+      "detox": false
     },
-    "lastLiquibaseTimestamp": 1615865782000
+    "lastLiquibaseTimestamp": 1636144153000
   }
 }

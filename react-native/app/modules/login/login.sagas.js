@@ -4,9 +4,10 @@ import AppConfig from '../../config/app-config';
 import LoginActions from './login.reducer';
 import AccountActions from '../../shared/reducers/account.reducer';
 import AuthInfoActions from '../../shared/reducers/auth-info.reducer';
-import { doOauthPkceFlow } from './login.utils';
+import { doOauthPkceFlow, logoutFromIdp } from './login.utils';
 
 export const selectAuthInfo = (state) => state.authInfo.authInfo;
+export const selectIdToken = (state) => state.login.idToken;
 export const selectAuthToken = (state) => state.login.authToken;
 // attempts to login
 export function* login(api) {
@@ -16,10 +17,10 @@ export function* login(api) {
       yield put(AuthInfoActions.authInfoRequest());
     }
     const { issuer, clientId } = authInfo;
-    const { accessToken } = yield call(doOauthPkceFlow, AppConfig.oktaClientId || clientId, issuer);
+    const { accessToken, idToken } = yield call(doOauthPkceFlow, AppConfig.oktaClientId || clientId, issuer);
     if (accessToken) {
       yield call(api.setAuthToken, accessToken);
-      yield put(LoginActions.loginSuccess(accessToken));
+      yield put(LoginActions.loginSuccess(accessToken, idToken));
       yield put(AccountActions.accountRequest());
       yield put({ type: 'RELOGIN_OK' });
     }
@@ -35,6 +36,9 @@ export function* logout(api) {
   yield put(AccountActions.accountReset());
   yield put(AccountActions.accountRequest());
   yield put(LoginActions.logoutSuccess());
+  const { clientId, issuer } = yield select(selectAuthInfo);
+  const idToken = yield select(selectIdToken);
+  yield call(logoutFromIdp, AppConfig.oktaClientId || clientId, issuer, idToken);
   yield put({ type: 'RELOGIN_ABORT' });
 }
 

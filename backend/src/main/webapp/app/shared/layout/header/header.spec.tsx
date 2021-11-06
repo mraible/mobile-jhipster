@@ -4,21 +4,15 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
-import sinon from 'sinon';
-
 import initStore from 'app/config/store';
 import Header from './header';
 
 describe('Header', () => {
   let mountedWrapper;
-
-  const localeSpy = sinon.spy();
-
   const devProps = {
     isAuthenticated: true,
     isAdmin: true,
     currentLocale: 'en',
-    onLocaleChange: localeSpy,
     ribbonEnv: 'dev',
     isInProduction: false,
     isOpenAPIEnabled: true,

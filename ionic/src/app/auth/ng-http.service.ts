@@ -16,21 +16,13 @@ export class NgHttpService implements Requestor {
 
     switch (settings.method) {
       case 'GET':
-        return this.http
-          .get<T>(settings.url, { headers: this.getHeaders(settings.headers) })
-          .toPromise();
+        return this.http.get<T>(settings.url, { headers: this.getHeaders(settings.headers) }).toPromise();
       case 'POST':
-        return this.http
-          .post<T>(settings.url, settings.data, { headers: this.getHeaders(settings.headers) })
-          .toPromise();
+        return this.http.post<T>(settings.url, settings.data, { headers: this.getHeaders(settings.headers) }).toPromise();
       case 'PUT':
-        return this.http
-          .put<T>(settings.url, settings.data, { headers: this.getHeaders(settings.headers) })
-          .toPromise();
+        return this.http.put<T>(settings.url, settings.data, { headers: this.getHeaders(settings.headers) }).toPromise();
       case 'DELETE':
-        return this.http
-          .delete<T>(settings.url, { headers: this.getHeaders(settings.headers) })
-          .toPromise();
+        return this.http.delete<T>(settings.url, { headers: this.getHeaders(settings.headers) }).toPromise();
     }
   }
 

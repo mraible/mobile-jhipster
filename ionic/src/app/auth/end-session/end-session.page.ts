@@ -8,8 +8,8 @@ import { AuthService } from 'ionic-appauth';
 export class EndSessionPage implements OnInit {
   constructor(private auth: AuthService, private navCtrl: NavController) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.auth.endSessionCallback();
-    this.navCtrl.navigateRoot('login');
+    await this.navCtrl.navigateRoot('login');
   }
 }

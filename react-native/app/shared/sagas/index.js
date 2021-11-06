@@ -10,10 +10,9 @@ import { AuthInfoTypes } from '../reducers/auth-info.reducer';
 import { LoginTypes } from '../../modules/login/login.reducer';
 import { AccountTypes } from '../../shared/reducers/account.reducer';
 import { UserTypes } from '../../shared/reducers/user.reducer';
-import { PointsTypes } from '../../modules/entities/points/points.reducer';
-import { BloodPressureTypes } from '../../modules/entities/blood-pressure/blood-pressure.reducer';
-import { WeightTypes } from '../../modules/entities/weight/weight.reducer';
-import { PreferencesTypes } from '../../modules/entities/preferences/preferences.reducer';
+import { AlbumTypes } from '../../modules/entities/album/album.reducer';
+import { PhotoTypes } from '../../modules/entities/photo/photo.reducer';
+import { TagTypes } from '../../modules/entities/tag/tag.reducer';
 // jhipster-react-native-saga-redux-import-needle
 
 /* ------------- Sagas ------------- */
@@ -23,10 +22,9 @@ import { getAuthInfo } from './auth-info.saga';
 import { login, logout, loginLoad } from '../../modules/login/login.sagas';
 import { getAccount, updateAccount } from '../../shared/sagas/account.sagas';
 import UserSagas from '../../shared/sagas/user.sagas';
-import PointsSagas from '../../modules/entities/points/points.sagas';
-import BloodPressureSagas from '../../modules/entities/blood-pressure/blood-pressure.sagas';
-import WeightSagas from '../../modules/entities/weight/weight.sagas';
-import PreferencesSagas from '../../modules/entities/preferences/preferences.sagas';
+import AlbumSagas from '../../modules/entities/album/album.sagas';
+import PhotoSagas from '../../modules/entities/photo/photo.sagas';
+import TagSagas from '../../modules/entities/tag/tag.sagas';
 // jhipster-react-native-saga-method-import-needle
 
 /* ------------- API ------------- */
@@ -48,25 +46,20 @@ export default function* root() {
     takeLatest(LoginTypes.LOGIN_REQUEST, login, api),
     takeLatest(LoginTypes.LOGOUT_REQUEST, logout, api),
 
-    takeLatest(PointsTypes.POINTS_REQUEST, PointsSagas.getPoints, api),
-    takeLatest(PointsTypes.POINTS_ALL_REQUEST, PointsSagas.getAllPoints, api),
-    takeLatest(PointsTypes.POINTS_UPDATE_REQUEST, PointsSagas.updatePoints, api),
-    takeLatest(PointsTypes.POINTS_DELETE_REQUEST, PointsSagas.deletePoints, api),
+    takeLatest(AlbumTypes.ALBUM_REQUEST, AlbumSagas.getAlbum, api),
+    takeLatest(AlbumTypes.ALBUM_ALL_REQUEST, AlbumSagas.getAllAlbums, api),
+    takeLatest(AlbumTypes.ALBUM_UPDATE_REQUEST, AlbumSagas.updateAlbum, api),
+    takeLatest(AlbumTypes.ALBUM_DELETE_REQUEST, AlbumSagas.deleteAlbum, api),
 
-    takeLatest(BloodPressureTypes.BLOOD_PRESSURE_REQUEST, BloodPressureSagas.getBloodPressure, api),
-    takeLatest(BloodPressureTypes.BLOOD_PRESSURE_ALL_REQUEST, BloodPressureSagas.getAllBloodPressures, api),
-    takeLatest(BloodPressureTypes.BLOOD_PRESSURE_UPDATE_REQUEST, BloodPressureSagas.updateBloodPressure, api),
-    takeLatest(BloodPressureTypes.BLOOD_PRESSURE_DELETE_REQUEST, BloodPressureSagas.deleteBloodPressure, api),
+    takeLatest(PhotoTypes.PHOTO_REQUEST, PhotoSagas.getPhoto, api),
+    takeLatest(PhotoTypes.PHOTO_ALL_REQUEST, PhotoSagas.getAllPhotos, api),
+    takeLatest(PhotoTypes.PHOTO_UPDATE_REQUEST, PhotoSagas.updatePhoto, api),
+    takeLatest(PhotoTypes.PHOTO_DELETE_REQUEST, PhotoSagas.deletePhoto, api),
 
-    takeLatest(WeightTypes.WEIGHT_REQUEST, WeightSagas.getWeight, api),
-    takeLatest(WeightTypes.WEIGHT_ALL_REQUEST, WeightSagas.getAllWeights, api),
-    takeLatest(WeightTypes.WEIGHT_UPDATE_REQUEST, WeightSagas.updateWeight, api),
-    takeLatest(WeightTypes.WEIGHT_DELETE_REQUEST, WeightSagas.deleteWeight, api),
-
-    takeLatest(PreferencesTypes.PREFERENCES_REQUEST, PreferencesSagas.getPreferences, api),
-    takeLatest(PreferencesTypes.PREFERENCES_ALL_REQUEST, PreferencesSagas.getAllPreferences, api),
-    takeLatest(PreferencesTypes.PREFERENCES_UPDATE_REQUEST, PreferencesSagas.updatePreferences, api),
-    takeLatest(PreferencesTypes.PREFERENCES_DELETE_REQUEST, PreferencesSagas.deletePreferences, api),
+    takeLatest(TagTypes.TAG_REQUEST, TagSagas.getTag, api),
+    takeLatest(TagTypes.TAG_ALL_REQUEST, TagSagas.getAllTags, api),
+    takeLatest(TagTypes.TAG_UPDATE_REQUEST, TagSagas.updateTag, api),
+    takeLatest(TagTypes.TAG_DELETE_REQUEST, TagSagas.deleteTag, api),
     // jhipster-react-native-saga-redux-connect-needle
 
     takeLatest(UserTypes.USER_ALL_REQUEST, UserSagas.getAllUsers, api),

@@ -1,62 +1,47 @@
-/*
- * 21-Points (https://github.com/mraible/21-points) as a WebFlux + React app
- */
-
 application {
   config {
     applicationType monolith
-    reactive true
-    baseName HealthPoints
-    packageName com.okta.developer
+    baseName flickr2
+    packageName com.auth0.flickr2
     authenticationType oauth2
     prodDatabaseType postgresql
-    buildTool gradle
     testFrameworks [cypress]
     clientFramework react
     enableTranslation true
     nativeLanguage en
     languages [en, es]
   }
-  entities Points, BloodPressure, Weight, Preferences
+  entities *
 }
 
-// JDL definition for application 'TwentyOnePoints' generated with command 'jhipster export-jdl'
-
-entity BloodPressure {
-  timestamp ZonedDateTime required,
-  systolic Integer required,
-  diastolic Integer required
-}
-entity Weight {
-  timestamp ZonedDateTime required,
-  weight Double required
-}
-entity Points {
-  date LocalDate required,
-  exercise Integer,
-  meals Integer,
-  alcohol Integer,
-  notes String maxlength(140)
-}
-entity Preferences {
-  weeklyGoal Integer required min(10) max(21),
-  weightUnits Units required
+entity Album {
+  title String required
+  description TextBlob
+  created Instant
 }
 
-enum Units {
-  KG,
-  LB
+entity Photo {
+  title String required
+  description TextBlob
+  image ImageBlob required
+  height Integer
+  width Integer
+  taken Instant
+  uploaded Instant
 }
 
-relationship OneToOne {
-  Preferences{user(login)} to User
+entity Tag {
+  name String required minlength(2)
 }
+
 relationship ManyToOne {
-  BloodPressure{user(login)} to User,
-  Weight{user(login)} to User,
-  Points{user(login)} to User
+  Album{user(login)} to User
+  Photo{album(title)} to Album
 }
 
-paginate BloodPressure, Weight with infinite-scroll
-paginate Points with pagination
+relationship ManyToMany {
+  Photo{tag(name)} to Tag{photo}
+}
 
+paginate Album with pagination
+paginate Photo, Tag with infinite-scroll

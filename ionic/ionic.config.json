@@ -1,5 +1,7 @@
 {
-  "name": "HealthPoints",
-  "integrations": {},
+  "name": "Flickr2",
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "angular"
 }

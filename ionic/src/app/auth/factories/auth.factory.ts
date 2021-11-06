@@ -1,11 +1,9 @@
+import { NgZone } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { StorageBackend, Requestor } from '@openid/appauth';
-import { AuthService, Browser, ConsoleLogObserver } from 'ionic-appauth';
-import { environment } from 'src/environments/environment';
-import { NgZone } from '@angular/core';
-import { Plugins } from '@capacitor/core';
-
-const { App } = Plugins;
+import { AuthService, Browser } from 'ionic-appauth';
+import { environment } from '../../../environments/environment';
+import { App } from '@capacitor/app';
 
 export const authFactory = (platform: Platform, ngZone: NgZone, requestor: Requestor, browser: Browser, storage: StorageBackend) => {
   const authService = new AuthService(browser, storage, requestor);
@@ -21,12 +19,15 @@ export const authFactory = (platform: Platform, ngZone: NgZone, requestor: Reque
     App.addListener('appUrlOpen', (data: any) => {
       if (data.url !== undefined) {
         ngZone.run(() => {
-          authService.authorizationCallback(data.url);
+          if (data.url.indexOf(authService.authConfig.redirect_url) === 0) {
+            authService.authorizationCallback(data.url);
+          } else {
+            authService.endSessionCallback();
+          }
         });
       }
     });
   }
 
-  authService.addActionObserver(new ConsoleLogObserver());
   return authService;
 };

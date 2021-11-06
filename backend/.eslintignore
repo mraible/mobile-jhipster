@@ -1,6 +1,5 @@
 node_modules/
 src/main/docker/
-src/test/javascript/cypress/
 jest.conf.js
 webpack/
 target/

@@ -2,94 +2,71 @@ export default {
   // Functions return fixtures
 
   // entity fixtures
-  updatePoints: (points) => {
+  updateAlbum: (album) => {
     return {
       ok: true,
-      data: require('../../shared/fixtures/update-points.json'),
+      data: require('../../shared/fixtures/update-album.json'),
     };
   },
-  getAllPoints: () => {
+  getAllAlbums: () => {
     return {
       ok: true,
-      data: require('../../shared/fixtures/get-all-points.json'),
+      data: require('../../shared/fixtures/get-all-albums.json'),
     };
   },
-  getPoints: (pointsId) => {
+  getAlbum: (albumId) => {
     return {
       ok: true,
-      data: require('../../shared/fixtures/get-points.json'),
+      data: require('../../shared/fixtures/get-album.json'),
     };
   },
-  deletePoints: (pointsId) => {
-    return {
-      ok: true,
-    };
-  },
-  updateBloodPressure: (bloodPressure) => {
-    return {
-      ok: true,
-      data: require('../../shared/fixtures/update-blood-pressure.json'),
-    };
-  },
-  getAllBloodPressures: () => {
-    return {
-      ok: true,
-      data: require('../../shared/fixtures/get-all-blood-pressures.json'),
-    };
-  },
-  getBloodPressure: (bloodPressureId) => {
-    return {
-      ok: true,
-      data: require('../../shared/fixtures/get-blood-pressure.json'),
-    };
-  },
-  deleteBloodPressure: (bloodPressureId) => {
+  deleteAlbum: (albumId) => {
     return {
       ok: true,
     };
   },
-  updateWeight: (weight) => {
+  updatePhoto: (photo) => {
     return {
       ok: true,
-      data: require('../../shared/fixtures/update-weight.json'),
+      data: require('../../shared/fixtures/update-photo.json'),
     };
   },
-  getAllWeights: () => {
+  getAllPhotos: () => {
     return {
       ok: true,
-      data: require('../../shared/fixtures/get-all-weights.json'),
+      data: require('../../shared/fixtures/get-all-photos.json'),
     };
   },
-  getWeight: (weightId) => {
+  getPhoto: (photoId) => {
     return {
       ok: true,
-      data: require('../../shared/fixtures/get-weight.json'),
+      data: require('../../shared/fixtures/get-photo.json'),
     };
   },
-  deleteWeight: (weightId) => {
+  deletePhoto: (photoId) => {
     return {
       ok: true,
     };
   },
-  updatePreferences: (preferences) => {
+  updateTag: (tag) => {
     return {
       ok: true,
-      data: require('../../shared/fixtures/update-preferences.json'),
+      data: require('../../shared/fixtures/update-tag.json'),
     };
   },
-  getAllPreferences: () => {
+  getAllTags: () => {
     return {
       ok: true,
-      data: require('../../shared/fixtures/get-all-preferences.json'),
+      data: require('../../shared/fixtures/get-all-tags.json'),
     };
   },
-  getPreferences: (preferencesId) => {
+  getTag: (tagId) => {
     return {
       ok: true,
-      data: require('../../shared/fixtures/get-preferences.json'),
+      data: require('../../shared/fixtures/get-tag.json'),
     };
   },
-  deletePreferences: (preferencesId) => {
+  deleteTag: (tagId) => {
     return {
       ok: true,
     };

@@ -14,7 +14,7 @@ function HomeScreen(props) {
       <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.scrollView}>
         <View style={styles.centered}>
           <Image source={Images.logoJhipster} style={styles.logo} />
-          <Text style={styles.welcomeText}>HealthPoints</Text>
+          <Text style={styles.welcomeText}>Flickr2</Text>
           <Text style={styles.welcomeText}>Welcome to your JHipster React Native app.</Text>
         </View>
         {account && account.login ? (

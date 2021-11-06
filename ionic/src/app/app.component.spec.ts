@@ -5,7 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { TranslateModule } from '@ngx-translate/core';
 import Mock = jest.Mock;
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AppComponent } from './app.component';
 import { AuthModule } from './auth/auth.module';
@@ -13,27 +13,29 @@ import { AuthModule } from './auth/auth.module';
 describe('AppComponent', () => {
   let statusBarSpy, splashScreenSpy, platformReadySpy, platformSpy;
 
-  beforeEach(async(() => {
-    statusBarSpy = createSpyObj('StatusBar', ['styleDefault']);
-    splashScreenSpy = createSpyObj('SplashScreen', ['hide']);
-    platformReadySpy = Promise.resolve();
-    platformSpy = createSpyObj('Platform', [{ ready: platformReadySpy }, 'is']);
+  beforeEach(
+    waitForAsync(() => {
+      statusBarSpy = createSpyObj('StatusBar', ['styleDefault']);
+      splashScreenSpy = createSpyObj('SplashScreen', ['hide']);
+      platformReadySpy = Promise.resolve();
+      platformSpy = createSpyObj('Platform', [{ ready: platformReadySpy }, 'is']);
 
-    TestBed.configureTestingModule({
-      declarations: [AppComponent],
-      imports: [TranslateModule.forRoot(), HttpClientTestingModule, IonicStorageModule.forRoot(), AuthModule],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      providers: [
-        { provide: StatusBar, useValue: statusBarSpy },
-        { provide: SplashScreen, useValue: splashScreenSpy },
-        { provide: Platform, useValue: platformSpy },
-      ],
-    }).compileComponents();
-  }));
+      TestBed.configureTestingModule({
+        declarations: [AppComponent],
+        imports: [TranslateModule.forRoot(), HttpClientTestingModule, IonicStorageModule.forRoot(), AuthModule],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        providers: [
+          { provide: StatusBar, useValue: statusBarSpy },
+          { provide: SplashScreen, useValue: splashScreenSpy },
+          { provide: Platform, useValue: platformSpy },
+        ],
+      }).compileComponents();
+    })
+  );
 
   it('should create the app', () => {
     const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
+    const app = fixture.componentInstance;
     expect(app).toBeTruthy();
   });
 
@@ -41,8 +43,6 @@ describe('AppComponent', () => {
     TestBed.createComponent(AppComponent);
     expect(platformSpy.ready).toHaveBeenCalled();
     await platformReadySpy;
-    expect(statusBarSpy.styleDefault).toHaveBeenCalled();
-    expect(splashScreenSpy.hide).toHaveBeenCalled();
   });
 
   // TODO: add more tests!
