@@ -24,7 +24,7 @@ To run the JHipster app, start Keycloak, then use Gradle to start it.
 ```
 cd mobile-jhipster/backend
 docker-compose -f src/main/docker/keycloak.yml up -d
-./gradlew
+./mvnw
 ```
 
 ### React Native
