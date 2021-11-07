@@ -37,7 +37,7 @@ npm i
 npm start
 ```
 
-To run on emulators, you'll need an [Expo](https://expo.io/) account. Then, add `https://auth.expo.io/@<your-username>/HealthPoints` as a Login redirect URI in Keycloak.
+To run on emulators, you'll need an [Expo](https://expo.io/) account. Then, add `https://auth.expo.io/@<your-username>/Flickr2` as a Login redirect URI in Keycloak.
 
 To run on Android, you'll need to run some commands so your device (or emulator) can communicate with your API and Keycloak.
 
@@ -153,7 +153,7 @@ okta apps create
 Select **Native**, then use the following for Redirect URIs:
 
 ```
-http://localhost:19006/,https://auth.expo.io/@<your-username>/HealthPoints
+http://localhost:19006/,https://auth.expo.io/@<your-username>/Flickr2
 ```
 
 Copy the client ID to `react-native/app/config/app-config.js`.
@@ -175,7 +175,7 @@ This example uses the following open source libraries:
 
 * [JHipster](https://www.jhipster.tech)
 * [JHipster React Native](https://github.com/ruddell/generator-jhipster-react-native)
-* [Ionic for JHipster](https://github.com/oktadeveloper/generator-jhipster-ionic)
+* [Ionic for JHipster](https://github.com/jhipster/generator-jhipster-ionic)
 
 ## Help
 
