@@ -140,11 +140,9 @@ If that doesn't work, just use Okta (and its HTTPS-by-default feature 😉).
 Install the [Okta CLI](https://cli.okta.com) and run the following commands:
 
 ```shell
-# register if you don't have an account
-okta register # or use: okta login
 cd backend
 okta apps register jhipster
-# source .okta.env && ./gradlew to start
+# source .okta.env && ./mvnw to start
 
 cd ../react-native
 okta apps create
@@ -166,8 +164,6 @@ Create another **Native** app for Ionic with the following redirect URIs:
 Update `ionic/src/app/auth/auth-config.service.ts` to use the generated client ID.
 
 Restart your mobile apps and sign in with Okta!
-
-See the [demo instructions for Okta](demo.adoc#use-okta-for-identity) for what these commands do.
 
 ## Links
 
