@@ -57,6 +57,8 @@ npm i
 
 You can run it as a web app using `ionic serve`. 
 
+#### Run on iOS
+
 To run on iOS:
 
 ```
@@ -81,15 +83,15 @@ Add your custom scheme to `ios/App/App/Info.plist`:
 </array>
 ```
 
-Open your project in Xcode and configure code signing.
+Run your app in iOS Simulator:
 
 ```shell
-npx cap open ios
+npx cap run ios
 ```
 
-Then, run your app from Xcode.
+#### Run on Android
 
-For Android:
+To run your Ionic app on Android, run the following commands:
 
 ```shell
 ionic build
@@ -110,10 +112,10 @@ npx jetify
 npx cap sync android
 ```   
 
-Then, open your project in Android Studio and run your app.
+Then, run your app in an Android emulator.
 
 ```
-npx cap open android
+npx cap run android
 ```
 
 You'll need to run a couple commands to allow the emulator to communicate with your API and Keycloak.

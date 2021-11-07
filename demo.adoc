@@ -148,7 +148,9 @@ If you see `java.io.IOException: Cleartext HTTP traffic to localhost not permitt
 
 . To run on emulators, you'll need an https://expo.io/[Expo] account
 
-. To run on Android, use `npm start -- --android`
+. To run on iOS, use `npm run ios`
+
+. To run on Android, use `npm run android`
 
 . For AVD to communicate with your API and Keycloak, add some port mappings
 
