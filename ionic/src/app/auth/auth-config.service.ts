@@ -18,7 +18,7 @@ export class AuthConfigService {
         this.authConfig = data;
         // Override issuer and client ID with values from API
         environment.oidcConfig.server_host = this.authConfig.issuer;
-        environment.oidcConfig.client_id = this.authConfig.clientId;
+        environment.oidcConfig.client_id = '0oa2ki7yq5UuNf1P05d7'; // this.authConfig.clientId;
       })
       .catch((error) => {
         console.error('Failed to fetch remote OIDC configuration.');
