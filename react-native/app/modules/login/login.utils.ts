@@ -24,6 +24,7 @@ export async function getAuthParams(clientId: string, redirectUri: string, disco
     state,
     client_id: clientId,
     redirect_uri: redirectUri,
+    audience: 'https://jhipster.us.auth0.com/api/v2/',
   };
   const authUrl = `${discovery.discoveryDocument?.authorization_endpoint}?${buildQueryString(authenticationOptions)}`;
   return {

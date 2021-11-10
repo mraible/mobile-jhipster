@@ -17,7 +17,11 @@ export function* login(api) {
       yield put(AuthInfoActions.authInfoRequest());
     }
     const { issuer, clientId } = authInfo;
-    const { accessToken, idToken } = yield call(doOauthPkceFlow, AppConfig.nativeClientId || clientId, issuer);
+    let issuerWithoutSlash = issuer;
+    if (issuer.endsWith('/')) {
+      issuerWithoutSlash = issuer.substring(0, issuer.length - 1);
+    }
+    const { accessToken, idToken } = yield call(doOauthPkceFlow, AppConfig.nativeClientId || clientId, issuerWithoutSlash);
     if (accessToken) {
       yield call(api.setAuthToken, accessToken);
       yield put(LoginActions.loginSuccess(accessToken, idToken));
@@ -37,6 +41,10 @@ export function* logout(api) {
   yield put(AccountActions.accountRequest());
   const { clientId, issuer } = yield select(selectAuthInfo);
   const idToken = yield select(selectIdToken);
+  let issuerWithoutSlash = issuer;
+  if (issuer.endsWith('/')) {
+    issuerWithoutSlash = issuer.substring(0, issuer.length - 1);
+  }
   if (idToken) {
     yield call(logoutFromIdp, AppConfig.nativeClientId || clientId, issuer, idToken);
   }

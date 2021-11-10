@@ -266,7 +266,9 @@ You can use the default `Auth0 Management API` audience value from the *Applicat
 
   http://localhost:8100/logout,dev.localhost.ionic:/logout
 
-. Set the Allowed Origins (CORS) to `http://localhost:8100`.
+. Set the Allowed Origins (CORS):
+
+  http://localhost:19006,http://localhost:8100
 
 . Update `ionic/src/app/auth/auth-config.service.ts` to use the generated client ID:
 
@@ -310,7 +312,6 @@ npm start
 - Doesn't work:
     - React Native Android login
     - Ionic Android login
-- Need to figure out /userinfo or given_name claims for Auth0
 
 ////
 
