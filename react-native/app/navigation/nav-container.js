@@ -17,6 +17,7 @@ import StorybookScreen from '../../storybook';
 import DrawerContent from './drawer/drawer-content';
 import { isReadyRef, navigationRef } from './nav-ref';
 import NotFound from './not-found-screen';
+import OAuthRedirectScreen from './oauth-redirect-screen';
 import { ModalScreen } from './modal-screen';
 import { DrawerButton } from './drawer/drawer-button';
 
@@ -78,6 +79,7 @@ const linking = {
         },
       },
       ModalScreen: 'alert',
+      OAuthRedirect: 'start',
       NotFound: '*',
     },
   },
@@ -174,6 +176,7 @@ function NavContainer(props) {
             }),
           }}
         />
+        <Stack.Screen name="OAuthRedirect" component={OAuthRedirectScreen} options={{ title: 'Redirecting...' }} />
         <Stack.Screen name="NotFound" component={NotFound} options={{ title: 'Oops!' }} />
       </Stack.Navigator>
     </NavigationContainer>

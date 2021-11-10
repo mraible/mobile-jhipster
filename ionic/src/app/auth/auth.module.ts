@@ -8,9 +8,7 @@ import { AuthService, Browser } from 'ionic-appauth';
 import { AuthConfigService } from './auth-config.service';
 
 const authInitializer = (authConfig: AuthConfigService) => {
-  return () => {
-    return authConfig.loadAuthConfig();
-  };
+  return () => authConfig.loadAuthConfig();
 };
 
 @NgModule({

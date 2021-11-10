@@ -23,7 +23,7 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(async () => {
       await this.authService.init();
-      if (this.platform.is('mobile') && !this.platform.is('mobileweb')) {
+      if (this.platform.is('hybrid')) {
         this.statusBar.styleDefault();
         this.splashScreen.hide();
       }
