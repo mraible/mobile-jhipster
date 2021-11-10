@@ -91,7 +91,7 @@
     "cordova-plugin-file": "6.0.2",
     "cordova-plugin-safariviewcontroller": "2.0.0",
     "cordova-plugin-secure-storage-echo": "5.1.1",
-    "ionic-appauth": "0.8.4",
+    "ionic-appauth": "0.8.5",
     "jetifier": "^2.0.0",
     "ngx-webstorage": "8.0.0",
     "rxjs": "~6.6.0",
