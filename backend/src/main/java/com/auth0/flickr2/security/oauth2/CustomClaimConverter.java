@@ -75,6 +75,17 @@ public class CustomClaimConverter implements Converter<Map<String, Object>, Map<
                 if (user.has("family_name")) {
                     convertedClaims.put("family_name", user.get("family_name").asText());
                 }
+                // https://github.com/jhipster/generator-jhipster/pull/16974
+                if (user.has("email")) {
+                    convertedClaims.put("email", user.get("email").asText());
+                }
+                // Allow full name in a name claim - happens with Auth0
+                if (user.has("name")) {
+                    String[] name = user.get("name").asText().split("\\s+");
+                    convertedClaims.put("given_name", name[0]);
+                    convertedClaims.put("family_name", name[1]);
+                }
+
                 if (user.has("groups")) {
                     List<String> groups = StreamSupport
                         .stream(user.get("groups").spliterator(), false)
