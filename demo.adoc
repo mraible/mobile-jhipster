@@ -307,11 +307,10 @@ npm start
 
 ////
 
-- Ionic with Auth0 needs audience in authorize request
-- React Native with Auth0 needs audience
 - Doesn't work:
     - React Native Android login
     - Ionic Android login
+    - Auth0 logout
 
 ////
 
