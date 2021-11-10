@@ -61,5 +61,5 @@
   "embedded": false,
   "applications": ["flickr2"],
   "angularJSSuffix": "",
-  "changelogDate": "20211105202813"
+  "changelogDate": "20211110135252"
 }
