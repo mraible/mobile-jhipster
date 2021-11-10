@@ -150,13 +150,9 @@ If you see `java.io.IOException: Cleartext HTTP traffic to localhost not permitt
 
 . Add `https://auth.expo.io/@mraible/Flickr2` as a Login redirect URI in Keycloak
 
-. In the `react-native` directory, run `npm start`
-
 . To run on emulators, you'll need an https://expo.io/[Expo] account
 
-. To run on iOS, use `npm run ios`
-
-. To run on Android, use `npm run android`
+. In the `react-native` directory, run `npm start`
 
 . For AVD to communicate with your API and Keycloak, add some port mappings
 
@@ -268,11 +264,32 @@ This code is adding the user's roles to a custom claim (prefixed with `https://w
   environment.oidcConfig.server_host = this.authConfig.issuer;
   environment.oidcConfig.client_id = 'Dz7Oc9Zv9onjUBsdC55wReC4ifGMlA7G';
 
-. Restart mobile apps and log in with Auth0!
+. Change logic to set email from `preferred_username` in `UserService` since Auth0 doesn't send email claim.
 
-  - Ionic: `
-  npx cap run ios
-  npm run ios
+. Modify Ionic's `login.page.ts` and `welcome.page.ts` to pass in `audience` as a parameter.
+
+  await this.authService.signIn({ audience: environment.oidcConfig.audience });
+
+. Restart Ionic app and log in with Auth0!
++
+----
+# Ionic
+npx cap run ios
+
+# React Native
+npm start
+----
+
+////
+
+- Ionic with Auth0 needs audience in authorize request
+- React Native with Auth0 needs audience in authorize request
+- Doesn't work:
+    - React Native Android login doesn't work
+    - Ionic Android login doesn't work
+- Need to figure out /userinfo or given_name claims for Auth0
+
+////
 
 == Use Okta for Identity
 
@@ -308,9 +325,14 @@ NOTE: The `\http://localhost:8761*` redirect URIs are for the JHipster Registry,
   environment.oidcConfig.client_id = this.authConfig.clientId;
 
 . Restart mobile apps and log in with Okta!
++
+----
+# Ionic
+npx cap run ios
 
-  npx cap run ios
-  npm run ios
+# React Native
+npm start
+----
 
 == Add Claims to Access Token
 

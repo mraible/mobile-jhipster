@@ -7,6 +7,7 @@ export default {
   // use 10.0.2.2 for Android to connect to host machine
   apiUrl: 'http://localhost:8080/',
   // leave blank if using Keycloak
+  // - Dz7Oc9Zv9onjUBsdC55wReC4ifGMlA7G for Auth0
   oktaClientId: '',
   // use fixtures instead of real API requests
   useFixtures: false,
