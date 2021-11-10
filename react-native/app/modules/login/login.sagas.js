@@ -17,7 +17,7 @@ export function* login(api) {
       yield put(AuthInfoActions.authInfoRequest());
     }
     const { issuer, clientId } = authInfo;
-    const { accessToken, idToken } = yield call(doOauthPkceFlow, AppConfig.oktaClientId || clientId, issuer);
+    const { accessToken, idToken } = yield call(doOauthPkceFlow, AppConfig.nativeClientId || clientId, issuer);
     if (accessToken) {
       yield call(api.setAuthToken, accessToken);
       yield put(LoginActions.loginSuccess(accessToken, idToken));
@@ -35,10 +35,12 @@ export function* logout(api) {
   yield call(api.removeAuthToken);
   yield put(AccountActions.accountReset());
   yield put(AccountActions.accountRequest());
-  yield put(LoginActions.logoutSuccess());
   const { clientId, issuer } = yield select(selectAuthInfo);
   const idToken = yield select(selectIdToken);
-  yield call(logoutFromIdp, AppConfig.oktaClientId || clientId, issuer, idToken);
+  if (idToken) {
+    yield call(logoutFromIdp, AppConfig.nativeClientId || clientId, issuer, idToken);
+  }
+  yield put(LoginActions.logoutSuccess());
   yield put({ type: 'RELOGIN_ABORT' });
 }
 

@@ -43,21 +43,21 @@
     "blueprints": [
       {
         "name": "generator-jhipster-react-native",
-        "version": "4.2.0"
+        "version": "4.2.1"
       }
     ],
     "otherModules": [
       {
         "name": "generator-jhipster-react-native",
-        "version": "4.2.0"
+        "version": "4.2.1"
       }
     ],
     "pages": [],
-    "creationTimestamp": 1636143973649,
+    "creationTimestamp": 1636552252116,
     "reactNative": {
       "reactNativeAppName": "Flickr2",
       "detox": false
     },
-    "lastLiquibaseTimestamp": 1636144153000
+    "lastLiquibaseTimestamp": 1636552432000
   }
 }

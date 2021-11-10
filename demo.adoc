@@ -63,11 +63,6 @@ NOTE: I've purposely left the version numbers off this tutorial's `npm install` 
 
 . Hide metadata in `photo-update.html` with `<div *ngIf="!isNew">`
 
-. Run app in iOS Simulator
-
-  ionic build
-  ionic capacitor add ios
-
 . Add your custom scheme to `ios/App/App/Info.plist`:
 +
 [source,xml]
@@ -148,17 +143,7 @@ If you see `java.io.IOException: Cleartext HTTP traffic to localhost not permitt
 
 . Change `application-dev.yml` in backend to allow `\http://localhost:19006` for CORS
 
-. Add `https://auth.expo.io/@mraible/Flickr2` as a Login redirect URI in Keycloak
-
-. To run on emulators, you'll need an https://expo.io/[Expo] account
-
-. In the `react-native` directory, run `npm start`
-
-. For AVD to communicate with your API and Keycloak, add some port mappings
-
-  adb reverse tcp:8080 tcp:8080 && adb reverse tcp:9080 tcp:9080
-
-. Refresh your app in Simulator using kbd:[{commandkey} + R] or by hitting kbd:[R] twice in Android
+. Add `\https://auth.expo.io/@mraible/Flickr2` as a Login redirect URI in Keycloak
 
 . Hide metadata in add photo screen when `isNewEntity`
 +
@@ -169,6 +154,16 @@ If you see `java.io.IOException: Cleartext HTTP traffic to localhost not permitt
   )
   const metadataRows = isNewEntity ? '' : metadata;
 ----
+
+. To run on emulators, you'll need an https://expo.io/[Expo] account
+
+. In the `react-native` directory, run `npm start`
+
+. For Android emulators to communicate with your API and Keycloak, add some port mappings
+
+  adb reverse tcp:8080 tcp:8080 && adb reverse tcp:9080 tcp:9080
+
+. Refresh your app in Simulator using kbd:[{commandkey} + R] or by hitting kbd:[R] twice in Android
 
 == Develop a Flutter App
 
@@ -247,6 +242,20 @@ This code is adding the user's roles to a custom claim (prefixed with `https://w
 
 . Click *Save changes* to continue.
 
+. Create a `backend/.auth0.env` file and populate it with your Auth0 settings.
++
+[source,shell]
+----
+export SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER_URI=https://<your-auth0-domain>/
+export SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_ID=<your-client-id>
+export SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_SECRET=<your-client-secret>
+export JHIPSTER_SECURITY_OAUTH2_AUDIENCE=https://<your-auth0-domain>/api/v2/
+----
++
+You can use the default `Auth0 Management API` audience value from the *Applications* > *API* > *API Audience* field. You can also define your own custom API and use the identifier as the API audience.
+
+=== Create a Native OIDC App
+
 . For Ionic and React Native, create a *Native* app and add the following Allowed Callback URLs:
 
   http://localhost:19006/,https://auth.expo.io/@mraible/Flickr2,http://localhost:8100/callback,dev.localhost.ionic:/callback
@@ -257,7 +266,9 @@ This code is adding the user's roles to a custom claim (prefixed with `https://w
 
   http://localhost:8100/logout,dev.localhost.ionic:/logout
 
-. Set the Allowed Origins (CORS) to `http://localhost:8100`.
+. Set the Allowed Origins (CORS):
+
+  http://localhost:19006,http://localhost:8100
 
 . Update `ionic/src/app/auth/auth-config.service.ts` to use the generated client ID:
 
@@ -266,11 +277,25 @@ This code is adding the user's roles to a custom claim (prefixed with `https://w
 
 . Change logic to set email from `preferred_username` in `UserService` since Auth0 doesn't send email claim.
 
+. Update `environment.ts` to specify your audience.
++
+[source,ts]
+----
+export const environment = {
+  ...
+  oidcConfig: {
+    ...
+    audience: 'https://<your-auth0-domain>/api/v2/'
+  },
+  ...
+};
+----
+
 . Modify Ionic's `login.page.ts` and `welcome.page.ts` to pass in `audience` as a parameter.
 
   await this.authService.signIn({ audience: environment.oidcConfig.audience });
 
-. Restart Ionic app and log in with Auth0!
+. Restart your mobile apps and log in with Auth0!
 +
 ----
 # Ionic
@@ -282,12 +307,9 @@ npm start
 
 ////
 
-- Ionic with Auth0 needs audience in authorize request
-- React Native with Auth0 needs audience
 - Doesn't work:
     - React Native Android login
     - Ionic Android login
-- Need to figure out /userinfo or given_name claims for Auth0
 
 ////
 
@@ -308,6 +330,8 @@ npm start
 +
 NOTE: The `\http://localhost:8761*` redirect URIs are for the JHipster Registry, which is often used when creating microservices with JHipster. The Okta CLI adds these by default.
 
+=== Create a Native OIDC App
+
 . Create a *Native* app using `okta apps create` and use the following redirect URIs:
 
   http://localhost:19006/,https://auth.expo.io/@mraible/Flickr2,http://localhost:8100/callback,dev.localhost.ionic:/callback
@@ -323,7 +347,7 @@ NOTE: The `\http://localhost:8761*` redirect URIs are for the JHipster Registry,
   environment.oidcConfig.server_host = '0oabzvz5mGpjjAT5o5d6';
   environment.oidcConfig.client_id = this.authConfig.clientId;
 
-. Restart mobile apps and log in with Okta!
+. Restart your mobile apps and log in with Okta!
 +
 ----
 # Ionic
