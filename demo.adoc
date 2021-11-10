@@ -1,8 +1,9 @@
 :experimental:
 // Define unicode for Apple Command key.
 :commandkey: &#8984;
+:toc: macro
 
-== Mobile Development with Ionic, React Native, Flutter, and JHipster
+= Mobile Development with Ionic, React Native, Flutter, and JHipster
 
 The brackets at the end of each step indicate the alias's or IntelliJ Live Templates to use. You can find the template definitions at https://github.com/mraible/idea-live-templates[mraible/idea-live-templates].
 
@@ -11,17 +12,22 @@ The brackets at the end of each step indicate the alias's or IntelliJ Live Templ
 * https://adoptopenjdk.net/[Java 11+]
 * https://nodejs.org[Node 14+]
 
-NOTE: I've purposely left the version numbers off this tutorial's `npm install` commands so the latest versions will be used. If you find issues with these steps, please file an issue for this repo.
-
 toc::[]
 
-=== Photo Gallery Spring Boot API
+NOTE: I've purposely left the version numbers off this tutorial's `npm install` commands so the latest versions will be used. If you find issues with these steps, please file an issue for this repo.
+
+== Build a Photo Gallery with JHipster (React + Spring Boot)
 
 . Create a new directory to hold all the projects: `take mobile-jhipster`
 
 . Clone an existing JHipster app into a `backend` directory:
 
   git clone https://github.com/oktadev/auth0-full-stack-java-example.git backend
+  rm -rf backend/.git
+
+. Modify `backend/package.json` to remove the `prepare` script that installs Husky.
+
+  "prepare": "husky install",
 
 . Start Keycloak:
 
@@ -32,7 +38,7 @@ toc::[]
 
 . Add a few photos and show lightbox
 
-=== Ionic App
+== Create an Ionic App
 
 . Install Ionic CLI and Ionic for JHipster
 
@@ -127,7 +133,7 @@ If you see `java.io.IOException: Cleartext HTTP traffic to localhost not permitt
 
 ////
 
-=== React Native App
+== Generate a React Native App
 
 . Install React Native JHipster and Expo CLI
 
@@ -140,7 +146,7 @@ If you see `java.io.IOException: Cleartext HTTP traffic to localhost not permitt
 
 . Name your app `Flickr2` when prompted
 
-. Change `application-dev.yml` in backend to allow `http://localhost:19006` for CORS
+. Change `application-dev.yml` in backend to allow `\http://localhost:19006` for CORS
 
 . Add `https://auth.expo.io/@mraible/Flickr2` as a Login redirect URI in Keycloak
 
@@ -168,7 +174,7 @@ If you see `java.io.IOException: Cleartext HTTP traffic to localhost not permitt
   const metadataRows = isNewEntity ? '' : metadata;
 ----
 
-=== Flutter App
+== Develop a Flutter App
 
 . Install Flutter for JHipster
 
@@ -194,9 +200,81 @@ NOTE: This module currently only supports JWT auth. There's open issues for http
   cd flutter-app
   flutter run
 
-NOTE: I was unable to make this work with JHipster 7. See https://github.com/merlinofcha0s/generator-jhipster-flutter/issues/50[generator-jhipster-flutter/issues/50] for more information.
+NOTE: See https://github.com/merlinofcha0s/generator-jhipster-flutter/issues/50[generator-jhipster-flutter/issues/50] for issues I had with JHipster 7.
 
-=== Use Okta for Identity
+== Use Auth0 for Identity
+
+. Log in to your Auth0 account (or https://auth0.com/signup[sign up] if you don't have an account). You should have a unique domain like `dev-xxx.us.auth0.com`.
+
+. Press the *Create Application* button in https://manage.auth0.com/#/applications[Applications section]. Use a name like `JHipster Baby!`, select `Regular Web Applications`, and click *Create*.
+
+. Switch to the *Settings* tab and configure your application settings:
++
+- Allowed Callback URLs: `\http://localhost:8080/login/oauth2/code/oidc`
+- Allowed Logout URLs: `\http://localhost:8080/`
+
+. Scroll to the bottom and click *Save Changes*.
+
+. In the https://manage.auth0.com/#/roles[roles] section, create new roles named `ROLE_ADMIN` and `ROLE_USER`.
+
+. Create a new user account in the https://manage.auth0.com/#/users[users] section. Click on the *Role* tab to assign the roles you just created to the new account.
++
+_Make sure your new user's email is verified before attempting to log in!_
+
+. Next, head to *Auth Pipeline* > *Rules* > *Create*. Select the `Empty rule` template. Provide a meaningful name like `Group claims` and replace the Script content with the following.
++
+[source,js]
+----
+function(user, context, callback) {
+  user.preferred_username = user.email;
+  const roles = (context.authorization || {}).roles;
+
+  function prepareCustomClaimKey(claim) {
+    return `https://www.jhipster.tech/${claim}`;
+  }
+
+  const rolesClaim = prepareCustomClaimKey('roles');
+
+  if (context.idToken) {
+    context.idToken[rolesClaim] = roles;
+  }
+
+  if (context.accessToken) {
+    context.accessToken[rolesClaim] = roles;
+  }
+
+  callback(null, user, context);
+}
+----
++
+This code is adding the user's roles to a custom claim (prefixed with `https://www.jhipster.tech/roles`). This claim is mapped to Spring Security authorities in `SecurityUtils.java`.
+
+. Click *Save changes* to continue.
+
+. For Ionic and React Native, create a *Native* app and add the following Allowed Callback URLs:
+
+  http://localhost:19006/,https://auth.expo.io/@mraible/Flickr2,http://localhost:8100/callback,dev.localhost.ionic:/callback
+
+. Copy the client ID to `react-native/app/config/app-config.js`.
+
+. Set the Allowed Logout URLs to:
+
+  http://localhost:8100/logout,dev.localhost.ionic:/logout
+
+. Set the Allowed Origins (CORS) to `http://localhost:8100`.
+
+. Update `ionic/src/app/auth/auth-config.service.ts` to use the generated client ID:
+
+  environment.oidcConfig.server_host = this.authConfig.issuer;
+  environment.oidcConfig.client_id = 'Dz7Oc9Zv9onjUBsdC55wReC4ifGMlA7G';
+
+. Restart mobile apps and log in with Auth0!
+
+  - Ionic: `
+  npx cap run ios
+  npm run ios
+
+== Use Okta for Identity
 
 . Install the https://cli.okta.com[Okta CLI] and run `okta register` to sign up for a new account. If you already have an account, run `okta login`.
 
@@ -205,24 +283,24 @@ NOTE: I was unable to make this work with JHipster 7. See https://github.com/mer
 . The Okta CLI streamlines configuring a JHipster app and does several things for you:
 
 1. Creates an OIDC app with the correct redirect URIs:
-  - login: `http://localhost:8080/login/oauth2/code/oidc` and `http://localhost:8761/login/oauth2/code/oidc`
-  - logout: `http://localhost:8080` and `http://localhost:8761`
+  - login: `\http://localhost:8080/login/oauth2/code/oidc` and `\http//localhost:8761/login/oauth2/code/oidc`
+  - logout: `\http//localhost:8080` and `\http//localhost:8761`
 2. Creates `ROLE_ADMIN` and `ROLE_USER` groups that JHipster expects
 3. Adds your current user to the `ROLE_ADMIN` and `ROLE_USER` groups
 4. Creates a `groups` claim in your default authorization server and adds the user's groups to it
 +
-NOTE: The `http://localhost:8761*` redirect URIs are for the JHipster Registry, which is often used when creating microservices with JHipster. The Okta CLI adds these by default.
+NOTE: The `\http://localhost:8761*` redirect URIs are for the JHipster Registry, which is often used when creating microservices with JHipster. The Okta CLI adds these by default.
 
-. Create a **Native** app using `okta apps create` and use `http://localhost:19006/,https://auth.expo.io/@your-expo-username/reactNativeAppName` as redirect URIs.
+. Create a *Native* app using `okta apps create` and use `\http://localhost:19006/,https://auth.expo.io/@your-expo-username/reactNativeAppName` as redirect URIs.
 
-  * `http://localhost:19006/,https://auth.expo.io/@mraible/Flickr2`
+  * `\http://localhost:19006/,https://auth.expo.io/@mraible/Flickr2`
 
 . Copy the client ID to `react-native/app/config/app-config.js`
 
-. Create another **Native** app for Ionic with the following redirect URIs:
+. Create another *Native* app for Ionic with the following redirect URIs:
 
-  * login: `http://localhost:8100/callback,dev.localhost.ionic:/callback`
-  * logout: `http://localhost:8100/logout,dev.localhost.ionic:/logout`
+  * login: `\http://localhost:8100/callback,dev.localhost.ionic:/callback`
+  * logout: `\http://localhost:8100/logout,dev.localhost.ionic:/logout`
 
 . Update `ionic/src/app/auth/auth-config.service.ts` to use the generated client ID
 
@@ -231,7 +309,10 @@ NOTE: The `http://localhost:8761*` redirect URIs are for the JHipster Registry, 
 
 . Restart mobile apps and log in with Okta!
 
-==== Add Claims to Access Token
+  npx cap run ios
+  npm run ios
+
+== Add Claims to Access Token
 
 NOTE: These steps are only necessary if you are using JHipster v6, or JHipster v7 with a Reactive JHipster backend.
 
