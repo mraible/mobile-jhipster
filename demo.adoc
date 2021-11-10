@@ -283,10 +283,10 @@ npm start
 ////
 
 - Ionic with Auth0 needs audience in authorize request
-- React Native with Auth0 needs audience in authorize request
+- React Native with Auth0 needs audience
 - Doesn't work:
-    - React Native Android login doesn't work
-    - Ionic Android login doesn't work
+    - React Native Android login
+    - Ionic Android login
 - Need to figure out /userinfo or given_name claims for Auth0
 
 ////
@@ -308,18 +308,17 @@ npm start
 +
 NOTE: The `\http://localhost:8761*` redirect URIs are for the JHipster Registry, which is often used when creating microservices with JHipster. The Okta CLI adds these by default.
 
-. Create a *Native* app using `okta apps create` and use `\http://localhost:19006/,https://auth.expo.io/@your-expo-username/reactNativeAppName` as redirect URIs.
+. Create a *Native* app using `okta apps create` and use the following redirect URIs:
 
-  * `\http://localhost:19006/,https://auth.expo.io/@mraible/Flickr2`
+  http://localhost:19006/,https://auth.expo.io/@mraible/Flickr2,http://localhost:8100/callback,dev.localhost.ionic:/callback
+
+. Set the Logout URIs to:
+
+  http://localhost:8100/logout,dev.localhost.ionic:/logout
 
 . Copy the client ID to `react-native/app/config/app-config.js`
 
-. Create another *Native* app for Ionic with the following redirect URIs:
-
-  * login: `\http://localhost:8100/callback,dev.localhost.ionic:/callback`
-  * logout: `\http://localhost:8100/logout,dev.localhost.ionic:/logout`
-
-. Update `ionic/src/app/auth/auth-config.service.ts` to use the generated client ID
+. Update `ionic/src/app/auth/auth-config.service.ts` to use the new client ID
 
   environment.oidcConfig.server_host = '0oabzvz5mGpjjAT5o5d6';
   environment.oidcConfig.client_id = this.authConfig.clientId;
