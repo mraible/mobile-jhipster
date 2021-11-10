@@ -10,8 +10,9 @@ export const environment = {
     server_host: 'http://localhost:9080/auth/realms/jhipster',
     redirect_url: window.location.origin + '/callback',
     end_session_redirect_url: window.location.origin + '/logout',
-    scopes: 'openid profile',
+    scopes: 'openid profile email',
     pkce: true,
+    audience: 'https://jhipster.us.auth0.com/api/v2/'
   },
   scheme: 'dev.localhost.ionic:/',
 };
