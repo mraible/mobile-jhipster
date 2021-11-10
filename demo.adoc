@@ -310,6 +310,7 @@ npm start
 - Doesn't work:
     - React Native Android login
     - Ionic Android login
+    - Auth0 logout
 
 ////
 
